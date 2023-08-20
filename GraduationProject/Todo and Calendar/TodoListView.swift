@@ -26,7 +26,7 @@ struct TodoListView: View {
             ZStack {
                 if taskStore.tasks.isEmpty {
                     // Display the message when there are no tasks
-                    Text("尚未新增事件")
+                    Text("尚未新增事項")
                         .font(.headline)
                         .foregroundColor(.gray)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)  // Center the message

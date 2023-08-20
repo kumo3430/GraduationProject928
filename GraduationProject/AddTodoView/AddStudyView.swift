@@ -53,12 +53,12 @@ struct AddStudyView: View {
                 }
                 Section {
                         HStack {
-                            Image(systemName: "tag")
+                            Image(systemName: "tag.fill")
                                 .resizable()
                                 .aspectRatio(contentMode: .fit) // 保持圖示的原始寬高比
                                 .foregroundColor(.white) // 圖示顏色設為白色
                                 .padding(6) // 確保有足夠的空間顯示外框和背景色
-                                .background(Color.blue) // 設定背景顏色
+                                .background(Color.yellow) // 設定背景顏色
                                 .clipShape(RoundedRectangle(cornerRadius: 8)) // 設定方形的邊框，並稍微圓角
                                 .frame(width: 30, height: 30) // 這裡的尺寸是示例，您可以根據需要調整
                             TextField("標籤", text: $label)
@@ -71,23 +71,24 @@ struct AddStudyView: View {
                             .aspectRatio(contentMode: .fit)
                             .foregroundColor(.white)
                             .padding(6)
-                            .background(Color.blue)
+                            .background(Color.red)
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                             .frame(width: 30, height: 30)
                         DatePicker("選擇時間", selection: $startDateTime, displayedComponents: [.date])
                     }
                     HStack {
-                        Image(systemName: "clock.fill")
+                        Image(systemName: "bell.fill")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .foregroundColor(.white)
                             .padding(6)
-                            .background(Color.blue)
+                            .background(Color.purple)
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                             .frame(width: 30, height: 30)
                         DatePicker("提醒時間", selection: $reminderTime, displayedComponents: [.hourAndMinute])
                     }
                 }
+
                 Section {
                     Toggle(isOn: $isRecurring) {
                         HStack {
@@ -96,7 +97,7 @@ struct AddStudyView: View {
                                 .aspectRatio(contentMode: .fit)
                                 .foregroundColor(.white)
                                 .padding(6)
-                                .background(Color.blue)
+                                .background(Color.gray)
                                 .clipShape(RoundedRectangle(cornerRadius: 8))
                                 .frame(width: 30, height: 30)
                             Text("重複")
@@ -121,10 +122,6 @@ struct AddStudyView: View {
                     }
                 }
                 TextField("備註", text: $todoNote)
-                if(isError) {
-                    Text(messenge)
-                        .foregroundColor(.red)
-                }
             }
             .navigationBarTitle("一般學習")
             .navigationBarItems(leading:

@@ -37,6 +37,12 @@ struct MainView: View {
                 Image(systemName: "calendar")
             }
             .tag(0)
+            
+            CommunityProfileView()
+                .tabItem {
+                    Image(systemName: "person.2.fill")
+                }
+            
             TestView()
                 .tabItem {
                     Image(systemName: "person.circle")
