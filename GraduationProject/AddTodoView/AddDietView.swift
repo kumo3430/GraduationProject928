@@ -111,7 +111,7 @@ struct AddDietView: View {
                 }
                 Section {
                     HStack {
-                        Image(systemName: "figure.walk.circle.fill")
+                        Image(systemName: "fork.knife.circle.fill")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .foregroundColor(.white)

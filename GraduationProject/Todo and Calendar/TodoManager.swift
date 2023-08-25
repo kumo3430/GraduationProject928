@@ -101,3 +101,8 @@ class TaskStore: ObservableObject {
         tasks = []
     }
 }
+
+func tasksFromLastYear(tasks: [TaskInfo]) -> [TaskInfo] {
+    let oneYearAgo = Calendar.current.date(byAdding: .year, value: -1, to: Date())!
+    return tasks.filter { $0.date >= oneYearAgo }
+}
