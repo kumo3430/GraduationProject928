@@ -103,8 +103,10 @@ struct TodoListView: View {
                     AddTaskView()
                 case .sport:
                     AddSportView()
+                case .diet:
+                    AddDietView()
                 default:
-                    AddStudyView()
+                    AddDietView()
                 }
             }
         }
