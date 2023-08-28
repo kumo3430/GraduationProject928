@@ -31,6 +31,8 @@
 		3B8647CF2A8DB83300555A9E /* QuoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B8647CE2A8DB83300555A9E /* QuoteView.swift */; };
 		3B8647D32A8DD87200555A9E /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B8647D22A8DD87200555A9E /* ImagePicker.swift */; };
 		3B8647D52A8DE31700555A9E /* TodayTodoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B8647D42A8DE31700555A9E /* TodayTodoView.swift */; };
+		3B9497932A9C3F7E00BD885F /* TaskCompletionIndicatorCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9497922A9C3F7E00BD885F /* TaskCompletionIndicatorCardView.swift */; };
+		3B9497952A9C410000BD885F /* QuoteCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9497942A9C410000BD885F /* QuoteCardView.swift */; };
 		3BA700532A1CC5820096B2FF /* +View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BA700522A1CC5820096B2FF /* +View.swift */; };
 		3BA700552A1CCB940096B2FF /* FireAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BA700542A1CCB940096B2FF /* FireAuth.swift */; };
 		3BA700572A1F3A860096B2FF /* ChatUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BA700562A1F3A860096B2FF /* ChatUser.swift */; };
@@ -41,7 +43,7 @@
 		3BBBF4C62A847B5E0077B3E6 /* TodoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BBBF4C52A847B5E0077B3E6 /* TodoManager.swift */; };
 		3BBBF4C82A8483C10077B3E6 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BBBF4C72A8483C10077B3E6 /* LoadingView.swift */; };
 		3BBBF4CA2A8488060077B3E6 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3BBBF4C92A8488060077B3E6 /* Launch Screen.storyboard */; };
-		3BDCD7E02A96F8BE00E077DE /* TaskCompletionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BDCD7DF2A96F8BE00E077DE /* TaskCompletionView.swift */; };
+		3BDCD7E02A96F8BE00E077DE /* TaskCompletionIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BDCD7DF2A96F8BE00E077DE /* TaskCompletionIndicatorView.swift */; };
 		3BFDFD432A1B443A0071798F /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 3BFDFD422A1B443A0071798F /* GoogleSignIn */; };
 		3BFDFD452A1B443A0071798F /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 3BFDFD442A1B443A0071798F /* GoogleSignInSwift */; };
 		3BFDFD482A1B47620071798F /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 3BFDFD472A1B47620071798F /* FirebaseAnalytics */; };
@@ -108,6 +110,8 @@
 		3B8647CE2A8DB83300555A9E /* QuoteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuoteView.swift; sourceTree = "<group>"; };
 		3B8647D22A8DD87200555A9E /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		3B8647D42A8DE31700555A9E /* TodayTodoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayTodoView.swift; sourceTree = "<group>"; };
+		3B9497922A9C3F7E00BD885F /* TaskCompletionIndicatorCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCompletionIndicatorCardView.swift; sourceTree = "<group>"; };
+		3B9497942A9C410000BD885F /* QuoteCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuoteCardView.swift; sourceTree = "<group>"; };
 		3BA700522A1CC5820096B2FF /* +View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "+View.swift"; sourceTree = "<group>"; };
 		3BA700542A1CCB940096B2FF /* FireAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FireAuth.swift; sourceTree = "<group>"; };
 		3BA700562A1F3A860096B2FF /* ChatUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatUser.swift; sourceTree = "<group>"; };
@@ -117,7 +121,7 @@
 		3BBBF4C52A847B5E0077B3E6 /* TodoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoManager.swift; sourceTree = "<group>"; };
 		3BBBF4C72A8483C10077B3E6 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		3BBBF4C92A8488060077B3E6 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
-		3BDCD7DF2A96F8BE00E077DE /* TaskCompletionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCompletionView.swift; sourceTree = "<group>"; };
+		3BDCD7DF2A96F8BE00E077DE /* TaskCompletionIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCompletionIndicatorView.swift; sourceTree = "<group>"; };
 		3BFDFD612A1C4E780071798F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		3BFDFD632A1C655C0071798F /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		3BFDFD652A1C69150071798F /* GoogleSigninBtn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleSigninBtn.swift; sourceTree = "<group>"; };
@@ -254,7 +258,8 @@
 				3B6975C82A7B7D1E00513302 /* HomeView.swift */,
 				3B8647D42A8DE31700555A9E /* TodayTodoView.swift */,
 				3B8647CE2A8DB83300555A9E /* QuoteView.swift */,
-				3BDCD7DF2A96F8BE00E077DE /* TaskCompletionView.swift */,
+				3BDCD7DF2A96F8BE00E077DE /* TaskCompletionIndicatorView.swift */,
+				3B9497962A9C41D200BD885F /* CardView */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -265,6 +270,15 @@
 				3B8647D22A8DD87200555A9E /* ImagePicker.swift */,
 			);
 			path = "Image Data";
+			sourceTree = "<group>";
+		};
+		3B9497962A9C41D200BD885F /* CardView */ = {
+			isa = PBXGroup;
+			children = (
+				3B9497942A9C410000BD885F /* QuoteCardView.swift */,
+				3B9497922A9C3F7E00BD885F /* TaskCompletionIndicatorCardView.swift */,
+			);
+			path = CardView;
 			sourceTree = "<group>";
 		};
 		3BBBF4BF2A8479EF0077B3E6 /* AddTodoView */ = {
@@ -502,11 +516,13 @@
 				3B8647D52A8DE31700555A9E /* TodayTodoView.swift in Sources */,
 				13AD35D62A70BC0D0003FF1B /* CalendarView.swift in Sources */,
 				3B8647CD2A8DAE6000555A9E /* PostView.swift in Sources */,
-				3BDCD7E02A96F8BE00E077DE /* TaskCompletionView.swift in Sources */,
+				3BDCD7E02A96F8BE00E077DE /* TaskCompletionIndicatorView.swift in Sources */,
 				3BA700592A1F3B870096B2FF /* FirebaseManager.swift in Sources */,
 				3B0A5DB22A81D6B700283B40 /* AddSportView.swift in Sources */,
 				3B05FB172A949EFB00540463 /* AddDietView.swift in Sources */,
+				3B9497932A9C3F7E00BD885F /* TaskCompletionIndicatorCardView.swift in Sources */,
 				3BB30CB62A5FF26800036987 /* TestView.swift in Sources */,
+				3B9497952A9C410000BD885F /* QuoteCardView.swift in Sources */,
 				3B37A8D32A188BA6009BB504 /* ContentView.swift in Sources */,
 				3BA700572A1F3A860096B2FF /* ChatUser.swift in Sources */,
 				3BFDFD662A1C69150071798F /* GoogleSigninBtn.swift in Sources */,

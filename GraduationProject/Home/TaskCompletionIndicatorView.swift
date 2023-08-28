@@ -1,5 +1,5 @@
 //
-//  TodoManager.swift
+//  TaskCompletionIndicator.swift
 //  GraduationProject
 //
 //  Created by heonrim on 8/8/23.
@@ -32,7 +32,7 @@ enum TimeFrame: String, CaseIterable, Identifiable {
     var id: String { self.rawValue }
 }
 
-struct TaskCompletionView: View {
+struct TaskCompletionIndicatorView: View {
     @State private var selectedIndicator: TimeIndicator = .week
     @State private var selectedDate: Date = Date()
     @State private var isViewByDate = true
@@ -250,8 +250,8 @@ struct CompletionCard: View {
     }
 }
 
-struct TaskCompletionView_Previews: PreviewProvider {
+struct TaskCompletionIndicator_Previews: PreviewProvider {
     static var previews: some View {
-        TaskCompletionView()
+        TaskCompletionIndicatorView()
     }
 }

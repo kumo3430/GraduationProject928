@@ -11,6 +11,9 @@ struct QuoteView: View {
     var quote: String = "這裡是一句感人的語錄。"
     var source: String = "感人的來源"
     
+    @State private var showShareSheet = false
+    @State private var imageToShare: UIImage?
+
     var body: some View {
         ZStack {
             // 背景
@@ -30,7 +33,7 @@ struct QuoteView: View {
                     .italic()
             }
             
-            // 喜歡按鈕，可以考慮移至其他位置
+            // 喜歡和分享按鈕
             VStack {
                 Spacer()
                 HStack {
@@ -44,10 +47,34 @@ struct QuoteView: View {
                             .background(Color.white.opacity(0.5))
                             .clipShape(Circle())
                     }
+                    .padding(.trailing, 10)
+                    
+                    Button(action: {
+                        self.imageToShare = captureView()
+                        self.showShareSheet = true
+                    }) {
+                        Image(systemName: "square.and.arrow.up")
+                            .font(.largeTitle)
+                            .padding()
+                            .background(Color.white.opacity(0.5))
+                            .clipShape(Circle())
+                    }
+                    .sheet(isPresented: $showShareSheet, content: {
+                        if let img = self.imageToShare {
+                            ShareSheet(activityItems: [img])
+                        }
+                    })
                     .padding()
                 }
             }
         }
+    }
+    
+    func captureView() -> UIImage? {
+        // Capture the current view as UIImage
+        // This method needs to be implemented to capture the view
+        // There are various ways to implement this depending on your needs
+        nil
     }
 }
 
@@ -57,3 +84,14 @@ struct QuoteView_Previews: PreviewProvider {
     }
 }
 
+struct ShareSheet: UIViewControllerRepresentable {
+    var activityItems: [Any]
+    var applicationActivities: [UIActivity]? = nil
+
+    func makeUIViewController(context: UIViewControllerRepresentableContext<ShareSheet>) -> UIActivityViewController {
+        let controller = UIActivityViewController(activityItems: activityItems, applicationActivities: applicationActivities)
+        return controller
+    }
+
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: UIViewControllerRepresentableContext<ShareSheet>) {}
+}
