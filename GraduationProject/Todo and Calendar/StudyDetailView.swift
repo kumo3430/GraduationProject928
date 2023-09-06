@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct TodoGeneralDetailView: View {
+struct StudyDetailView: View {
     @Binding var todo: Todo
     //@State var isReviewChecked: [Bool] = Array(repeating: false, count: 4)
     @Environment(\.presentationMode) var presentationMode
@@ -179,6 +179,6 @@ struct TodoGeneralDetailView_Previews: PreviewProvider {
     static var previews: some View {
         // 創建一個@State變數
         @State var todo = Todo(id: 000, label: "我是標籤", title: "學習", description: "一般學習", startDateTime: Date(), todoStatus: false, dueDateTime: Date(), reminderTime: Date(), todoNote: "我是備註")
-        TodoGeneralDetailView(todo: $todo)
+        StudyDetailView(todo: $todo)
     }
 }

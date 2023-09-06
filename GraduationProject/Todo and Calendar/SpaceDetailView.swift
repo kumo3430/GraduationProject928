@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct TaskDetailView: View {
+struct SpaceDetailView: View {
     //@State var task: Task
     @Binding var task: Task
     //@State var isReviewChecked: [Bool] = Array(repeating: false, count: 4)
@@ -279,7 +279,7 @@ struct TaskDetailView_Previews: PreviewProvider {
                                isReviewChecked2: false,
                                isReviewChecked3: false)
         
-        TaskDetailView(task: $task) // 使用綁定的task
+        SpaceDetailView(task: $task) // 使用綁定的task
         //            .environmentObject(TaskStore())
     }
 }
