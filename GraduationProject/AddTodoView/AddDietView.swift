@@ -37,7 +37,7 @@ struct AddDietView: View {
         "少油炸": ["次"],
         "多吃蔬果": ["份"]
     ]
-    
+
     let dietsPreTextByType: [String: String] = [
         "減糖": "少於",
         "多喝水": "至少",
@@ -53,7 +53,7 @@ struct AddDietView: View {
     @State private var selectedFrequency = 1
     @State private var recurringOption = 1
     @State private var recurringEndDate = Date()
-    
+
     struct TodoData: Decodable {
         var userId: String?
         var category_id: Int
@@ -111,7 +111,7 @@ struct AddDietView: View {
                 }
                 Section {
                     HStack {
-                        Image(systemName: "fork.knife.circle.fill")
+                        Image(systemName: "figure.walk.circle.fill")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .foregroundColor(.white)
@@ -119,11 +119,11 @@ struct AddDietView: View {
                             .background(Color.blue)
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                             .frame(width: 30, height: 30)
-                        
+
                         Text("飲食類型")
-                        
+
                         Spacer()
-                        
+
                         Button(action: {
                             self.showDietsPicker.toggle()
                         }) {
@@ -152,7 +152,7 @@ struct AddDietView: View {
                             Text(preText)
                                 .font(.subheadline) // Reduce font size if necessary
                         }
-                        
+
                         // Numeric Input
                         TextField("數值", value: $dietsValue, formatter: NumberFormatter())
                             .keyboardType(.decimalPad)
@@ -169,7 +169,7 @@ struct AddDietView: View {
                         // "/" Symbol
                         Text("/")
                             .padding(.horizontal, 2)
-                        
+
                         // Time Unit (e.g., 日、週、月)
                         Picker("選擇時間單位", selection: $dietsUnit) {
                             ForEach(timeUnits, id: \.self) {
@@ -186,7 +186,7 @@ struct AddDietView: View {
 
 
                 }
-                
+
 
                 Section {
                     Toggle(isOn: $isRecurring) {
@@ -242,13 +242,13 @@ struct AddDietView: View {
         formatter.dateFormat = "yyyy/MM/dd"
         return formatter.string(from: date)
     }
-    
+
     func formattedTime(_ date: Date) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "HH:MM"
         return formatter.string(from: date)
     }
-    
+
     func addTodo() {
         class URLSessionSingleton {
             static let shared = URLSessionSingleton()
@@ -260,7 +260,7 @@ struct AddDietView: View {
                 session = URLSession(configuration: config)
             }
         }
-        
+
         let url = URL(string: "http://localhost:8888/addTodo.php")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -288,16 +288,16 @@ struct AddDietView: View {
                     let todoData = try decoder.decode(TodoData.self, from: data)
                     if (todoData.message == "User New Todo successfully") {
                         DispatchQueue.main.async {
-                            let todo = Todo(id: Int(todoData.todo_id)!,
-                                            label: label,
-                                            title: todoTitle,
-                                            description: todoIntroduction,
-                                            startDateTime: startDateTime,
-                                            todoStatus: todoStatus,
-                                            dueDateTime: dueDateTime,
-                                            reminderTime: reminderTime,
-                                            todoNote: todoNote)
-                            todoStore.todos.append(todo)
+//                            let todo = Todo(id: Int(todoData.todo_id)!,
+//                                            label: label,
+//                                            title: todoTitle,
+//                                            description: todoIntroduction,
+//                                            startDateTime: startDateTime,
+//                                            todoStatus: todoStatus,
+//                                            dueDateTime: dueDateTime,
+//                                            reminderTime: reminderTime,
+//                                            todoNote: todoNote)
+//                            todoStore.todos.append(todo)
                             presentationMode.wrappedValue.dismiss()
                         }
                     } else {

@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-struct AddTaskView: View {
+struct AddSpaceView: View {
     @Environment(\.presentationMode) var presentationMode
     //    @ObservedObject var taskStore: TaskStore
     //    @StateObject var taskStore: TaskStore
@@ -30,16 +30,17 @@ struct AddTaskView: View {
         var userId: String?
         //        var id: Int
         var category_id: Int
-        var label: String
+        var label: String?
         var todoTitle: String
         var todoIntroduction: String
         var startDateTime: String
         var reminderTime: String
-        var todo_id: String
+        var todo_id: Int
         var repetition1Count: String
         var repetition2Count: String
         var repetition3Count: String
         var repetition4Count: String
+        
         var message: String
     }
     
@@ -119,7 +120,7 @@ struct AddTaskView: View {
             },
                                 trailing: Button("完成") { addStudySpaced() }
                                 // 如果 title 為空，按鈕會被禁用，即無法點擊。
-                .disabled(title.isEmpty)
+                .disabled(title.isEmpty && description.isEmpty)
                 .onDisappear() {
                     repetition1Count = nextReviewDates[0]
                     repetition2Count = nextReviewDates[1]
@@ -157,7 +158,7 @@ struct AddTaskView: View {
             }
         }
         
-        let url = URL(string: "http://127.0.0.1:8888/addStudySpaced.php")!
+        let url = URL(string: "http://127.0.0.1:8888/addTask/addStudySpaced.php")!
         //        let url = URL(string: "http://10.21.1.164:8888/account/register.php")!
         var request = URLRequest(url: url)
         //        request.cachePolicy = .reloadIgnoringLocalCacheData
@@ -187,7 +188,7 @@ struct AddTaskView: View {
                         print("事件種類為：\(userData.category_id)")
                         print("事件名稱為：\(userData.todoTitle)")
                         print("事件簡介為：\(userData.todoIntroduction)")
-                        print("事件種類為：\(userData.label)")
+                        print("事件種類為：\(userData.label ?? "N/A")")
                         print("開始時間為：\(userData.startDateTime)")
                         print("提醒時間為：\(userData.reminderTime)")
                         print("事件編號為：\(userData.todo_id)")
@@ -199,7 +200,7 @@ struct AddTaskView: View {
                         DispatchQueue.main.async {
                             isError = false
                             // 如果沒有錯才可以關閉視窗並且把此次東西暫存起來
-                            let task = Task(id: Int(userData.todo_id)!, label: label,title: title, description: description, nextReviewDate: nextReviewDate, nextReviewTime: nextReviewTime, repetition1Count: repetition1Count, repetition2Count: repetition2Count, repetition3Count: repetition3Count, repetition4Count: repetition4Count, isReviewChecked0: false, isReviewChecked1: false, isReviewChecked2: false, isReviewChecked3: false)
+                            let task = Task(id: Int(exactly: userData.todo_id)!, label: label,title: title, description: description, nextReviewDate: nextReviewDate, nextReviewTime: nextReviewTime, repetition1Count: repetition1Count, repetition2Count: repetition2Count, repetition3Count: repetition3Count, repetition4Count: repetition4Count, isReviewChecked0: false, isReviewChecked1: false, isReviewChecked2: false, isReviewChecked3: false)
                             taskStore.tasks.append(task)
                             presentationMode.wrappedValue.dismiss()
                         }
@@ -236,9 +237,9 @@ struct AddTaskView: View {
     }
 }
 
-struct AddTaskView_Previews: PreviewProvider {
+struct AddSpaceView_Previews: PreviewProvider {
     static var previews: some View {
-        AddTaskView()
+        AddSpaceView()
             .environmentObject(TaskStore())
     }
 }

@@ -19,7 +19,7 @@ struct SpaceDetailView: View {
     @State var repetition2Status:Int = 0
     @State var repetition3Status:Int = 0
     @State var repetition4Status:Int = 0
-    @State var messenge = ""
+    @State var message = ""
     @State var isError = false
     struct reviseUserData : Decodable {
         var userId: String?
@@ -116,7 +116,7 @@ struct SpaceDetailView: View {
                 //                Text(messenge)
                 //                    .foregroundColor(.red)
             }
-            Text(messenge)
+            Text(message)
                 .foregroundColor(.red)
                 .navigationTitle("任務")
                 .navigationBarItems(
@@ -247,12 +247,12 @@ struct SpaceDetailView: View {
                     } else  {
                         isError = true
                         print("reviseStudySpaced - message：\(userData.message)")
-                        messenge = "修改失敗，請重新建立"
+                        message = "修改失敗，請重新建立"
                     }
                 } catch {
                     isError = true
                     print("reviseStudySpaced - 解碼失敗：\(error)")
-                    messenge = "修改失敗，請重新建立"
+                    message = "修改失敗，請重新建立"
                 }
             }
         }

@@ -15,44 +15,50 @@ struct Event: Identifiable {
 }
 
 struct CalendarView: View {
-    //    @ObservedObject var taskStore = TaskStore()
     @EnvironmentObject var taskStore: TaskStore
     @EnvironmentObject var todoStore: TodoStore
+    @EnvironmentObject var sportStore: SportStore
     @State private var showingActionSheet = false
     @State private var action: Action? = nil
     @State var selectedDate = Date()
     @State var showModal = false
+    @State var frequency:Int = 0
     
     var switchViewAction: () -> Void
     
     var body: some View {
         NavigationView {
             ZStack {
-                Color.white
+                Color(UIColor.systemGray6).edgesIgnoringSafeArea(.all)
                 VStack {
-                    datePicker()
+                    datePicker().padding(.bottom, 20)
                     
-                    Divider().frame(height: 1).background(.gray.opacity(0.4))
-                    
-                    eventList()
-                    
-                    Spacer()
+                    ScrollView {
+                        eventList()
+                    }
+                    .padding(.top, 15)
                 }
+                .padding()
             }
             .navigationBarTitle("行事曆", displayMode: .inline)
             .navigationBarItems(
                 leading:
                     Button(action: {
-                        switchViewAction()  // 切換視圖
+                        switchViewAction()
                     }) {
-                        //                        Image(systemName: "list.pullet")
                         Image(systemName: "list.bullet")
+                            .resizable()
+                            .frame(width: 20, height: 20)
+                            .foregroundColor(.blue)
                     },
                 trailing:
                     Button(action: {
                         self.showingActionSheet = true
                     }) {
                         Image(systemName: "plus")
+                            .resizable()
+                            .frame(width: 20, height: 20)
+                            .foregroundColor(.blue)
                     }
             )
             .actionSheet(isPresented: $showingActionSheet) {
@@ -80,7 +86,7 @@ struct CalendarView: View {
                 case .generalLearning:
                     AddStudyView()
                 case .spacedLearning:
-                    AddTaskView()
+                    AddSpaceView()
                 case .sport:
                     AddSportView()
                 case .diet:
@@ -89,20 +95,26 @@ struct CalendarView: View {
                     AddDietView()
                 }
             }
-            .onAppear() {
-                print("taskStore:\(taskStore)")
-                print("taskStore.tasks_Calendar:\(taskStore.tasks)")
-            }
         }
     }
     
     func datePicker() -> some View {
-        DatePicker("Select Date", selection: $selectedDate,
-                   in: ...Date.distantFuture, displayedComponents: .date)
-        .datePickerStyle(.graphical)
-        .onChange(of: selectedDate) { newValue in
-            selectedDate = newValue
+        VStack(spacing: 10) {
+            Text("選擇日期")
+                .font(.headline)
+                .fontWeight(.medium)
+                .foregroundColor(Color.black.opacity(0.7))
+            
+            DatePicker("", selection: $selectedDate, in: ...Date.distantFuture, displayedComponents: .date)
+                .datePickerStyle(GraphicalDatePickerStyle())
+                .labelsHidden()
+                .background(
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(Color.white)
+                        .shadow(color: Color.gray.opacity(0.2), radius: 5, x: 0, y: 5)
+                )
         }
+        .padding(.horizontal, 15)
     }
     
     func formattedDate(_ date: Date) -> String {
@@ -110,65 +122,104 @@ struct CalendarView: View {
         formatter.dateFormat = "yyyy/MM/dd"
         return formatter.string(from: date)
     }
-    
+
     func eventList() -> some View {
         let filteredTasks = taskStore.tasksForDate(selectedDate)
         let filteredTodos = todoStore.todosForDate(selectedDate)
-
-        return List {
-            Text("間隔學習法")
-                .font(.caption)
-            ForEach(filteredTasks) { task in
-                VStack(alignment: .leading) {
-                    if formattedDate(selectedDate) == formattedDate(task.nextReviewDate) {
-                        Text(task.title)
-                            .font(.headline)
-                        Text("設定日期")
-                            .font(.subheadline)
-                    } else if formattedDate(selectedDate) == formattedDate(task.repetition1Count) {
-                        Text(task.title)
-                            .font(.headline)
-                        Text("第一天")
-                            .font(.subheadline)
-                    }else if formattedDate(selectedDate) == formattedDate(task.repetition2Count) {
-                        Text(task.title)
-                            .font(.headline)
-                        Text("第三天")
-                            .font(.subheadline)
-                    }else if formattedDate(selectedDate) == formattedDate(task.repetition3Count) {
-                        Text(task.title)
-                            .font(.headline)
-                        Text("第七天")
-                            .font(.subheadline)
-                    }else if formattedDate(selectedDate) == formattedDate(task.repetition4Count) {
-                        Text(task.title)
-                            .font(.headline)
-                        Text("第十四天")
-                            .font(.subheadline)
-                    } else {
-                        Text("selectedDate:\(selectedDate)")
-                        Text("nextReviewDate:\(task.nextReviewDate)")
-                    }
+        let filteredSports = sportStore.sportsForDate(selectedDate)
+        
+        return VStack(spacing: 20) {
+            Group {
+                Text("間隔學習法")
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .padding(.leading)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                ForEach(filteredTasks) { task in
+                    ModernEventRow(eventTitle: task.title, eventSubtitle: "設定日期: \(formattedDate(task.nextReviewDate))", icon: "calendar")
                 }
             }
-            Text("一般學習")
-                .font(.caption)
-            ForEach(filteredTodos) { todo in
-                VStack(alignment: .leading) {
-                    if formattedDate(selectedDate) == formattedDate(todo.startDateTime) {
-                        Text(todo.title)
-                            .font(.headline)
-                        Text("一般學習：設定日期")
-                            .font(.subheadline)
-                    }  else {
-                        Text("selectedDate:\(selectedDate)")
-                        Text("startDateTime:\(todo.startDateTime)")
-                    }
+
+            Group {
+                Text("一般學習")
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .padding(.leading)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                ForEach(filteredTodos) { todo in
+                    ModernEventRow(eventTitle: todo.title, eventSubtitle: "開始時間: \(formattedDate(todo.startDateTime))", icon: "book")
+                }
+            }
+
+            Group {
+                Text("運動")
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .padding(.leading)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                ForEach(filteredSports) { sport in
+                    ModernEventRow(eventTitle: sport.title, eventSubtitle: "開始時間: \(formattedDate(sport.startDateTime))", icon: "figure.walk")
                 }
             }
         }
+        .padding(.horizontal, 15)
+    }
+
+    struct ModernEventRow: View {
+        var eventTitle: String
+        var eventSubtitle: String
+        var icon: String
+        
+        var body: some View {
+            HStack(spacing: 15) {
+                Image(systemName: icon)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 30, height: 30)
+                    .foregroundColor(Color.blue.opacity(0.7))
+                    .background(Color.gray.opacity(0.1))
+                    .clipShape(Circle())
+                VStack(alignment: .leading, spacing: 5) {
+                    Text(eventTitle)
+                        .font(.headline)
+                    Text(eventSubtitle)
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                }
+            }
+            .padding()
+            .background(Color.white)
+            .cornerRadius(15)
+            .shadow(color: Color.gray.opacity(0.2), radius: 5, x: 0, y: 5)
+        }
     }
     
+    struct EventRow: View {
+        var eventTitle: String
+        var eventSubtitle: String
+        var icon: String
+        
+        var body: some View {
+            HStack(spacing: 10) {
+                Image(systemName: icon)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 25, height: 25)
+                    .foregroundColor(Color.blue.opacity(0.7))
+                VStack(alignment: .leading, spacing: 5) {
+                    Text(eventTitle)
+                        .font(.headline)
+                    Text(eventSubtitle)
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                }
+            }
+            .padding()
+            .background(Color.white)
+            .cornerRadius(12)
+            .shadow(color: Color.gray.opacity(0.2), radius: 5, x: 0, y: 5)
+        }
+    }
 }
 
 
@@ -177,6 +228,6 @@ struct CalendarView_Previews: PreviewProvider {
         CalendarView(switchViewAction: {})
             .environmentObject(TaskStore())
             .environmentObject(TodoStore())
+            .environmentObject(SportStore())
     }
 }
-

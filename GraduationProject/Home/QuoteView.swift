@@ -16,22 +16,25 @@ struct QuoteView: View {
 
     var body: some View {
         ZStack {
-            // 背景
-            Color(UIColor.systemBackground)
+            // 背景色
+            LinearGradient(gradient: Gradient(colors: [Color("Color"), Color("Color1"), Color("Color2")]), startPoint: .top, endPoint: .bottom)
                 .edgesIgnoringSafeArea(.all)
             
             // 語錄內容
-            VStack(spacing: 20) {
+            VStack(spacing: 30) {
                 Text(quote)
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
+                    .font(.title)
+                    .fontWeight(.medium)
                     .multilineTextAlignment(.center)
-                    .padding(.horizontal)
+                    .padding(.horizontal, 30)
+                    .cardStyle() // 使用 cardStyle 修飾符
                 
                 Text("— \(source)")
                     .font(.headline)
                     .italic()
+                    .foregroundColor(Color.black.opacity(0.7))
             }
+            .padding(.vertical, 50)
             
             // 喜歡和分享按鈕
             VStack {
@@ -41,31 +44,32 @@ struct QuoteView: View {
                     Button(action: {
                         // 喜歡按鈕的動作
                     }) {
-                        Image(systemName: "heart")
-                            .font(.largeTitle)
+                        Image(systemName: "heart.fill")
+                            .font(.title)
+                            .foregroundColor(.red)
                             .padding()
-                            .background(Color.white.opacity(0.5))
+                            .background(Color.white.opacity(0.8)) // 使用稍高的不透明度
                             .clipShape(Circle())
+                            .shadow(color: Color.black.opacity(0.2), radius: 5)
                     }
-                    .padding(.trailing, 10)
+                    .padding(.trailing, 20)
                     
                     Button(action: {
                         self.imageToShare = captureView()
                         self.showShareSheet = true
                     }) {
                         Image(systemName: "square.and.arrow.up")
-                            .font(.largeTitle)
+                            .font(.title)
+                            .foregroundColor(.blue)
                             .padding()
-                            .background(Color.white.opacity(0.5))
+                            .background(Color.white.opacity(0.8)) // 使用稍高的不透明度
                             .clipShape(Circle())
+                            .shadow(color: Color.black.opacity(0.2), radius: 5)
                     }
-                    .sheet(isPresented: $showShareSheet, content: {
-                        if let img = self.imageToShare {
-                            ShareSheet(activityItems: [img])
-                        }
-                    })
-                    .padding()
+                    .padding(.leading, 20)
                 }
+                .padding(.horizontal, 50)
+                .padding(.bottom, 30)
             }
         }
     }
@@ -73,7 +77,6 @@ struct QuoteView: View {
     func captureView() -> UIImage? {
         // Capture the current view as UIImage
         // This method needs to be implemented to capture the view
-        // There are various ways to implement this depending on your needs
         nil
     }
 }

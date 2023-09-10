@@ -13,8 +13,6 @@ $password = $data['password'];
 $create_at = $data['create_at'];
 
 $servername = "localhost"; // 資料庫伺服器名稱
-
-$servername = "localhost"; // 資料庫伺服器名稱
 $user = "heonrim"; // 資料庫使用者名稱
 $pass = "22042205"; // 資料庫使用者密碼
 $dbname = "GraduationProject"; // 資料庫名稱

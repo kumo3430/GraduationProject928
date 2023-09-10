@@ -10,6 +10,7 @@ import SwiftUI
 struct TodoListView: View {
     @EnvironmentObject var taskStore: TaskStore
     @EnvironmentObject var todoStore: TodoStore
+    @EnvironmentObject var sportStore: SportStore
     @AppStorage("uid") private var uid: String = ""
     @State private var showingActionSheet = false
     @State private var action: Action? = nil
@@ -32,8 +33,10 @@ struct TodoListView: View {
                         .frame(maxWidth: .infinity, maxHeight: .infinity)  // Center the message
                 } else {
                     List {
+                        Text("間隔學習法")
                         ForEach(taskStore.tasks.indices, id: \.self) { index in
-                            NavigationLink(destination: TaskDetailView(task: $taskStore.tasks[index])) {
+                            
+                            NavigationLink(destination: SpaceDetailView(task: $taskStore.tasks[index])) {
                                 VStack(alignment: .leading, spacing: 4) {
                                     Text(taskStore.tasks[index].title)
                                         .font(.headline)
@@ -44,14 +47,28 @@ struct TodoListView: View {
                                 }
                             }
                         }
+                        Text("一般學習法")
                         ForEach(todoStore.todos.indices, id: \.self) { index in
-                            NavigationLink(destination: TodoGeneralDetailView(todo: $todoStore.todos[index])) {
+                            NavigationLink(destination: StudyDetailView(todo: $todoStore.todos[index])) {
                                 VStack(alignment: .leading, spacing: 4) {
                                     Text(todoStore.todos[index].title)
                                         .font(.headline)
                                     Text(todoStore.todos[index].description)
                                         .font(.subheadline)
                                     Text("Start time: \(formattedDate(todoStore.todos[index].startDateTime))")
+                                        .font(.caption)
+                                }
+                            }
+                        }
+                        Text("運動")
+                        ForEach(sportStore.sports.indices, id: \.self) { index in
+                            NavigationLink(destination: DetailSportView(sport: $sportStore.sports[index])) {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text(sportStore.sports[index].title)
+                                        .font(.headline)
+                                    Text(sportStore.sports[index].description)
+                                        .font(.subheadline)
+                                    Text("Start time: \(formattedDate(sportStore.sports[index].startDateTime))")
                                         .font(.caption)
                                 }
                             }
@@ -95,12 +112,12 @@ struct TodoListView: View {
                     .cancel()
                 ])
             }
-            .sheet(item: $action) { item in
+            .fullScreenCover(item: $action) { item in
                 switch item {
                 case .generalLearning:
                     AddStudyView()
                 case .spacedLearning:
-                    AddTaskView()
+                    AddSpaceView()
                 case .sport:
                     AddSportView()
                 case .diet:
@@ -128,5 +145,6 @@ struct SpacedView_Previews: PreviewProvider {
         //        TodoListView(switchViewAction: {})
             .environmentObject(TaskStore())
             .environmentObject(TodoStore())
+            .environmentObject(SportStore())
     }
 }
