@@ -25,6 +25,9 @@ struct TodoListView: View {
     var body: some View {
         NavigationView {
             ZStack {
+                
+                LinearGradient(gradient: .init(colors: [Color("Color"),Color("Color1"),Color("Color2")]), startPoint: .top, endPoint: .bottom).edgesIgnoringSafeArea(.all)
+                
                 if taskStore.tasks.isEmpty {
                     // Display the message when there are no tasks
                     Text("尚未新增事項")
@@ -84,12 +87,18 @@ struct TodoListView: View {
                         switchViewAction()  // 切換視圖
                     }) {
                         Image(systemName: "calendar")
+                            .resizable()
+                            .frame(width: 20, height: 20)
+                            .foregroundColor(.black)
                     },
                 trailing:
                     Button(action: {
                         self.showingActionSheet = true
                     }) {
                         Image(systemName: "plus")
+                            .resizable()
+                            .frame(width: 20, height: 20)
+                            .foregroundColor(.black)
                     }
             )
             .actionSheet(isPresented: $showingActionSheet) {
@@ -128,7 +137,30 @@ struct TodoListView: View {
             }
         }
     }
-    
+    func listItem(title: String, description: String, date: Date, icon: String) -> some View {
+            HStack(spacing: 10) {
+                Image(systemName: icon)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 25, height: 25)
+                    .foregroundColor(Color("Primary"))
+                    .background(Color("IconBackground"))
+                    .clipShape(Circle())
+                VStack(alignment: .leading, spacing: 5) {
+                    Text(title)
+                        .font(.headline)
+                    Text(description)
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                    Text("Start time: \(formattedDate(date))")
+                        .font(.caption)
+                }
+            }
+            .padding()
+            .background(Color.white)
+            .cornerRadius(12)
+            .shadow(color: Color.gray.opacity(0.2), radius: 5, x: 0, y: 5)
+        }
     // 用於將日期格式化為指定的字符串格式
     func formattedDate(_ date: Date) -> String {
         let formatter = DateFormatter()

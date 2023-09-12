@@ -89,7 +89,7 @@ struct TabBarView: View {
                 .padding(6)
             }
             .frame(height: 70)
-            .background(Color(#colorLiteral(red: 0.9725490196, green: 0.8039215686, blue: 0.6196078431, alpha: 1)).opacity(0.5))
+            .background(Color(red: 78/255, green: 131/255, blue: 162/255).opacity(0.75))
             .cornerRadius(35)
             .padding(.horizontal, 26)
         }
@@ -103,12 +103,12 @@ extension TabBarView{
             Image(systemName:systemName)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .foregroundColor(isActive ? .white : .gray)
+                .foregroundColor(isActive ? .white : .white)
                 .frame(width: 25, height: 25)
             Spacer()
         }
         .frame(width: isActive ? .infinity : 70, height: 60)
-        .background(isActive ? Color(#colorLiteral(red: 0.9843137255, green: 0.6156862745, blue: 0.4941176471, alpha: 1)) : .clear)
+        .background(isActive ? Color(red: 52/255, green: 96/255, blue: 126/255) : .clear)
         .cornerRadius(30)
     }
 }

@@ -13,33 +13,47 @@ struct HomeView: View {
     @State private var showQuoteView: Bool = false
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: 20) { // Reduced spacing
-                QuoteCardView()
-                    .cardStyle()
+        NavigationView {
+            ScrollView {
+                
+                VStack(spacing: 20) {
 
-                TaskCompletionIndicatorCardView()
-                    .cardStyle()
+                    NavigationLink(destination: QuoteView()) {
+                                        QuoteCardView().cardStyle()
+                                    }
+                    
+//                    NavigationLink(destination: TaskCompletionIndicatorView()) {
+//                                TaskCompletionIndicatorCardView()
+//                                    .cardStyle()
+//                            }
+                            
+                            NavigationLink(destination: QuoteView()) {
+                                TodayTodoView()
+                                    .cardStyle()
+                            }
+                            
+                    NavigationLink(destination: AchievementView(achievement: Achievement(title: "首次之旅", description: "第一次添加習慣", achieved: true, imageName: "plus.circle.fill"))) {
+                        AchievementCardView(achievement: Achievement(title: "首次之旅", description: "第一次添加習慣", achieved: true, imageName: "plus.circle.fill"))
+                            .cardStyle()
+                    }
 
-                TodayTodoView()
-                    .cardStyle()
-
-                AchievementCardView(achievement: Achievement(title: "首次之旅", description: "第一次添加習慣", achieved: true, imageName: "plus.circle.fill"))
-                    .cardStyle()
-
-                CommunityCardView()
-                    .cardStyle()
+                            
+                            NavigationLink(destination: QuoteView()) {
+                                CommunityCardView()
+                                    .cardStyle()
+                            }
+                }
+                .padding()
             }
-            .padding()
+            .background(LinearGradient(gradient: .init(colors: [Color("Color"),Color("Color1"),Color("Color2")]), startPoint: .top, endPoint: .bottom).edgesIgnoringSafeArea(.all))
         }
-        .background(LinearGradient(gradient: .init(colors: [Color("Color"),Color("Color1"),Color("Color2")]), startPoint: .top, endPoint: .bottom).edgesIgnoringSafeArea(.all))
     }
 }
 
 extension View {
     func cardStyle() -> some View {
-        self.padding(.all, 10)
-            .background(RoundedRectangle(cornerRadius: 30).fill(Color.white.opacity(0.7)).shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5))
+        self.padding(.all, 5)
+            .background(RoundedRectangle(cornerRadius: 30).fill(Color.white.opacity(0.3)).shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5))
     }
 }
 

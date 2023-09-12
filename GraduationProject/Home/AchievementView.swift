@@ -28,6 +28,7 @@ struct AchievementView: View {
     let achievement: Achievement
     
     var body: some View {
+        
         HStack {
             // 成就圖示
             Image(systemName: achievement.imageName)
@@ -62,8 +63,11 @@ struct AchievementView: View {
         .padding(.vertical, 10)
         .AchievementViewCardStyle()
         .padding(.horizontal)
+        .navigationBarTitle("", displayMode: .inline)
+        .navigationBarHidden(true)
     }
 }
+ 
 struct AchievementsPageView: View {
     let achievements: [Achievement] = [
         Achievement(title: "首次之旅", description: "第一次添加習慣", achieved: true, imageName: "plus.circle.fill"),

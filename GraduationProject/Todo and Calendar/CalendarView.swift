@@ -28,8 +28,9 @@ struct CalendarView: View {
     
     var body: some View {
         NavigationView {
+            
             ZStack {
-                Color(UIColor.systemGray6).edgesIgnoringSafeArea(.all)
+                LinearGradient(gradient: .init(colors: [Color("Color"),Color("Color1"),Color("Color2")]), startPoint: .top, endPoint: .bottom).edgesIgnoringSafeArea(.all)
                 VStack {
                     datePicker().padding(.bottom, 20)
                     
@@ -49,7 +50,7 @@ struct CalendarView: View {
                         Image(systemName: "list.bullet")
                             .resizable()
                             .frame(width: 20, height: 20)
-                            .foregroundColor(.blue)
+                            .foregroundColor(.black)
                     },
                 trailing:
                     Button(action: {
@@ -58,7 +59,7 @@ struct CalendarView: View {
                         Image(systemName: "plus")
                             .resizable()
                             .frame(width: 20, height: 20)
-                            .foregroundColor(.blue)
+                            .foregroundColor(.black)
                     }
             )
             .actionSheet(isPresented: $showingActionSheet) {

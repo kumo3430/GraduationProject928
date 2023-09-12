@@ -214,6 +214,33 @@ class SportStore: ObservableObject {
 //    }
 //}
 
+class SleepStore: ObservableObject {
+    @Published var sleeps: [Sleep] = []
+    
+    func sleepsForDate(_ date: Date) -> [Sleep] {
+        let filteredSleeps = sleeps.filter { sleep in
+            return isDate(date, inRangeOf: sleep.bedtime, and: sleep.wakeTime)
+        }
+        return filteredSleeps
+    }
+    
+    func isDate(_ date: Date, inRangeOf startDate: Date, and endDate: Date) -> Bool {
+        return date >= startDate && date <= endDate
+            || Calendar.current.isDate(date, inSameDayAs: startDate)
+            || Calendar.current.isDate(date, inSameDayAs: endDate)
+    }
+    
+    func formattedDate(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy/MM/dd"
+        return formatter.string(from: date)
+    }
+    
+    func clearSleeps() {
+        sleeps = []
+    }
+}
+
 class TickerStore: ObservableObject {
     //    @Published var todos = [Todo]()
     @Published var tickers: [Ticker] = []
