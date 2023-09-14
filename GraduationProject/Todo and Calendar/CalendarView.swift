@@ -111,7 +111,7 @@ struct CalendarView: View {
                 .labelsHidden()
                 .background(
                     RoundedRectangle(cornerRadius: 12)
-                        .fill(Color.white)
+                        .fill(Color(red: 184/255, green: 205/255, blue: 227/255))
                         .shadow(color: Color.gray.opacity(0.2), radius: 5, x: 0, y: 5)
                 )
         }

@@ -76,12 +76,12 @@ struct AddDietView: View {
                         HStack {
                             Image(systemName: "tag.fill")
                                 .resizable()
-                                .aspectRatio(contentMode: .fit) // 保持圖示的原始寬高比
-                                .foregroundColor(.white) // 圖示顏色設為白色
-                                .padding(6) // 確保有足夠的空間顯示外框和背景色
-                                .background(Color.yellow) // 設定背景顏色
-                                .clipShape(RoundedRectangle(cornerRadius: 8)) // 設定方形的邊框，並稍微圓角
-                                .frame(width: 30, height: 30) // 這裡的尺寸是示例，您可以根據需要調整
+                                .aspectRatio(contentMode: .fit)
+                                .foregroundColor(.white)
+                                .padding(6)
+                                .background(Color.yellow)
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
+                                .frame(width: 30, height: 30)
                             TextField("標籤", text: $label)
                         }
                     }
@@ -111,7 +111,7 @@ struct AddDietView: View {
                 }
                 Section {
                     HStack {
-                        Image(systemName: "figure.walk.circle.fill")
+                        Image(systemName: "fork.knife.circle.fill")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .foregroundColor(.white)
@@ -119,6 +119,7 @@ struct AddDietView: View {
                             .background(Color.blue)
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                             .frame(width: 30, height: 30)
+                            .padding(.trailing, 8)
 
                         Text("飲食類型")
 
@@ -130,94 +131,64 @@ struct AddDietView: View {
                             HStack {
                                 Text(selectedDiets)
                                     .foregroundColor(.black)
-
                             }
                         }
                         .buttonStyle(.bordered)
                     }
-
+                    
                     if showDietsPicker {
                         Picker("飲食類型", selection: $selectedDiets) {
-                            ForEach(diets, id: \.self) { diets in
-                                Text(diets).tag(diets)
+                            ForEach(diets, id: \.self) { diet in
+                                Text(diet).tag(diet)
                             }
                         }
                         .pickerStyle(WheelPickerStyle())
                     }
 
-
-                    HStack {
-                        // Pre-text based on the diet type
+                    HStack(spacing: 10) {
                         if let preText = dietsPreTextByType[selectedDiets] {
                             Text(preText)
-                                .font(.subheadline) // Reduce font size if necessary
+                                .font(.subheadline)
                         }
-
-                        // Numeric Input
                         TextField("數值", value: $dietsValue, formatter: NumberFormatter())
                             .keyboardType(.decimalPad)
-                            .frame(width: 60, alignment: .leading) // Adjust width
-                        
-                        // Primary Unit (e.g., 毫升, 次, 份)
+                            .frame(width: 60, alignment: .leading)
                         if let primaryUnits = dietsUnitsByType[selectedDiets] {
                             Text(primaryUnits.first!)
-                                .font(.subheadline) // Reduce font size if necessary
+                                .font(.subheadline)
                         }
-
-                        Spacer() // Pushes the remaining elements to the right
-                        
-                        // "/" Symbol
-                        Text("/")
-                            .padding(.horizontal, 2)
-
-                        // Time Unit (e.g., 日、週、月)
-                        Picker("選擇時間單位", selection: $dietsUnit) {
+                        Spacer()
+                        Picker("", selection: $dietsUnit) {
                             ForEach(timeUnits, id: \.self) {
                                 Text($0)
                             }
                         }
                         .pickerStyle(SegmentedPickerStyle())
-                        .frame(width: 120, alignment: .trailing) // Adjust width
+                        .frame(width: 120, alignment: .trailing)
                     }
-
-
                     .padding(.horizontal)
-
-
-
                 }
 
 
                 Section {
-                    Toggle(isOn: $isRecurring) {
-                        HStack {
-                            Image(systemName: "arrow.clockwise")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .foregroundColor(.white)
-                                .padding(6)
-                                .background(Color.gray)
-                                .clipShape(RoundedRectangle(cornerRadius: 8))
-                                .frame(width: 30, height: 30)
-                            Text("重複")
-                        }
-                    }
-
-                    if isRecurring {
-                        Picker("重複頻率", selection: $selectedFrequency) {
-                            Text("每日").tag(1)
-                            Text("每週").tag(2)
-                            Text("每月").tag(3)
-                        }
-
+                    HStack {
+                        Image(systemName: "arrow.clockwise")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .foregroundColor(.white)
+                            .padding(6)
+                            .background(Color.gray)
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                            .frame(width: 30, height: 30)
+                        
                         Picker("結束重複", selection: $recurringOption) {
                             Text("一直重複").tag(1)
                             Text("選擇結束日期").tag(2)
                         }
-
-                        if recurringOption == 2 {
-                            DatePicker("結束重複日期", selection: $recurringEndDate, displayedComponents: [.date])
-                        }
+                    }
+                    
+                    if recurringOption == 2 {
+                        DatePicker("結束重複日期", selection: $recurringEndDate, displayedComponents: [.date])
                     }
                 }
                 TextField("備註", text: $todoNote)

@@ -22,17 +22,21 @@ struct HomeView: View {
                                         QuoteCardView().cardStyle()
                                     }
                     
-//                    NavigationLink(destination: TaskCompletionIndicatorView()) {
-//                                TaskCompletionIndicatorCardView()
-//                                    .cardStyle()
-//                            }
+                    NavigationLink(destination: TaskCompletionIndicatorView()) {
+                                TaskCompletionIndicatorCardView()
+                                    .cardStyle()
+                            }
                             
                             NavigationLink(destination: QuoteView()) {
                                 TodayTodoView()
                                     .cardStyle()
                             }
                             
-                    NavigationLink(destination: AchievementView(achievement: Achievement(title: "首次之旅", description: "第一次添加習慣", achieved: true, imageName: "plus.circle.fill"))) {
+//                    NavigationLink(destination: AchievementView(achievement: Achievement(title: "首次之旅", description: "第一次添加習慣", achieved: true, imageName: "plus.circle.fill"))) {
+//                        AchievementCardView(achievement: Achievement(title: "首次之旅", description: "第一次添加習慣", achieved: true, imageName: "plus.circle.fill"))
+//                            .cardStyle()
+//                    }
+                    NavigationLink(destination: AchievementsPageView()) {
                         AchievementCardView(achievement: Achievement(title: "首次之旅", description: "第一次添加習慣", achieved: true, imageName: "plus.circle.fill"))
                             .cardStyle()
                     }

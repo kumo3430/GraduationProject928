@@ -63,8 +63,6 @@ struct AchievementView: View {
         .padding(.vertical, 10)
         .AchievementViewCardStyle()
         .padding(.horizontal)
-        .navigationBarTitle("", displayMode: .inline)
-        .navigationBarHidden(true)
     }
 }
  
