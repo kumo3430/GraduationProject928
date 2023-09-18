@@ -10,7 +10,7 @@ import SwiftUI
 struct AddDietView: View {
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var todoStore: TodoStore
-
+    
     @State var uid: String = ""
     @State var category_id: Int = 1
     @State var label: String = ""
@@ -23,37 +23,39 @@ struct AddDietView: View {
     @State var reminderTime: Date = Date()
     @State var todoNote: String = ""
     @State var dietsType: String = ""
-    @State private var dietsValue: Float = 0.0
     @State private var showDietsPicker = false
-    @State private var selectedDiets = "減醣"
     @State private var selectedDietsUnit: String = "次"
+    @State private var selectedTimeUnit: String = "每日"
     let diets = [
-      "減糖", "多喝水", "少油炸", "多吃蔬果"
+        "減糖", "多喝水", "少油炸", "多吃蔬果"
     ]
-
+    
     let dietsUnitsByType: [String: [String]] = [
         "減糖": ["次"],
         "多喝水": ["豪升"],
         "少油炸": ["次"],
         "多吃蔬果": ["份"]
     ]
-
+    
     let dietsPreTextByType: [String: String] = [
         "減糖": "少於",
         "多喝水": "至少",
         "少油炸": "少於",
         "多吃蔬果": "至少"
     ]
-
-
-    let timeUnits = ["日", "周", "月"]
-
-    @State private var dietsUnit: String = "次"
+    
+    
+    let timeUnits = ["每日", "每周", "每月"]
+    
     @State private var isRecurring = false
     @State private var selectedFrequency = 1
     @State private var recurringOption = 1
     @State private var recurringEndDate = Date()
-
+    @State private var selectedDiets = "減糖"
+    @State private var dietsUnit = "每日"
+    @State private var dietsValue: Double = 0
+    
+    
     struct TodoData: Decodable {
         var userId: String?
         var category_id: Int
@@ -64,7 +66,7 @@ struct AddDietView: View {
         var todo_id: String
         var message: String
     }
-
+    
     var body: some View {
         NavigationView {
             Form {
@@ -73,18 +75,18 @@ struct AddDietView: View {
                     TextField("內容", text: $todoIntroduction)
                 }
                 Section {
-                        HStack {
-                            Image(systemName: "tag.fill")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .foregroundColor(.white)
-                                .padding(6)
-                                .background(Color.yellow)
-                                .clipShape(RoundedRectangle(cornerRadius: 8))
-                                .frame(width: 30, height: 30)
-                            TextField("標籤", text: $label)
-                        }
+                    HStack {
+                        Image(systemName: "tag.fill")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .foregroundColor(.white)
+                            .padding(6)
+                            .background(Color.yellow)
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                            .frame(width: 30, height: 30)
+                        TextField("標籤", text: $label)
                     }
+                }
                 Section {
                     HStack {
                         Image(systemName: "calendar")
@@ -109,6 +111,7 @@ struct AddDietView: View {
                         DatePicker("提醒時間", selection: $reminderTime, displayedComponents: [.hourAndMinute])
                     }
                 }
+                
                 Section {
                     HStack {
                         Image(systemName: "fork.knife.circle.fill")
@@ -120,11 +123,11 @@ struct AddDietView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                             .frame(width: 30, height: 30)
                             .padding(.trailing, 8)
-
+                        
                         Text("飲食類型")
-
+                        
                         Spacer()
-
+                        
                         Button(action: {
                             self.showDietsPicker.toggle()
                         }) {
@@ -144,32 +147,44 @@ struct AddDietView: View {
                         }
                         .pickerStyle(WheelPickerStyle())
                     }
-
+                    
                     HStack(spacing: 10) {
+                        Menu {
+                            ForEach(timeUnits, id: \.self) { unit in
+                                Button(action: {
+                                    selectedTimeUnit = unit
+                                }) {
+                                    Text(unit)
+                                }
+                            }
+                        } label: {
+                            Text(selectedTimeUnit)
+                                .padding(.trailing)
+                        }
+                        
                         if let preText = dietsPreTextByType[selectedDiets] {
                             Text(preText)
                                 .font(.subheadline)
                         }
+                        
+                        Spacer()
+                        
                         TextField("數值", value: $dietsValue, formatter: NumberFormatter())
                             .keyboardType(.decimalPad)
                             .frame(width: 60, alignment: .leading)
+                        
                         if let primaryUnits = dietsUnitsByType[selectedDiets] {
                             Text(primaryUnits.first!)
                                 .font(.subheadline)
                         }
-                        Spacer()
-                        Picker("", selection: $dietsUnit) {
-                            ForEach(timeUnits, id: \.self) {
-                                Text($0)
-                            }
-                        }
-                        .pickerStyle(SegmentedPickerStyle())
-                        .frame(width: 120, alignment: .trailing)
                     }
                     .padding(.horizontal)
                 }
-
-
+                
+                
+                
+                
+                
                 Section {
                     HStack {
                         Image(systemName: "arrow.clockwise")
@@ -181,9 +196,9 @@ struct AddDietView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                             .frame(width: 30, height: 30)
                         
-                        Picker("結束重複", selection: $recurringOption) {
+                        Picker("週期", selection: $recurringOption) {
                             Text("一直重複").tag(1)
-                            Text("選擇結束日期").tag(2)
+                            Text("週期結束時間").tag(2)
                         }
                     }
                     
@@ -196,30 +211,30 @@ struct AddDietView: View {
             .navigationBarTitle("飲食")
             .navigationBarItems(leading:
                                     Button(action: {
-                                        presentationMode.wrappedValue.dismiss()
-                                    }) {
-                                        Text("返回")
-                                            .foregroundColor(.blue)
-                                                },
-                trailing: Button("完成", action: addTodo))
+                presentationMode.wrappedValue.dismiss()
+            }) {
+                Text("返回")
+                    .foregroundColor(.blue)
+            },
+                                trailing: Button("完成", action: addTodo))
         }
         .onAppear {
             dietsUnit = dietsUnitsByType["減糖"]!.first!
-                }
+        }
     }
-
+    
     func formattedDate(_ date: Date) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy/MM/dd"
         return formatter.string(from: date)
     }
-
+    
     func formattedTime(_ date: Date) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "HH:MM"
         return formatter.string(from: date)
     }
-
+    
     func addTodo() {
         class URLSessionSingleton {
             static let shared = URLSessionSingleton()
@@ -231,7 +246,7 @@ struct AddDietView: View {
                 session = URLSession(configuration: config)
             }
         }
-
+        
         let url = URL(string: "http://localhost:8888/addTodo.php")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -259,16 +274,16 @@ struct AddDietView: View {
                     let todoData = try decoder.decode(TodoData.self, from: data)
                     if (todoData.message == "User New Todo successfully") {
                         DispatchQueue.main.async {
-//                            let todo = Todo(id: Int(todoData.todo_id)!,
-//                                            label: label,
-//                                            title: todoTitle,
-//                                            description: todoIntroduction,
-//                                            startDateTime: startDateTime,
-//                                            todoStatus: todoStatus,
-//                                            dueDateTime: dueDateTime,
-//                                            reminderTime: reminderTime,
-//                                            todoNote: todoNote)
-//                            todoStore.todos.append(todo)
+                            //                            let todo = Todo(id: Int(todoData.todo_id)!,
+                            //                                            label: label,
+                            //                                            title: todoTitle,
+                            //                                            description: todoIntroduction,
+                            //                                            startDateTime: startDateTime,
+                            //                                            todoStatus: todoStatus,
+                            //                                            dueDateTime: dueDateTime,
+                            //                                            reminderTime: reminderTime,
+                            //                                            todoNote: todoNote)
+                            //                            todoStore.todos.append(todo)
                             presentationMode.wrappedValue.dismiss()
                         }
                     } else {
