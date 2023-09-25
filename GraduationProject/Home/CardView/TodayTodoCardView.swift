@@ -14,7 +14,7 @@ extension Task {
     }
 }
 
-struct TodayTodoView: View {
+struct TodayTodoCardView: View {
     @EnvironmentObject var taskStore: TaskStore
     @EnvironmentObject var todoStore: TodoStore
     
@@ -96,7 +96,7 @@ struct TodayTodoView: View {
 
 struct TodayTodoView_Previews: PreviewProvider {
     static var previews: some View {
-        TodayTodoView()
+        TodayTodoCardView()
             .environmentObject(TaskStore())
             .environmentObject(TodoStore())
     }
