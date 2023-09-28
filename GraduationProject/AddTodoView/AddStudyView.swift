@@ -184,6 +184,9 @@ struct AddStudyView: View {
     }
     
     func addTodo() {
+//        GraduationProjectApp.phpUrl(php: "addStudyGeneral", type: "addTask")
+//        phpUrl(php: "StudySpaceList",type: "list")
+        
         class URLSessionSingleton {
             static let shared = URLSessionSingleton()
             let session: URLSession
