@@ -33,9 +33,14 @@ struct Todo: Identifiable {
     var title: String
     var description: String
     var startDateTime: Date
-    var isRecurring: Bool
+    
+    var studyValue: Float
+    var studyUnit: String
+    
+    // 週期選擇
+    var recurringUnit: String
+    // 是否有結束日期
     var recurringOption: Int
-    var selectedFrequency: Int
     var todoStatus: Bool
     var dueDateTime: Date
     var reminderTime: Date
@@ -53,9 +58,10 @@ struct Sport: Identifiable {
     var sportValue: Float
     var sportUnits: String
     
-    var isRecurring: Bool
+    // 週期選擇
+    var recurringUnit: String
+    // 是否有結束日期
     var recurringOption: Int
-    var selectedFrequency: Int
     var todoStatus: Bool
     var dueDateTime: Date
     var reminderTime: Date
@@ -70,13 +76,12 @@ struct Diet: Identifiable {
     var startDateTime: Date
     
     var selectedDiets: String
-//    var dietsType: String
-    var dietsValue: Float
-    var dietsUnits: String
+    var dietsValue: Int
     
-    var isRecurring: Bool
+    // 週期選擇
+    var recurringUnit: String
+    // 是否有結束日期
     var recurringOption: Int
-    var selectedFrequency: Int
     var todoStatus: Bool
     var dueDateTime: Date
     var reminderTime: Date

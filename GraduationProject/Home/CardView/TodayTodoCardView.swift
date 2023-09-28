@@ -1,5 +1,5 @@
 //
-//  TodayTodoView.swift
+//  TodayTodoCardView.swift
 //  GraduationProject
 //
 //  Created by heonrim on 8/17/23.
@@ -94,7 +94,7 @@ struct TodayTodoCardView: View {
 }
 
 
-struct TodayTodoView_Previews: PreviewProvider {
+struct TodayTodoCardView_Previews: PreviewProvider {
     static var previews: some View {
         TodayTodoCardView()
             .environmentObject(TaskStore())

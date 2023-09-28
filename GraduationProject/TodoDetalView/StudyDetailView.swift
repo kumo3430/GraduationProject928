@@ -11,7 +11,7 @@ struct StudyDetailView: View {
     @Environment(\.presentationMode) var presentationMode
     @Binding var todo: Todo
     @EnvironmentObject var todoStore: TodoStore
-   
+    
     
     @State var messenge = ""
     @State var isError = false
@@ -20,6 +20,7 @@ struct StudyDetailView: View {
         var todo_id: Int
         var label: String
         var reminderTime: String
+        var dueDateTime: String
         var todoNote: String
         var message: String
     }
@@ -29,7 +30,9 @@ struct StudyDetailView: View {
             Form {
                 Section {
                     Text(todo.title)
+                        .foregroundColor(Color.gray)
                     Text(todo.description)
+                        .foregroundColor(Color.gray)
                 }
                 Section {
                     HStack {
@@ -55,12 +58,13 @@ struct StudyDetailView: View {
                             .aspectRatio(contentMode: .fit)
                             .foregroundColor(.white)
                             .padding(6)
-                            .background(Color.red)
+                            .background(Color.orange)
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                             .frame(width: 30, height: 30)
                         Text("選擇時間")
                         Spacer()
                         Text(formattedDate(todo.startDateTime))
+                            .foregroundColor(Color.gray)
                     }
                     HStack {
                         Image(systemName: "bell.fill")
@@ -80,71 +84,47 @@ struct StudyDetailView: View {
                 }
                 
                 Section {
-                    if todo.isRecurring {
-                        HStack {
-                            Image(systemName: "arrow.clockwise")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .foregroundColor(.white)
-                                .padding(6)
-                                .background(Color.gray)
-                                .clipShape(RoundedRectangle(cornerRadius: 8))
-                                .frame(width: 30, height: 30)
-                            Text("重複頻率")
-                            Spacer()
-                            if (todo.selectedFrequency == 1){
-                                Text("每日")
-                            } else if (todo.selectedFrequency == 2) {
-                                Text("每週")
-                            } else if (todo.selectedFrequency == 3) {
-                                Text("每月")
+                    HStack {
+                        Image(systemName: "book.closed.circle.fill")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit) // 保持圖示的原始寬高比
+                            .foregroundColor(.white) // 圖示顏色設為白色
+                            .padding(6) // 確保有足夠的空間顯示外框和背景色
+                            .background(Color.red) // 設定背景顏色
+                            .clipShape(RoundedRectangle(cornerRadius: 8)) // 設定方形的邊框，並稍微圓角
+                            .frame(width: 30, height: 30) // 這裡的尺寸是示例，您可以根據需要調整
+                        Text("目標")
+                        Spacer()
+                        Text(todo.recurringUnit)
+                            .foregroundColor(Color.gray)
+                        Text(String(todo.studyValue))
+                            .foregroundColor(Color.gray)
+                        Text(todo.studyUnit)
+                            .foregroundColor(Color.gray)
+                    }
+                    HStack {
+                        Image(systemName: "arrow.clockwise")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .foregroundColor(.white)
+                            .padding(6)
+                            .background(Color.gray)
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                            .frame(width: 30, height: 30)
+                        DatePicker("結束日期", selection: $todo.dueDateTime, displayedComponents: [.date])
+                            .onChange(of: todo.dueDateTime) { newValue in
+                                todo.dueDateTime = newValue
                             }
-                        }
-                        HStack {
-                            Image(systemName: "arrow.clockwise")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .foregroundColor(.white)
-                                .padding(6)
-                                .background(Color.gray)
-                                .clipShape(RoundedRectangle(cornerRadius: 8))
-                                .frame(width: 30, height: 30)
-                            Text("結束重複")
-                            Spacer()
-                            if (todo.recurringOption == 1){
-                                Text("一直重複")
-                            } else if (todo.recurringOption == 2) {
-                                Text(formattedDate(todo.dueDateTime))
-                            }
-                        }
-                    } else {
-                        HStack {
-                            Image(systemName: "arrow.clockwise")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .foregroundColor(.white)
-                                .padding(6)
-                                .background(Color.gray)
-                                .clipShape(RoundedRectangle(cornerRadius: 8))
-                                .frame(width: 30, height: 30)
-                            Spacer()
-                            Text("不重複")
-                        }
                     }
                 }
+                
                 TextField("備註", text: $todo.todoNote)
                     .onChange(of: todo.todoNote) { newValue in
                         todo.todoNote = newValue
                     }
             }
             .navigationBarTitle("一般學習修改")
-            .navigationBarItems(leading:
-                                    Button(action: {
-                presentationMode.wrappedValue.dismiss()
-            }) {
-                Text("返回")
-                    .foregroundColor(.blue)
-            },
+            .navigationBarItems(
                                 trailing: Button(action: {
                 reviseTodo()
                 if todo.label == "" {
@@ -153,7 +133,7 @@ struct StudyDetailView: View {
             }) {
                 Text("完成")
                     .foregroundColor(.blue)
-                        })
+            })
         }
     }
     
@@ -185,14 +165,15 @@ struct StudyDetailView: View {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         let body: [String: Any] = [
-//            "label": todo.label,
-//            "todoTitle": todo.wrappedValue.todoTitle,
-//            "todoIntroduction": todo.todoIntroduction.wrappedValue,
-//            "startDateTime": formattedDate(todo.startDateTime),
+            //            "label": todo.label,
+            //            "todoTitle": todo.wrappedValue.todoTitle,
+            //            "todoIntroduction": todo.todoIntroduction.wrappedValue,
+            //            "startDateTime": formattedDate(todo.startDateTime),
             //            "dueDateTime": formattedDate(recurringEndDate),
             "id": todo.id,
             "label": todo.label,
             "reminderTime": formattedTime(todo.reminderTime),
+            "dueDateTime": formattedDate(todo.dueDateTime),
             "todoNote": todo.todoNote
         ]
         
@@ -218,13 +199,14 @@ struct StudyDetailView: View {
                         print("事件id為：\(todoData.todo_id)")
                         print("事件種類為：\(todoData.label)")
                         print("提醒時間為：\(todoData.reminderTime)")
+                        print("結束日期為：\(todoData.dueDateTime)")
                         print("事件備註為：\(todoData.todoNote)")
                         print("reviseTodo - message：\(todoData.message)")
                         isError = false
                         DispatchQueue.main.async {
                             presentationMode.wrappedValue.dismiss()
                         }
-                       
+                        
                         print("============== reviseTodo ==============")
                     }  else {
                         isError = true
@@ -248,9 +230,10 @@ struct StudyDetailView_Previews: PreviewProvider {
                                title: "英文",
                                description: "背L2單字",
                                startDateTime: Date(),
-                               isRecurring: true,
+                               studyValue: 3.0,
+                               studyUnit: "小時",
+                               recurringUnit:"每週",
                                recurringOption:2,
-                               selectedFrequency: 1,
                                todoStatus: false,
                                dueDateTime: Date(),
                                reminderTime: Date(),

@@ -23,153 +23,121 @@ struct TodoListView: View {
     var switchViewAction: () -> Void
     
     var body: some View {
-        NavigationView {
-            ZStack {
-                
-                LinearGradient(gradient: .init(colors: [Color("Color"),Color("Color1"),Color("Color2")]), startPoint: .top, endPoint: .bottom).edgesIgnoringSafeArea(.all)
-                
-                if taskStore.tasks.isEmpty {
-                    // Display the message when there are no tasks
-                    Text("尚未新增事項")
-                        .font(.headline)
-                        .foregroundColor(.gray)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)  // Center the message
-                } else {
-                    List {
-                        Text("間隔學習法")
-                        ForEach(taskStore.tasks.indices, id: \.self) { index in
+            NavigationView {
+                ZStack {
+                    LinearGradient(gradient: .init(colors: [Color("Color"), Color("Color1"), Color("Color2")]), startPoint: .top, endPoint: .bottom)
+                        .edgesIgnoringSafeArea(.all)
+                    
+                    if taskStore.tasks.isEmpty && todoStore.todos.isEmpty && sportStore.sports.isEmpty {
+                        EmptyStateView()
+                    } else {
+                        ScrollView {
+                            SectionHeaderView(title: "間隔學習法")
+                            ForEach(taskStore.tasks.indices, id: \.self) { index in
+                                NavigationLink(destination: SpaceDetailView(task: $taskStore.tasks[index])) {
+                                    ItemView(title: taskStore.tasks[index].title, description: taskStore.tasks[index].description, date: taskStore.tasks[index].nextReviewDate)
+                                }
+                            }
                             
-                            NavigationLink(destination: SpaceDetailView(task: $taskStore.tasks[index])) {
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text(taskStore.tasks[index].title)
-                                        .font(.headline)
-                                    Text(taskStore.tasks[index].description)
-                                        .font(.subheadline)
-                                    Text("Start time: \(formattedDate(taskStore.tasks[index].nextReviewDate))")
-                                        .font(.caption)
+                            SectionHeaderView(title: "一般學習法")
+                            ForEach(todoStore.todos.indices, id: \.self) { index in
+                                NavigationLink(destination: StudyDetailView(todo: $todoStore.todos[index])) {
+                                    ItemView(title: todoStore.todos[index].title, description: todoStore.todos[index].description, date: todoStore.todos[index].startDateTime)
+                                }
+                            }
+                            
+                            SectionHeaderView(title: "運動")
+                            ForEach(sportStore.sports.indices, id: \.self) { index in
+                                NavigationLink(destination: DetailSportView(sport: $sportStore.sports[index])) {
+                                    ItemView(title: sportStore.sports[index].title, description: sportStore.sports[index].description, date: sportStore.sports[index].startDateTime)
                                 }
                             }
                         }
-                        Text("一般學習法")
-                        ForEach(todoStore.todos.indices, id: \.self) { index in
-                            NavigationLink(destination: StudyDetailView(todo: $todoStore.todos[index])) {
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text(todoStore.todos[index].title)
-                                        .font(.headline)
-                                    Text(todoStore.todos[index].description)
-                                        .font(.subheadline)
-                                    Text("Start time: \(formattedDate(todoStore.todos[index].startDateTime))")
-                                        .font(.caption)
-                                }
-                            }
-                        }
-                        Text("運動")
-                        ForEach(sportStore.sports.indices, id: \.self) { index in
-                            NavigationLink(destination: DetailSportView(sport: $sportStore.sports[index])) {
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text(sportStore.sports[index].title)
-                                        .font(.headline)
-                                    Text(sportStore.sports[index].description)
-                                        .font(.subheadline)
-                                    Text("Start time: \(formattedDate(sportStore.sports[index].startDateTime))")
-                                        .font(.caption)
-                                }
-                            }
-                        }
+                        .padding()
                     }
-                    .listStyle(PlainListStyle())
                 }
-            }
-            .navigationBarTitle("待辦事項", displayMode: .inline)
-            .navigationBarItems(
-                leading:
-                    Button(action: {
-                        switchViewAction()  // 切換視圖
-                    }) {
-                        Image(systemName: "calendar")
-                            .resizable()
-                            .frame(width: 20, height: 20)
-                            .foregroundColor(.black)
-                    },
-                trailing:
-                    Button(action: {
-                        self.showingActionSheet = true
-                    }) {
-                        Image(systemName: "plus")
-                            .resizable()
-                            .frame(width: 20, height: 20)
-                            .foregroundColor(.black)
-                    }
-            )
-            .actionSheet(isPresented: $showingActionSheet) {
-                ActionSheet(title: Text("新增事項"), message: Text("選擇一個事件類型"), buttons: [
-                    .default(Text("一般學習"), action: {
-                        self.action = .generalLearning
-                    }),
-                    .default(Text("間隔學習"), action: {
-                        self.action = .spacedLearning
-                    }),
-                    .default(Text("運動"), action: {
-                        self.action = .sport
-                    }),
-                    .default(Text("作息"), action: {
-                        self.action = .routine
-                    }),
-                    .default(Text("飲食"), action: {
-                        self.action = .diet
-                    }),
-                    .cancel()
-                ])
-            }
-            .fullScreenCover(item: $action) { item in
-                switch item {
-                case .generalLearning:
-                    AddStudyView()
-                case .spacedLearning:
-                    AddSpaceView()
-                case .sport:
-                    AddSportView()
-                case .diet:
-                    AddDietView()
-                default:
-                    AddDietView()
-                }
+                .navigationBarTitle("待辦事項", displayMode: .inline)
+                .navigationBarItems(leading: leadingBarItem, trailing: trailingBarItem)
+                // ... other views and modifiers ...
             }
         }
-    }
-    func listItem(title: String, description: String, date: Date, icon: String) -> some View {
-            HStack(spacing: 10) {
-                Image(systemName: icon)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 25, height: 25)
-                    .foregroundColor(Color("Primary"))
-                    .background(Color("IconBackground"))
-                    .clipShape(Circle())
-                VStack(alignment: .leading, spacing: 5) {
-                    Text(title)
-                        .font(.headline)
-                    Text(description)
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
-                    Text("Start time: \(formattedDate(date))")
-                        .font(.caption)
-                }
-            }
-            .padding()
-            .background(Color.white)
-            .cornerRadius(12)
-            .shadow(color: Color.gray.opacity(0.2), radius: 5, x: 0, y: 5)
+        
+        // Empty state view
+        private func EmptyStateView() -> some View {
+            Text("尚未新增事項")
+                .font(.largeTitle)
+                .fontWeight(.bold)
+                .foregroundColor(.gray)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
-    // 用於將日期格式化為指定的字符串格式
-    func formattedDate(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy/MM/dd"
-        return formatter.string(from: date)
+        
+        // Section header view
+        private func SectionHeaderView(title: String) -> some View {
+            Text(title)
+                .font(.title2)
+                .fontWeight(.semibold)
+                .padding(.vertical)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        
+        // List item view
+    private func ItemView(title: String, description: String, date: Date, icon: String = "calendar") -> some View {
+        HStack(spacing: 15) {
+            Image(systemName: icon)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 30, height: 30)
+                .foregroundColor(Color.blue.opacity(0.7))
+                .background(Color.gray.opacity(0.1))
+                .clipShape(Circle())
+            
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title)
+                    .font(.headline)
+                    .multilineTextAlignment(.leading)
+                    .frame(minWidth: 250)
+                
+                Text(description)
+                    .font(.subheadline)
+                    .foregroundColor(.gray)
+                
+                Text("Start time: \(formattedDate(date))")
+                    .font(.caption)
+                    .foregroundColor(.gray)
+            }
+        }
+        .padding()
+        .background(Color.white)
+        .cornerRadius(15)
+        .shadow(color: Color.gray.opacity(0.2), radius: 5, x: 0, y: 5)
     }
-    
-    
-}
+
+        
+        // Leading navigation bar item
+        var leadingBarItem: some View {
+            Button(action: switchViewAction) {
+                Image(systemName: "calendar")
+                    .imageScale(.large)
+                    .foregroundColor(.primary)
+            }
+        }
+        
+        // Trailing navigation bar item
+        var trailingBarItem: some View {
+            Button(action: { showingActionSheet = true }) {
+                Image(systemName: "plus")
+                    .imageScale(.large)
+                    .foregroundColor(.primary)
+            }
+        }
+        
+        // Function to format date
+        private func formattedDate(_ date: Date) -> String {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy/MM/dd"
+            return formatter.string(from: date)
+        }
+    }
 
 struct SpacedView_Previews: PreviewProvider {
     static var previews: some View {

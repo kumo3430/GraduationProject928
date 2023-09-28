@@ -1,41 +1,85 @@
+//
+//  TodayTasksView.swift
+//  GraduationProject
+//
+//  Created by heonrim on 2023/9/21.
+//
+
 import SwiftUI
 
-struct Task {
+enum TaskType: String {
+    case sport, space, study
+}
+
+struct DailyTask {
     var id: Int
     var name: String
-    var type: String // sport, space, study...
+    var type: TaskType
 }
 
 struct TodayTasksView: View {
-    var tasks: [Task] = [
-        Task(id: 1, name: "跑步", type: "sport"),
-        Task(id: 2, name: "學習", type: "study"),
-        Task(id: 3, name: "第一次複習", type: "space")
+    var tasks: [DailyTask] = [
+        DailyTask(id: 1, name: "跑步", type: .sport),
+        DailyTask(id: 2, name: "學習", type: .study),
+        DailyTask(id: 3, name: "第一次複習", type: .space)
     ]
+    
+    @State private var selectedTaskId: Int? // 添加这一行来存储选中的任务ID
+    
+    var cardSpacing: CGFloat = 50
     
     var body: some View {
         NavigationView {
             ScrollView {
-                LazyVStack {
+                LazyVStack(spacing: cardSpacing) {
                     ForEach(tasks, id: \.id) { task in
-                        if task.type == "sport" {
-                            // Display CheckSportView
-                            CheckSportView()
-                                .padding()
-                        } else if task.type == "study" {
-                            // Display CheckStudyView
-                            CheckStudyView()
-                                .padding()
-                        } else if task.type == "space" {
-                            // Display CheckSpaceView
-                            CheckSpaceView()
-                                .padding()
+                        ZStack {
+                            getTaskView(for: task.type)
+                                .background(getBackgroundColor(for: task.type, selected: task.id == selectedTaskId)) // 修改这一行来传递selected参数
+                        }
+                        .background(RoundedRectangle(cornerRadius: 10)
+                            .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 1))
+                        .padding(20)
+                        .accessibilityLabel("\(task.name)")
+                        .accessibilityHint("This is a \(task.type.rawValue) task")
+                        .onTapGesture {
+                            withAnimation {
+                                self.selectedTaskId = self.selectedTaskId == task.id ? nil : task.id
+                            }
                         }
                     }
                 }
+                .padding(.horizontal)
             }
+            .background(Color(UIColor.secondarySystemBackground).edgesIgnoringSafeArea(.all))
             .navigationTitle("今日任務")
+            .navigationBarTitleDisplayMode(.inline)
+            .animation(.default)
         }
+    }
+    
+    func getTaskView(for type: TaskType) -> some View {
+        switch type {
+        case .sport:
+            return AnyView(CheckSportView())
+        case .study:
+            return AnyView(CheckStudyView())
+        case .space:
+            return AnyView(CheckSpaceView())
+        }
+    }
+    
+    func getBackgroundColor(for type: TaskType, selected: Bool) -> Color {
+        let baseColor: Color
+        switch type {
+        case .sport:
+            baseColor = Color.blue
+        case .study:
+            baseColor = Color.green
+        case .space:
+            baseColor = Color.orange
+        }
+        return selected ? baseColor : baseColor.opacity(0.1)
     }
 }
 

@@ -47,6 +47,10 @@ struct TodoData: Decodable {
     var todoIntroduction: [String]
     var todoLabel: [String?]
     var startDateTime: [String]
+    
+    var studyValue: [String]
+    var studyUnit: [String]
+    
     var frequency: [String]
     var reminderTime: [String]
     var todoStatus: [String?]
@@ -88,7 +92,6 @@ struct DietData: Decodable {
     
     var dietsType: [String]
     var dietsValue: [String]
-    var dietsUnit: [String]
     
     var frequency: [String]
     var reminderTime: [String]
@@ -113,12 +116,12 @@ class TodoStore: ObservableObject {
     
     func todosForDate(_ date: Date) -> [Todo] {
         let filteredTodos = todos.filter { todo in
-            return isDate(date, inRangeOf: todo.startDateTime, and: todo.dueDateTime)
+            return isDate(date, inRangeOf: todo.startDateTime, and: todo.dueDateTime, description: todo.description)
         }
         return filteredTodos
     }
     
-    func isDate(_ date: Date, inRangeOf startDate: Date, and endDate: Date) -> Bool {
+    func isDate(_ date: Date, inRangeOf startDate: Date, and endDate: Date, description: String) -> Bool {
         return date >= startDate && date <= endDate
             || Calendar.current.isDate(date, inSameDayAs: startDate)
             || Calendar.current.isDate(date, inSameDayAs: endDate)
@@ -188,31 +191,31 @@ class SportStore: ObservableObject {
     }
 }
 
-//class DietStore: ObservableObject {
-//    @Published var diet: [Diet] = []
-//    
-//    func dietForDate(_ date: Date) -> [Diet] {
-//        let filteredDiets = diet.filter { diet in
-//            return isDate(date, inRangeOf: diet.startDateTime, and: diet.dueDateTime)
-//        }
-//        return filteredDiets
-//    }
-//    
-//    func isDate(_ date: Date, inRangeOf startDate: Date, and endDate: Date) -> Bool {
-//        return date >= startDate && date <= endDate
-//            || Calendar.current.isDate(date, inSameDayAs: startDate)
-//            || Calendar.current.isDate(date, inSameDayAs: endDate)
-//    }
-//    
-//    func formattedDate(_ date: Date) -> String {
-//        let formatter = DateFormatter()
-//        formatter.dateFormat = "yyyy/MM/dd"
-//        return formatter.string(from: date)
-//    }
-//    func clearDiets() {
-//        diets = []
-//    }
-//}
+class DietStore: ObservableObject {
+    @Published var diets: [Diet] = []
+    
+    func dietForDate(_ date: Date) -> [Diet] {
+        let filteredDiets = diets.filter { diet in
+            return isDate(date, inRangeOf: diet.startDateTime, and: diet.dueDateTime)
+        }
+        return filteredDiets
+    }
+    
+    func isDate(_ date: Date, inRangeOf startDate: Date, and endDate: Date) -> Bool {
+        return date >= startDate && date <= endDate
+            || Calendar.current.isDate(date, inSameDayAs: startDate)
+            || Calendar.current.isDate(date, inSameDayAs: endDate)
+    }
+    
+    func formattedDate(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy/MM/dd"
+        return formatter.string(from: date)
+    }
+    func clearTodos() {
+        diets = []
+    }
+}
 
 class SleepStore: ObservableObject {
     @Published var sleeps: [Sleep] = []

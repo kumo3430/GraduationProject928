@@ -1,75 +1,134 @@
+//
 // CheckStudyView.swift
 // GraduationProject
 //
-// Created by [Your Name] on [Current Date].
+//  Created by heonrim on 9/22/23.
+//
 
 import SwiftUI
+import Lottie
 
-struct CheckStudyComponent: View {
+struct CheckStudyView: View {
     @State var studyValue: Float = 0.0
-    @State var studyUnit: String = "次"
+    @State var accumulatedValue: Float = 0.0
+    @State var targetValue: Float = 5.0
+    @State var taskName: String = "學習SwiftUI"
     let studyUnits = ["次", "小時"]
+    let studyUnit: String = "次"
+    let habitType: String = "一般學習" // 新添加的習慣類型
+    
+    @State private var isCompleted: Bool = false
+    @State private var showCelebration: Bool = false
+    let animationName: String = "animation_lmvsn755"
+    let titleColor = Color.gray
+    let customBlue = Color(UIColor.systemBlue).opacity(0.7)
     
     var body: some View {
-        VStack {
-            HStack {
-                Spacer()
+        ZStack {
+            LinearGradient(gradient: Gradient(colors: [Color.white, Color(.systemGray6)]), startPoint: .top, endPoint: .bottom)
+                .edgesIgnoringSafeArea(.all)
+            
+            VStack(alignment: .leading, spacing: 10) {
+                Text(taskName)
+                    .font(.system(size: 25, weight: .bold, design: .rounded))
+                    .foregroundColor(titleColor)
+                    .padding(.bottom, 2)
                 
-                TextField("輸入數值", value: $studyValue, formatter: NumberFormatter())
-                    .keyboardType(.decimalPad)
-                    .frame(width: 80, alignment: .center)
+                Text("習慣類型：\(habitType)")
+                    .font(.system(size: 15, weight: .medium, design: .default))
+                    .foregroundColor(Color.secondary)
+                    .padding(.bottom, 2)
                 
-                Picker("選擇單位", selection: $studyUnit) {
-                    ForEach(studyUnits, id: \.self) { unit in
-                        Text(unit)
-                            .font(.system(size: 12))
+                HStack {
+                    VStack(alignment: .leading) {
+                        Text("目標")
+                            .font(.system(size: 14, weight: .medium, design: .serif))
+                            .foregroundColor(Color.secondary)
+
+                        Text("\(targetValue, specifier: "%.1f") \(studyUnit)")
+                            .font(.system(size: 18, weight: .semibold, design: .default))
+                            .foregroundColor(customBlue)
+                    }
+
+                    Spacer()
+
+                    VStack(alignment: .trailing) {
+                        Text("已完成")
+                            .font(.system(size: 14, weight: .medium, design: .serif))
+                            .foregroundColor(Color.secondary)
+
+                        Text("\(accumulatedValue, specifier: "%.1f") \(studyUnit)")
+                            .font(.system(size: 18, weight: .semibold, design: .default))
+                            .foregroundColor(customBlue)
                     }
                 }
-                .pickerStyle(SegmentedPickerStyle())
-                .frame(width: 150, alignment: .trailing)
+                .padding(.horizontal, 10)
                 
-                Spacer()
+                HStack {
+                    TextField("數值", value: $studyValue, format: .number)
+                        .keyboardType(.decimalPad)
+                        .frame(width: 70, height: 35)
+                        .padding(6)
+                        .background(RoundedRectangle(cornerRadius: 8).fill(Color.white).shadow(color: Color.black.opacity(0.1), radius: 3, x: 0, y: 3))
+                        .cornerRadius(8)
+                        .font(.system(size: 18, weight: .regular, design: .monospaced))
+                        .disabled(isCompleted)
+
+                    Text(studyUnit)
+                        .font(.system(size: 18, weight: .regular, design: .monospaced))
+                        .foregroundColor(customBlue)
+                        .frame(width: 100, alignment: .trailing)
+
+                    Button(action: {
+                        accumulatedValue += studyValue
+                        if accumulatedValue >= targetValue {
+                            isCompleted = true
+                            withAnimation {
+                                showCelebration = true
+                            }
+                        }
+                    }) {
+                        Image(systemName: "checkmark")
+                            .foregroundColor(Color.white)
+                            .padding(8)
+                            .background(Capsule().fill(customBlue).shadow(color: Color.black.opacity(0.2), radius: 2, x: 0, y: 2))
+                    }
+                    .disabled(isCompleted)
+                }
+                .padding(.horizontal, 10)
             }
-            Button("檢核學習", action: checkStudy)
-        }
-    }
-    
-    func checkStudy() {
-        // 使用假值
-        let userId = "1234"
-        let todoId = "5678"
-        
-        // 构造请求体
-        let body: [String: Any] = [
-            "userId": userId,
-            "todoId": todoId,
-            "studyValue": studyValue,
-            "studyUnit": studyUnit,
-        ]
-        
-        let url = URL(string: "http://127.0.0.1:8888/checkStudy.php")!
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        
-        let jsonData = try! JSONSerialization.data(withJSONObject: body, options: [])
-        request.httpBody = jsonData
-        
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            if let error = error {
-                print("CheckStudyComponent - Connection error: \(error)")
-            } else if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode != 200 {
-                print("CheckStudyComponent - HTTP error: \(httpResponse.statusCode)")
-            } else {
-                print("CheckStudyComponent - Success!")
+            .padding(15)
+            .background(RoundedRectangle(cornerRadius: 15).fill(Color.white).shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 4))
+            .frame(height: 160)
+            
+            if showCelebration {
+                VStack {
+                    Text("恭喜！任務完成！")
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+                        .foregroundColor(Color.white)
+                        .padding()
+
+                    LottieView(animation: .named(animationName))
+                        .play(.fromProgress(0, toProgress: 1, loopMode: .playOnce))
+                        .animationDidFinish { _ in
+                            withAnimation {
+                                showCelebration = false
+                            }
+                        }
+                        .frame(width: 200, height: 200)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(Color.black.opacity(0.5).edgesIgnoringSafeArea(.all))
             }
         }
-        .resume()
     }
 }
 
 struct CheckStudyView_Previews: PreviewProvider {
     static var previews: some View {
         CheckStudyView()
-            .environmentObject(TodoStore())
     }
 }
+
+//這個檔案作為動畫參考

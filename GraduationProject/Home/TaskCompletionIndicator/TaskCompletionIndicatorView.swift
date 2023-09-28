@@ -17,7 +17,7 @@ struct TaskCompletionIndicatorView: View {
             VStack(spacing: 20) {
                 Text("任務完成指標")
                     .font(.system(size: 32, weight: .bold))
-                    .padding(.top, 20)
+                                    .padding(.top, 50)
 
                 Picker("選擇查看方式", selection: $viewModel.viewingMode) {
                     ForEach(ViewingMode.allCases, id: \.self) { mode in

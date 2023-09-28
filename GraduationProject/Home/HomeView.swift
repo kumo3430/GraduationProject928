@@ -28,8 +28,8 @@ struct HomeView: View {
                             .cardStyle()
                     }
                     
-                    NavigationLink(destination: QuoteView()) {
-                        TodayTodoView()
+                    NavigationLink(destination: TodayTasksView()) {
+                        TodayTodoCardView()
                             .cardStyle()
                     }
                     
