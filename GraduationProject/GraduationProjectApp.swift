@@ -70,27 +70,32 @@ struct YourApp: App {
     }
 
     private func StudySpaceList(completion: @escaping () -> Void) {
-        phpUrl(php: "StudySpaceList" ,type: "list",uid:uid,store: taskStore)
+        let body: [String: Any] = ["uid": uid]
+        phpUrl(php: "StudySpaceList" ,type: "list",body:body,store: taskStore)
         completion()
     }
 
     private func StudyGeneralList(completion: @escaping () -> Void) {
-        phpUrl(php: "StudyGeneralList",type: "list",uid:uid,store: todoStore)
+        let body: [String: Any] = ["uid": uid]
+        phpUrl(php: "StudyGeneralList",type: "list",body:body,store: todoStore)
         completion()
     }
 
     private func SportList(completion: @escaping () -> Void) {
-        phpUrl(php: "SportList",type: "list",uid:uid,store: sportStore)
+        let body: [String: Any] = ["uid": uid]
+        phpUrl(php: "SportList",type: "list",body:body,store: sportStore)
         completion()
     }
 
     private func DietList(completion: @escaping () -> Void) {
-        phpUrl(php: "DietList",type: "list",uid:uid,store: dietStore)
+        let body: [String: Any] = ["uid": uid]
+        phpUrl(php: "DietList",type: "list",body:body,store: dietStore)
         completion()
     }
 
     private func tickersList(completion: @escaping () -> Void) {
-        phpUrl(php: "tickersList",type: "list",uid:uid,store: tickerStore)
+        let body: [String: Any] = ["uid": uid]
+        phpUrl(php: "tickersList",type: "list",body:body,store: tickerStore)
         completion()
     }
     

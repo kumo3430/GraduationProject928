@@ -19,8 +19,7 @@ class URLSessionSingleton {
     }
 }
 
-func phpUrl(php: String,type: String,uid: String,store: any ObservableObject) {
-//func phpUrl(php: String,type: String,body: [String:Any],store: any ObservableObject) {
+func phpUrl(php: String,type: String,body: [String:Any],store: any ObservableObject) {
     // 在這裡使用傳入的參數
     let server = "http://127.0.0.1:8888"
     var url: URL?
@@ -29,8 +28,6 @@ func phpUrl(php: String,type: String,uid: String,store: any ObservableObject) {
     print("新的url\(String(describing: url))")
     var request = URLRequest(url: url!)
     request.httpMethod = "POST"
-    
-    let body: [String: Any] = ["uid": uid]
     let jsonData = try! JSONSerialization.data(withJSONObject: body, options: [])
     request.httpBody = jsonData
     
