@@ -22,6 +22,7 @@
 		13D6E1E62A710D480049E5A5 /* verifyRegister.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13D6E1E52A710D480049E5A5 /* verifyRegister.swift */; };
 		13D6E1E92A710DA50049E5A5 /* SwiftSMTP in Frameworks */ = {isa = PBXBuildFile; productRef = 13D6E1E82A710DA50049E5A5 /* SwiftSMTP */; };
 		13D8DA8C2AC5CF4400753C8F /* PHPUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13D8DA8B2AC5CF4400753C8F /* PHPUrl.swift */; };
+		13D8DA8E2AC5DCBF00753C8F /* List.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13D8DA8D2AC5DCBF00753C8F /* List.swift */; };
 		3B01AF142AC0709500321E35 /* CheckSpaceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B01AF132AC0709500321E35 /* CheckSpaceView.swift */; };
 		3B05FB172A949EFB00540463 /* AddDietView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B05FB162A949EFB00540463 /* AddDietView.swift */; };
 		3B0A5DB22A81D6B700283B40 /* AddSportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B0A5DB12A81D6B600283B40 /* AddSportView.swift */; };
@@ -105,6 +106,7 @@
 		13AD35D52A70BC0D0003FF1B /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 		13D6E1E52A710D480049E5A5 /* verifyRegister.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = verifyRegister.swift; sourceTree = "<group>"; };
 		13D8DA8B2AC5CF4400753C8F /* PHPUrl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PHPUrl.swift; sourceTree = "<group>"; };
+		13D8DA8D2AC5DCBF00753C8F /* List.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = List.swift; sourceTree = "<group>"; };
 		3B01AF132AC0709500321E35 /* CheckSpaceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckSpaceView.swift; sourceTree = "<group>"; };
 		3B05FB162A949EFB00540463 /* AddDietView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddDietView.swift; sourceTree = "<group>"; };
 		3B0A5DB12A81D6B600283B40 /* AddSportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSportView.swift; sourceTree = "<group>"; };
@@ -361,6 +363,7 @@
 				13AD35D52A70BC0D0003FF1B /* CalendarView.swift */,
 				3BAE3CB02AB9F9740079464F /* WeeklyReportView_Previews.swift */,
 				13D8DA8B2AC5CF4400753C8F /* PHPUrl.swift */,
+				13D8DA8D2AC5DCBF00753C8F /* List.swift */,
 			);
 			path = "Todo and Calendar";
 			sourceTree = "<group>";
@@ -594,6 +597,7 @@
 				3B17F3B32ABF0ED500AFF7F5 /* CheckSportView.swift in Sources */,
 				3B2EF2E02A7FF4E800FC021A /* AddStudyView.swift in Sources */,
 				3B6975C92A7B7D1E00513302 /* HomeView.swift in Sources */,
+				13D8DA8E2AC5DCBF00753C8F /* List.swift in Sources */,
 				3B01AF142AC0709500321E35 /* CheckSpaceView.swift in Sources */,
 				3B8CBB1F2AB2D75E004E5A26 /* TaskCompletionTimeBasedView.swift in Sources */,
 				3BAE3CB12AB9F9740079464F /* WeeklyReportView_Previews.swift in Sources */,
