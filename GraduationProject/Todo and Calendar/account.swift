@@ -7,21 +7,32 @@
 
 import Foundation
 import SwiftSMTP
+enum Message: String {
+    case success = "Success"
+    case userRegistered = "User registered successfully"
+    case userLogin = "User login successfully"
+    case notYetFilled = "not yet filled"
+    case emailRegistered = "email is registered"
+    case registrationFailed = "註冊失敗請重新註冊"
+}
 
+struct MailConfig {
+    static let smtpHostname = "smtp.gmail.com"
+    static let smtpEmail = "3430yun@gmail.com"
+    static let smtpPassword = "knhipliavnpqxwty"
+}
 func Send(verify: String,mail: String,completion: @escaping (String, String) -> Void) {
     DispatchQueue.global().async {
-        Random() { message in
-            let verify = message
-            sendMail(verify: verify,mail: mail) { message in
-                if (message == "Success") {
-                    print("Send - 隨機變數為：\(verify)")
-                    completion(verify, message)
-                } else {
-                    completion("0", message)
-                }
-            }
-        }
-    }
+         Random() { randomMessage in
+             let verify = randomMessage
+             sendMail(verify: verify, mail: mail) { message in
+                 if message == Message.success.rawValue {
+                     print("Send - 隨機變數為：\(verify)")
+                 }
+                 completion(verify, message)
+             }
+         }
+     }
 }
 func Random( completion: @escaping (String) -> Void) {
     let verify = Int.random(in: 1..<99999999)
@@ -30,10 +41,10 @@ func Random( completion: @escaping (String) -> Void) {
 }
 func sendMail(verify: String,mail: String,completion: @escaping (String) -> Void) {
     let smtp = SMTP(
-        hostname: "smtp.gmail.com",     // SMTP server address
-        email: "3430yun@gmail.com",        // username to login
-        password: "knhipliavnpqxwty"            // password to login
-    )
+            hostname: MailConfig.smtpHostname,
+            email: MailConfig.smtpEmail,
+            password: MailConfig.smtpPassword
+        )
     print("mail:\(mail)")
     let megaman = Mail.User(name: "我習慣了使用者", email: mail)
     let drLight = Mail.User(name: "Yun", email: "3430yun@gmail.com")
@@ -44,63 +55,44 @@ func sendMail(verify: String,mail: String,completion: @escaping (String) -> Void
         text: "以下是您的驗證碼： \(String(verify))"
     )
     
-    smtp.send(mail) { (error) in
-        if let error = error {
-            print("regiest - \(error)")
-            completion("regiest - \(error)")
-        } else {
-            completion("Success")
-            print("SEND: SUBJECT: \(mail.subject)")
-            print("SEND: SUBJECT: \(mail.text)")
-            print("FROM: \(mail.from)")
-            print("TO: \(mail.to)")
-            print("Send email successful")
-            print("---------------------------------")
-        }
-    }
+    smtp.send(mail) { error in
+           if let error = error {
+               print("regiest - \(error)")
+               completion(error.localizedDescription)
+           } else {
+               completion(Message.success.rawValue)
+               print("SEND: SUBJECT: \(mail.subject)")
+                          print("SEND: SUBJECT: \(mail.text)")
+                          print("FROM: \(mail.from)")
+                          print("TO: \(mail.to)")
+                          print("Send email successful")
+           }
+       }
 }
 
 func handleLogin(data: Data, completion: @escaping (String) -> Void) {
+    handleUserData(data: data, messageType: .userLogin, completion: completion)
+}
+
+func handleRegister(data: Data, completion: @escaping (String) -> Void) {
+    handleUserData(data: data, messageType: .userRegistered, completion: completion)
+}
+
+func handleUserData(data: Data, messageType: Message, completion: @escaping (String) -> Void) {
     handleDecodableData(UserData.self, data: data) { userData in
-        if (userData.message == "User login successfully") {
+        if userData.message == messageType.rawValue {
             print("============== loginView ==============")
-            print("login - userDate:\(userData)")
+            print("\(messageType.rawValue) - userDate:\(userData)")
             print("使用者ID為：\(userData.id)")
             print("使用者帳號為：\(userData.email)")
             UserDefaults.standard.set(true, forKey: "signIn")
             UserDefaults.standard.set("\(userData.id)", forKey: "uid")
             UserDefaults.standard.set("\(userData.email)", forKey: "userName")
-            completion("Success")
+            completion(Message.success.rawValue)
             print("============== loginView ==============")
-        }
-    }
-}
-func handleRegister(data: Data, completion: @escaping (String) -> Void) {
-    handleDecodableData(UserData.self, data: data) { userData in
-        if (userData.message == "User registered successfully") {
-            print("============== verifyView ==============")
-            print("regiest - userDate:\(userData)")
-            print("使用者ID為：\(userData.id)")
-            print("使用者email為：\(userData.email)")
-            print("註冊日期為：\(userData.create_at)")
-            print("message：\(userData.message)")
-            UserDefaults.standard.set(true, forKey: "signIn")
-            UserDefaults.standard.set("\(userData.id)", forKey: "uid")
-            UserDefaults.standard.set("\(userData.email)", forKey: "userName")
-            completion("Success")
-            print("============== verifyView ==============")
-        } else if (userData.message == "not yet filled") {
-            completion("not yet filled")
-            print("verifyMessage：\(userData.message)")
-//            messenge = "請確認電子郵件、使用者名稱、密碼都有輸入"
-        } else if (userData.message == "email is registered") {
-            completion("email is registered")
-            print("verify - Message：\(userData.message)")
-//            messenge = "電子郵件已被註冊過 請重新輸入"
         } else {
-            completion("註冊失敗請重新註冊")
-            print("verify - Message：\(String(data: data, encoding: .utf8)!)")
-//            messenge = "註冊失敗請重新註冊"
+            completion(userData.message)
+            print("\(messageType.rawValue) - Message：\(userData.message)")
         }
     }
 }
