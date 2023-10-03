@@ -6,13 +6,12 @@
 //
 
 import SwiftUI
+import Foundation
 
 struct AddStudyView: View {
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var todoStore: TodoStore
-    
-    @State var uid: String = ""
-    @State var category_id: Int = 1
+
     @State var label: String = ""
     @State var todoTitle: String = ""
     @State var todoIntroduction: String = ""
@@ -28,13 +27,11 @@ struct AddStudyView: View {
     @State private var recurringEndDate = Date()
     @State private var selectedTimeUnit: String = "每日"
     
-    @State var messenge = ""
-    @State var isError = false
     @State private var studyUnit: String = "次"
     let studyUnits = ["次", "小時"]
     let timeUnits = ["每日", "每週", "每月"]
-    
-    
+    @State var messenge = ""
+    @State var isError = false
     struct TodoData : Decodable {
         var userId: String?
         var category_id: Int
@@ -165,42 +162,13 @@ struct AddStudyView: View {
                 Text("返回")
                     .foregroundColor(.blue)
             },
-                                trailing: Button("完成", action: addTodo)
+                                trailing: Button("完成") { StudyGeneralAdd{}}
                 .disabled(todoTitle.isEmpty && todoIntroduction.isEmpty)
             )
         }
     }
     
-    func formattedDate(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy/MM/dd"
-        return formatter.string(from: date)
-    }
-    
-    func formattedTime(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH:MM"
-        return formatter.string(from: date)
-    }
-    
-    func addTodo() {
-//        GraduationProjectApp.phpUrl(php: "addStudyGeneral", type: "addTask")
-//        phpUrl(php: "StudySpaceList",type: "list")
-        
-        class URLSessionSingleton {
-            static let shared = URLSessionSingleton()
-            let session: URLSession
-            private init() {
-                let config = URLSessionConfiguration.default
-                config.httpCookieStorage = HTTPCookieStorage.shared
-                config.httpCookieAcceptPolicy = .always
-                session = URLSession(configuration: config)
-            }
-        }
-        
-        let url = URL(string: "http://127.0.0.1:8888/addTask/addStudyGeneral.php")!
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
+    func StudyGeneralAdd(completion: @escaping () -> Void) {
         var body: [String: Any] = [
             "label": label,
             "todoTitle": todoTitle,
@@ -222,84 +190,19 @@ struct AddStudyView: View {
         } else if selectedTimeUnit == "每月" {
             body["frequency"] = 3
         }
-
-        
-            if recurringOption == 1 {
-                // 持續重複
-                body["dueDateTime"] = formattedDate(Calendar.current.date(byAdding: .year, value: 5, to: recurringEndDate)!)
-            } else {
-                // 選擇結束日期
-                body["dueDateTime"] = formattedDate(recurringEndDate)
-            }
-      
-        
-        print("AddTodoView - body:\(body)")
-        let jsonData = try! JSONSerialization.data(withJSONObject: body, options: [])
-        request.httpBody = jsonData
-        URLSessionSingleton.shared.session.dataTask(with: request) { data, response, error in
-            if let error = error {
-                print("AddTodoView - Connection error: \(error)")
-            } else if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode != 200 {
-                print("AddTodoView - HTTP error: \(httpResponse.statusCode)")
-            }
-            else if let data = data{
-                let decoder = JSONDecoder()
-                do {
-                    print("AddTodoView - Data : \(String(data: data, encoding: .utf8)!)")
-                    let todoData = try decoder.decode(TodoData.self, from: data)
-                    if (todoData.message == "User New StudyGeneral successfullyUser New first RecurringInstance successfully" || todoData.message == "User New StudyGeneral successfully") {
-                        print("============== AddTodoView ==============")
-                        print(String(data: data, encoding: .utf8)!)
-                        print("addStudySpaced - userDate:\(todoData)")
-                        print("使用者ID為：\(todoData.userId ?? "N/A")")
-                        print("事件id為：\(todoData.todo_id)")
-                        print("事件種類為：\(todoData.category_id)")
-                        print("事件名稱為：\(todoData.todoTitle)")
-                        print("事件簡介為：\(todoData.todoIntroduction)")
-                        print("事件種類為：\(todoData.label ?? "N/A")")
-                        print("事件狀態為：\(todoData.todoStatus)")
-                        print("開始時間為：\(todoData.startDateTime)")
-                        print("運動目標量為：\(todoData.studyValue)")
-                        print("運動目標單位為：\(todoData.studyUnit)")
-                        print("提醒時間為：\(todoData.reminderTime)")
-                        print("截止日期為：\(todoData.dueDateTime)")
-                        print("事件備註：\(todoData.todoNote ?? "N/A")")
-                        print("事件編號為：\(todoData.todo_id)")
-                        print("AddTodoView - message：\(todoData.message)")
-                        isError = false
-                        DispatchQueue.main.async {
-                            var todo: Todo?
-                            todo = Todo(id: Int(exactly: todoData.todo_id)!,
-                                        label: label,
-                                        title: todoTitle,
-                                        description: todoIntroduction,
-                                        startDateTime: startDateTime,
-                                        studyValue: studyValue,
-                                        studyUnit: studyUnit,
-                                        recurringUnit: selectedTimeUnit,
-                                        recurringOption: recurringOption,
-                                        todoStatus: todoStatus,
-                                        dueDateTime: recurringEndDate,
-                                        reminderTime: reminderTime,
-                                        todoNote: todoNote)
-                            if let unwrappedTodo = todo {  // 使用可選綁定來解封 'todo'
-                                todoStore.todos.append(unwrappedTodo)
-                                presentationMode.wrappedValue.dismiss()
-                            }
-                        }
-                        print("============== AddTodoView ==============")
-                    }  else {
-                        isError = true
-                        print("AddTodoView - message：\(todoData.message)")
-                        messenge = "建立失敗，請重新建立"                    }
-                } catch {
-                    isError = true
-                    print("AddTodoView - 解碼失敗：\(error)")
-                    messenge = "建立失敗，請重新建立"
-                }
-            }
+        if recurringOption == 1 {
+            // 持續重複
+            body["dueDateTime"] = formattedDate(Calendar.current.date(byAdding: .year, value: 5, to: recurringEndDate)!)
+        } else {
+            // 選擇結束日期
+            body["dueDateTime"] = formattedDate(recurringEndDate)
         }
-        .resume()
+
+        phpUrl(php: "addStudyGeneral" ,type: "addTask",body:body,store: todoStore)
+        presentationMode.wrappedValue.dismiss()
+        
+        completion()
+        
     }
 }
 

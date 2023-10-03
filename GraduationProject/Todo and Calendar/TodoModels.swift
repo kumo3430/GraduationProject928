@@ -28,6 +28,8 @@ struct Task: Identifiable {
 
 
 struct Todo: Identifiable {
+//    var id: ObjectIdentifier
+    
     var id: Int
     var label: String
     var title: String

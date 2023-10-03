@@ -45,7 +45,7 @@ struct AddDietView: View {
     ]
     
     
-    let timeUnits = ["每日", "每周", "每月"]
+    let timeUnits = ["每日", "每週", "每月"]
     
     @State private var selectedFrequency = 1
     @State private var recurringOption = 1
@@ -221,38 +221,24 @@ struct AddDietView: View {
                                         Text("返回")
                                             .foregroundColor(.blue)
                                                 },
-                trailing: Button("完成", action: addTodo)
+                                trailing: Button("完成"){addDiet {}}
                 .disabled(todoTitle.isEmpty && todoIntroduction.isEmpty))
             
         }
     }
     
-    func formattedDate(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy/MM/dd"
-        return formatter.string(from: date)
-    }
-    
-    func formattedTime(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH:MM"
-        return formatter.string(from: date)
-    }
-    func addTodo() {
-        class URLSessionSingleton {
-            static let shared = URLSessionSingleton()
-            let session: URLSession
-            private init() {
-                let config = URLSessionConfiguration.default
-                config.httpCookieStorage = HTTPCookieStorage.shared
-                config.httpCookieAcceptPolicy = .always
-                session = URLSession(configuration: config)
-            }
-        }
-
-        let url = URL(string: "http://127.0.0.1:8888/addTask/addDiet.php")!
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
+//    func formattedDate(_ date: Date) -> String {
+//        let formatter = DateFormatter()
+//        formatter.dateFormat = "yyyy/MM/dd"
+//        return formatter.string(from: date)
+//    }
+//
+//    func formattedTime(_ date: Date) -> String {
+//        let formatter = DateFormatter()
+//        formatter.dateFormat = "HH:MM"
+//        return formatter.string(from: date)
+//    }
+    func addDiet(completion: @escaping () -> Void) {
         var body = ["label": label,
                     "todoTitle": todoTitle,
                     "todoIntroduction": todoIntroduction,
@@ -276,72 +262,117 @@ struct AddDietView: View {
                 // 選擇結束日期
                 body["dueDateTime"] = formattedDate(recurringEndDate)
             }
+        print("body:\(body)")
+        print("selectedTimeUnit:\(selectedTimeUnit)")
+        phpUrl(php: "addDiet" ,type: "addTask",body:body,store: dietStore)
+        presentationMode.wrappedValue.dismiss()
         
-        let jsonData = try! JSONSerialization.data(withJSONObject: body, options: [])
-        request.httpBody = jsonData
-        URLSessionSingleton.shared.session.dataTask(with: request) { data, response, error in
-            if let error = error {
-                print("addTodo - Connection error: \(error)")
-            } else if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode != 200 {
-                print("addTodo - HTTP error: \(httpResponse.statusCode)")
-            }
-            else if let data = data{
-                let decoder = JSONDecoder()
-                do {
-                    print("AddDietView - Data : \(String(data: data, encoding: .utf8)!)")
-                    let todoData = try decoder.decode(TodoData.self, from: data)
-                    if (todoData.message == "User New diet successfullyUser New first RecurringInstance successfully") {
-                        print("============== addSport ==============")
-                        print(String(data: data, encoding: .utf8)!)
-                        print("addSport - userDate:\(todoData)")
-                        print("使用者ID為：\(todoData.userId ?? "N/A")")
-                        print("事件id為：\(todoData.todo_id)")
-                        print("事件種類為：\(todoData.category_id)")
-                        print("事件名稱為：\(todoData.todoTitle)")
-                        print("事件簡介為：\(todoData.todoIntroduction)")
-                        print("事件種類為：\(todoData.label ?? "N/A")")
-                        print("事件狀態為：\(todoData.todoStatus)")
-                        print("開始時間為：\(todoData.startDateTime)")
-                        print("運動種類為：\(todoData.dietType)")
-                        print("運動目標量為：\(todoData.dietValue)")
-                        print("提醒時間為：\(todoData.reminderTime)")
-                        print("重複頻率為：\(todoData.frequency)")
-                        print("截止日期為：\(todoData.dueDateTime)")
-                        print("事件備註：\(todoData.todoNote ?? "N/A")")
-                        print("事件編號為：\(todoData.todo_id)")
-                        print("addSport - message：\(todoData.message)")
-                        isError = false
-                        DispatchQueue.main.async {
-                            var diet: Diet?
-                            diet = Diet(id: Int(exactly: todoData.todo_id)!,
-                                        label: label,
-                                        title: todoTitle,
-                                        description: todoIntroduction,
-                                        startDateTime: startDateTime,
-                                        selectedDiets: selectedDiets,
-                                        dietsValue: dietsValue,
-                                        recurringUnit: selectedTimeUnit,
-                                        recurringOption: recurringOption,
-                                        todoStatus: todoStatus,
-                                        dueDateTime: recurringEndDate,
-                                        reminderTime: reminderTime,
-                                        todoNote: todoNote)
-                            if let unwrappedTodo = diet {  // 使用可選綁定來解封 'todo'
-                                dietStore.diets.append(unwrappedTodo)
-                                presentationMode.wrappedValue.dismiss()
-                            }
-                        }
-                    } else {
-                        print("addTodo - message：\(todoData.message)")
-                        // handle other messages from the server
-                    }
-                } catch {
-                    print("addTodo - 解碼失敗：\(error)")
-                }
-            }
-        }
-        .resume()
+        completion()
     }
+//    func addTodo() {
+//        class URLSessionSingleton {
+//            static let shared = URLSessionSingleton()
+//            let session: URLSession
+//            private init() {
+//                let config = URLSessionConfiguration.default
+//                config.httpCookieStorage = HTTPCookieStorage.shared
+//                config.httpCookieAcceptPolicy = .always
+//                session = URLSession(configuration: config)
+//            }
+//        }
+//
+//        let url = URL(string: "http://127.0.0.1:8888/addTask/addDiet.php")!
+//        var request = URLRequest(url: url)
+//        request.httpMethod = "POST"
+//        var body = ["label": label,
+//                    "todoTitle": todoTitle,
+//                    "todoIntroduction": todoIntroduction,
+//                    "startDateTime": formattedDate(startDateTime),
+//                    "dietType": selectedDiets,
+//                    "dietValue": dietsValue,
+//                    "reminderTime": formattedTime(reminderTime),
+//                    "todoNote": todoNote] as [String : Any]
+//        
+//            if selectedTimeUnit == "每日" {
+//                body["frequency"] = 1
+//            } else if selectedTimeUnit == "每週" {
+//                body["frequency"] = 2
+//            } else if selectedTimeUnit == "每月" {
+//                body["frequency"] = 3
+//            }
+//            if recurringOption == 1 {
+//                // 持續重複
+//                body["dueDateTime"] = formattedDate(Calendar.current.date(byAdding: .year, value: 5, to: recurringEndDate)!)
+//            } else {
+//                // 選擇結束日期
+//                body["dueDateTime"] = formattedDate(recurringEndDate)
+//            }
+//        
+//        let jsonData = try! JSONSerialization.data(withJSONObject: body, options: [])
+//        request.httpBody = jsonData
+//        URLSessionSingleton.shared.session.dataTask(with: request) { data, response, error in
+//            if let error = error {
+//                print("addTodo - Connection error: \(error)")
+//            } else if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode != 200 {
+//                print("addTodo - HTTP error: \(httpResponse.statusCode)")
+//            }
+//            else if let data = data{
+//                let decoder = JSONDecoder()
+//                do {
+//                    print("AddDietView - Data : \(String(data: data, encoding: .utf8)!)")
+//                    let todoData = try decoder.decode(TodoData.self, from: data)
+//                    if (todoData.message == "User New diet successfullyUser New first RecurringInstance successfully") {
+//                        print("============== addSport ==============")
+//                        print(String(data: data, encoding: .utf8)!)
+//                        print("addSport - userDate:\(todoData)")
+//                        print("使用者ID為：\(todoData.userId ?? "N/A")")
+//                        print("事件id為：\(todoData.todo_id)")
+//                        print("事件種類為：\(todoData.category_id)")
+//                        print("事件名稱為：\(todoData.todoTitle)")
+//                        print("事件簡介為：\(todoData.todoIntroduction)")
+//                        print("事件種類為：\(todoData.label ?? "N/A")")
+//                        print("事件狀態為：\(todoData.todoStatus)")
+//                        print("開始時間為：\(todoData.startDateTime)")
+//                        print("運動種類為：\(todoData.dietType)")
+//                        print("運動目標量為：\(todoData.dietValue)")
+//                        print("提醒時間為：\(todoData.reminderTime)")
+//                        print("重複頻率為：\(todoData.frequency)")
+//                        print("截止日期為：\(todoData.dueDateTime)")
+//                        print("事件備註：\(todoData.todoNote ?? "N/A")")
+//                        print("事件編號為：\(todoData.todo_id)")
+//                        print("addSport - message：\(todoData.message)")
+//                        isError = false
+//                        DispatchQueue.main.async {
+//                            var diet: Diet?
+//                            diet = Diet(id: Int(exactly: todoData.todo_id)!,
+//                                        label: label,
+//                                        title: todoTitle,
+//                                        description: todoIntroduction,
+//                                        startDateTime: startDateTime,
+//                                        selectedDiets: selectedDiets,
+//                                        dietsValue: dietsValue,
+//                                        recurringUnit: selectedTimeUnit,
+//                                        recurringOption: recurringOption,
+//                                        todoStatus: todoStatus,
+//                                        dueDateTime: recurringEndDate,
+//                                        reminderTime: reminderTime,
+//                                        todoNote: todoNote)
+//                            if let unwrappedTodo = diet {  // 使用可選綁定來解封 'todo'
+//                                dietStore.diets.append(unwrappedTodo)
+//                                presentationMode.wrappedValue.dismiss()
+//                            }
+//                        }
+//                    } else {
+//                        print("addTodo - message：\(todoData.message)")
+//                        // handle other messages from the server
+//                    }
+//                } catch {
+//                    print("addTodo - 解碼失敗：\(error)")
+//                }
+//            }
+//        }
+//        .resume()
+//    }
 }
 struct AddDietView_Previews: PreviewProvider {
     static var previews: some View {

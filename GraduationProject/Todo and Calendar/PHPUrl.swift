@@ -7,6 +7,7 @@
 
 import Foundation
 
+var server = "http://127.0.0.1:8888"
 
 class URLSessionSingleton {
     static let shared = URLSessionSingleton()
@@ -21,7 +22,7 @@ class URLSessionSingleton {
 
 func phpUrl(php: String,type: String,body: [String:Any],store: any ObservableObject) {
     // 在這裡使用傳入的參數
-    let server = "http://127.0.0.1:8888"
+//    let server = "http://127.0.0.1:8888"
     var url: URL?
     
     url = URL(string: "\(server)/\(type)/\(php).php")
@@ -49,29 +50,51 @@ func convertToDate(_ dateString: String) -> Date? {
     dateFormatter.dateFormat = "yyyy-MM-dd"
     return dateFormatter.date(from: dateString)
 }
-
 func convertToTime(_ timeString: String) -> Date? {
     let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "HH:mm:ss"
     return dateFormatter.date(from: timeString)
 }
-
 func convertToDateTime(_ dateString: String) -> Date? {
     let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
     return dateFormatter.date(from: dateString)
 }
 
+func formattedDate(_ date: Date) -> String {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "yyyy-MM-dd"
+    return formatter.string(from: date)
+}
+
+func formattedTime(_ date: Date) -> String {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "HH:mm:ss"
+    return formatter.string(from: date)
+}
+
 func handleDataForPHP(php: String, data: Data,store: any ObservableObject) {
     switch php {
     case "StudySpaceList":
     handleStudySpaceList(data: data,store: store as! TaskStore)
+    case "addStudySpaced":
+        handleStudySpaceAdd(data: data,store: store as! TaskStore)
+        
     case "StudyGeneralList":
         handleStudyGeneralList(data: data,store: store as! TodoStore)
+    case "addStudyGeneral":
+        handleStudyGeneralAdd(data: data,store: store as! TodoStore)
+        
     case "SportList":
         handleSportList(data: data,store: store as! SportStore)
+    case "addSport":
+        handleSportAdd(data: data,store: store as! SportStore)
+        
     case "DietList":
         handleDietList(data: data,store: store as! DietStore)
+    case "addDiet":
+        handleDietAdd(data: data,store: store as! DietStore)
+        
     case "tickersList":
         handletickersList(data: data,store: store as! TickerStore)
     default:
@@ -86,6 +109,6 @@ func handleDecodableData<T: Decodable>(_ type: T.Type, data: Data, handler: (T) 
         print("\(type): \(String(data: data, encoding: .utf8)!)")
         handler(userData)
     } catch {
-        print("解码失败：\(error)")
+        print("解碼失敗：\(error)")
     }
 }

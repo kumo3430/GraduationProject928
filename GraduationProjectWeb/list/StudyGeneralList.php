@@ -8,7 +8,7 @@ $data = json_decode($input_data, true);
 // $userName = $data['userName'];
 // $uid = $_SESSION['uid'];
 $uid = $data['uid'];
-$_SESSION['uid'] = $uid ;
+$_SESSION['uid'] = $uid;
 $category_id = 0;
 
 $TodoTitle = array();

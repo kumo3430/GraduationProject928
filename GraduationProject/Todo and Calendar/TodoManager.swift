@@ -109,7 +109,81 @@ struct TickerData: Decodable {
     var exchange: [String?]
     var message: String
 }
-
+struct addTaskData : Decodable {
+    var userId: String?
+    //        var id: Int
+    var category_id: Int
+    var todoLabel: String?
+    var todoTitle: String
+    var todoIntroduction: String
+    var startDateTime: String
+    var reminderTime: String
+    var todo_id: Int
+    var repetition1Count: String
+    var repetition2Count: String
+    var repetition3Count: String
+    var repetition4Count: String
+    
+    var message: String
+}
+struct addTodoData : Decodable {
+    var userId: String?
+    var category_id: Int
+    var todoLabel: String?
+    var todoTitle: String
+    var todoIntroduction: String
+    var startDateTime: String
+    
+    var studyValue: Float
+    var studyUnit: Int
+    
+    var frequency: Int
+    var todoStatus: Int
+    var reminderTime: String
+    var dueDateTime: String
+    var todo_id: Int
+    var todoNote: String?
+    var message: String
+}
+struct addSportData : Decodable {
+    var userId: String?
+    var category_id: Int
+    var todoLabel: String?
+    var todoTitle: String
+    var todoIntroduction: String
+    var startDateTime: String
+    
+    var sportType: String
+    var sportValue: Float
+    var sportUnit: Int
+    
+    var frequency: Int
+    var todoStatus: Int
+    var reminderTime: String
+    var dueDateTime: String
+    var todo_id: Int
+    var todoNote: String?
+    var message: String
+}
+struct addDietData: Decodable {
+    var userId: String?
+    var category_id: Int
+    var todoLabel: String?
+    var todoTitle: String
+    var todoIntroduction: String
+    var startDateTime: String
+    
+    var dietType: String
+    var dietValue: Int
+    
+    var todoStatus: Int
+    var reminderTime: String
+    var frequency: Int
+    var dueDateTime: String
+    var todo_id: Int
+    var todoNote: String?
+    var message: String
+}
 class TodoStore: ObservableObject {
     //    @Published var todos = [Todo]()
     @Published var todos: [Todo] = []
