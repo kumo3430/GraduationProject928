@@ -1,19 +1,18 @@
 <?php
 session_start();
 
-// $input_data = file_get_contents("php://input");
-// $data = json_decode($input_data, true);
+$input_data = file_get_contents("php://input");
+$data = json_decode($input_data, true);
 
-// $uid = $_SESSION['uid'];
-// $uid = 30;
+$uid = $data['uid'];
+$_SESSION['uid'] = $uid;
 $ticker_id = array();
 $name = array();
 $deadline = array();
 $exchange = array();
 $message = "";
 
-$uid = $data['uid'];
-$_SESSION['uid'] = $uid;
+
 $servername = "localhost";
 $user = "kumo";
 $pass = "coco3430";

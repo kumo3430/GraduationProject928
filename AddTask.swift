@@ -7,41 +7,32 @@
 
 import Foundation
 
-var frequency:Int = 0
-var recurringUnit: String = ""
-var recurringOption: Int = 0
-var TodoStatus: Bool = false
-var todoStatus:Int = 0
-
-func frequency(frequency:Int) {
-    if (frequency == 1 ){
-        recurringUnit = "每日"
-    } else  if (frequency == 2 ) {
-        recurringUnit = "每週"
-    } else  if (frequency == 3 ) {
-        recurringUnit = "每月"
+// 定義一個通用的函數處理頻率轉換
+func convertFrequency(frequency: Int) -> String {
+    switch frequency {
+    case 1:
+        return "每日"
+    case 2:
+        return "每週"
+    case 3:
+        return "每月"
+    default:
+        return ""
     }
 }
-func year(dueDateTime:Date,startDate:Date) {
+
+// 定義一個通用的函數處理重複選項計算
+func calculateRecurringOption(dueDateTime: Date, startDate: Date) -> Int {
     let calendar = Calendar.current
     let components = calendar.dateComponents([.year], from: startDate, to: dueDateTime)
-    if let yearsDifference = components.year, yearsDifference >= 5 {
-        recurringOption = 2
-    } else {
-        recurringOption = 1
-    }
-}
-func Status(todoStatus:Int) {
-    if (todoStatus  == 0 ){
-        TodoStatus = false
-    } else {
-        TodoStatus = true
-    }
+    return components.year! >= 5 ? 2 : 1
 }
 
-func toChange(frequency:Int,dueDateTime:Date,startDate:Date,todoStatus:Int){
-    
+// 定義一個通用的函數處理狀態轉換
+func convertTodoStatus(todoStatus: Int) -> Bool {
+    return todoStatus != 0
 }
+
 func handleStudySpaceAdd(data: Data,store: TaskStore) {
     handleDecodableData(addTaskData.self, data: data) { userData in
         if (userData.message == "User New StudySpaced successfully") {
@@ -84,11 +75,13 @@ func handleStudyGeneralAdd(data: Data,store: TodoStore) {
             if let startDate = convertToDate(userData.startDateTime),
                let dueDateTime = convertToDate(userData.dueDateTime),
                let reminderTime = convertToTime(userData.reminderTime) {
-                
-                frequency = userData.frequency
-                todoStatus = userData.todoStatus
-                toChange(frequency: frequency,dueDateTime:dueDateTime,startDate:startDate,todoStatus: todoStatus)
-                
+
+                let frequency = userData.frequency
+                let recurringUnit = convertFrequency(frequency: frequency)
+                let recurringOption = calculateRecurringOption(dueDateTime: dueDateTime, startDate: startDate)
+                let todoStatus = userData.todoStatus
+                let isTodoStatus = convertTodoStatus(todoStatus: todoStatus)
+
                 if (userData.studyUnit == 0 ){
                     studyUnit = "小時"
                 } else  if (userData.studyUnit == 1 ) {
@@ -105,7 +98,7 @@ func handleStudyGeneralAdd(data: Data,store: TodoStore) {
                                 studyUnit: studyUnit,
                                 recurringUnit: recurringUnit,
                                 recurringOption: recurringOption,
-                                todoStatus: TodoStatus,
+                                todoStatus: isTodoStatus,
                                 dueDateTime: dueDateTime,
                                 reminderTime: reminderTime,
                                 todoNote: userData.todoNote ?? "")
@@ -129,9 +122,11 @@ func handleSportAdd(data: Data,store: SportStore) {
                let dueDateTime = convertToDate(userData.dueDateTime ),
                let reminderTime = convertToTime(userData.reminderTime ) {
                 
-                frequency = userData.frequency
-                todoStatus = userData.todoStatus
-                toChange(frequency: frequency,dueDateTime:dueDateTime,startDate:startDate,todoStatus: todoStatus)
+                let frequency = userData.frequency
+                let recurringUnit = convertFrequency(frequency: frequency)
+                let recurringOption = calculateRecurringOption(dueDateTime: dueDateTime, startDate: startDate)
+                let todoStatus = userData.todoStatus
+                let isTodoStatus = convertTodoStatus(todoStatus: todoStatus)
                 
                 if (userData.sportUnit  == 0 ){
                     sportUnit = "小時"
@@ -152,7 +147,7 @@ func handleSportAdd(data: Data,store: SportStore) {
                                   sportUnits: sportUnit,
                                   recurringUnit: recurringUnit,
                                   recurringOption: recurringOption,
-                                  todoStatus: TodoStatus,
+                                  todoStatus: isTodoStatus,
                                   dueDateTime: dueDateTime,
                                   reminderTime: reminderTime,
                                   todoNote: userData.todoNote ?? "" )
@@ -173,9 +168,12 @@ func handleDietAdd(data: Data,store: DietStore) {
                let dueDateTime = convertToDate(userData.dueDateTime ),
                let reminderTime = convertToTime(userData.reminderTime ) {
                 
-                frequency = userData.frequency
-                todoStatus = userData.todoStatus
-                toChange(frequency: frequency,dueDateTime:dueDateTime,startDate:startDate,todoStatus: todoStatus)
+                let frequency = userData.frequency
+                let recurringUnit = convertFrequency(frequency: frequency)
+                let recurringOption = calculateRecurringOption(dueDateTime: dueDateTime, startDate: startDate)
+                let todoStatus = userData.todoStatus
+                let isTodoStatus = convertTodoStatus(todoStatus: todoStatus)
+                
                 let taskId = Int(userData.todo_id )
                 let diet = Diet(id: taskId,
                                 label: userData.todoLabel ?? "",
@@ -186,7 +184,7 @@ func handleDietAdd(data: Data,store: DietStore) {
                                 dietsValue: userData.dietValue,
                                 recurringUnit: recurringUnit,
                                 recurringOption: recurringOption,
-                                todoStatus: TodoStatus,
+                                todoStatus: isTodoStatus,
                                 dueDateTime: dueDateTime,
                                 reminderTime: reminderTime,
                                 todoNote: userData.todoNote ?? "" )

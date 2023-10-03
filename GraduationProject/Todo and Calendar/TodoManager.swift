@@ -39,9 +39,9 @@ struct TaskData: Decodable {
 }
 
 struct TodoData: Decodable {
-    var todo_id: [String]
-//    var todo_id: [Int]
     var userId: String?
+    var todo_id: [String]
+
     var category_id: Int
     var todoTitle: [String]
     var todoIntroduction: [String]
@@ -60,50 +60,45 @@ struct TodoData: Decodable {
 }
 
 struct SportData: Decodable {
-    var todo_id: [String]
-//    var todo_id: [Int]
     var userId: String?
     var category_id: Int
+    var todo_id: [String]
     var todoTitle: [String]
     var todoIntroduction: [String]
     var todoLabel: [String?]
     var startDateTime: [String]
-    
+    var dueDateTime: [String]
+    var reminderTime: [String]
+    var frequency: [String]
     var sportType: [String]
     var sportValue: [String]
     var sportUnit: [String]
-    
-    var frequency: [String]
-    var reminderTime: [String]
     var todoStatus: [String?]
-    var dueDateTime: [String]
     var todoNote: [String]
     var message: String
 }
 
 struct DietData: Decodable {
-    var todo_id: [String]
     var userId: String?
     var category_id: Int
+    var todo_id: [String]
     var todoTitle: [String]
     var todoIntroduction: [String]
     var todoLabel: [String?]
     var startDateTime: [String]
-    
+    var dueDateTime: [String]
+    var reminderTime: [String]
+    var frequency: [String]
     var dietsType: [String]
     var dietsValue: [String]
-    
-    var frequency: [String]
-    var reminderTime: [String]
     var todoStatus: [String?]
-    var dueDateTime: [String]
     var todoNote: [String]
     var message: String
 }
 
 struct TickerData: Decodable {
+    var userId: String?
     var ticker_id: [String]
-    var userId: Int?
     var name: [String]
     var deadline: [String]
     var exchange: [String?]
