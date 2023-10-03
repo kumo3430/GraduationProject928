@@ -16,7 +16,7 @@ struct verifyRegister: View {
     @Binding var mail :String
     @Binding var pass :String
     @Binding var isSendingMail :Bool
-    
+    @State private var isButtonEnabled = false // 控制按钮是否可用的状态变量
     @State var set_date: Date = Date()
     @State var Set_date: String = ""
     @State var Verify = ""
@@ -28,93 +28,101 @@ struct verifyRegister: View {
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     var body: some View {
-            ZStack {
-                // Background Gradient
-                LinearGradient(gradient: .init(colors: [Color("Color"),Color("Color1"),Color("Color2")]), startPoint: .top, endPoint: .bottom).edgesIgnoringSafeArea(.all)
+        ZStack {
+            // Background Gradient
+            LinearGradient(gradient: .init(colors: [Color("Color"),Color("Color1"),Color("Color2")]), startPoint: .top, endPoint: .bottom).edgesIgnoringSafeArea(.all)
+            
+            VStack(spacing: 25) {
+                Image("logo")
+                    .resizable()
+                    .frame(width: 200, height: 180)
                 
-                VStack(spacing: 25) {
-                    Image("logo")
-                        .resizable()
-                        .frame(width: 200, height: 180)
-                    
-                    Text("驗證帳號")
-                        .font(.largeTitle)
-                        .bold()
-                        .foregroundColor(.white)
-                        .padding(.bottom, 30)
-                    
-                    // Remaining Time
-                    Text("剩餘時間：\(timeRemaining / 60)分 \(timeRemaining % 60)秒")
-                        .font(.subheadline)
-                        .padding(.all, 15)
-                        .background(Color.white.opacity(0.5))
-                        .cornerRadius(15)
-                    
-                    // Verification Code Input Field
-                    VStack(alignment: .leading) {
-                        Text("您的驗證碼：")
-                            .font(.caption)
-                            .foregroundColor(.white)
-                        TextField("驗證碼", text: $Verify)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .keyboardType(.numberPad)
-                            .padding(.horizontal, 10)
-                    }
-                    .padding(.horizontal, 30)
-                    
-                    // Verification Button
-                    Button {
-                        print("verify - 進行驗證中")
-                        doVerify()
-                    } label: {
-                        Text("進行驗證")
-                            .font(.headline)
-                            .padding(.horizontal, 80)
-                            .padding(.vertical, 15)
-                            .background(Color.blue.opacity(0.8))
-                            .foregroundColor(.white)
-                            .cornerRadius(15)
-                            .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
-                    }
-                    .padding(.top, 15)
-                    
-                    // Resend Verification Code Button
-                    Button {
-                        print("verify - 再次發送驗證碼")
-                        timeRemaining = 40
-                        Send(verify: verify,mail: mail) { v,m in
-                            verify = "0"
-                            if (m == "Success") {
-                                verificationCode = v
-                                print("loginVerify - \(m)")
-                            } else {
-                                print("regiest - \(m)")
-                            }
+                Text("驗證帳號")
+                    .font(.largeTitle)
+                    .bold()
+                    .foregroundColor(.white)
+                    .padding(.bottom, 30)
+                
+                // Remaining Time
+                Text("剩餘時間：\(timeRemaining / 60)分 \(timeRemaining % 60)秒")
+                    .onReceive(timer) { _ in
+                        if timeRemaining > 0 {
+                            timeRemaining -= 1
                         }
-                    } label: {
-                        Text("重新發送驗證碼")
-                            .font(.callout)
-                            .underline()
-                            .foregroundColor(Color.blue)
                     }
-                    .padding(.top, 10)
-                    
-                    // Error Message
-                    Text(messenge)
-                        .foregroundColor(.red)
+                
+                    .font(.subheadline)
+                    .padding(.all, 15)
+                    .background(Color.white.opacity(0.5))
+                    .cornerRadius(15)
+                
+                // Verification Code Input Field
+                VStack(alignment: .leading) {
+                    Text("您的驗證碼：")
                         .font(.caption)
-                        .padding(.top, 10)
-                    
-                    Spacer()
+                        .foregroundColor(.white)
+                    TextField("驗證碼", text: $Verify)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .keyboardType(.numberPad)
+                        .padding(.horizontal, 10)
                 }
-                .padding(.top, 50)
+                .padding(.horizontal, 30)
+                
+                // Verification Button
+                Button {
+                    print("verify - 進行驗證中")
+                    doVerify()
+                } label: {
+                    Text("進行驗證")
+                        .font(.headline)
+                        .padding(.horizontal, 80)
+                        .padding(.vertical, 15)
+                        .background(Color.blue.opacity(0.8))
+                        .foregroundColor(.white)
+                        .cornerRadius(15)
+                        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
+                }
+                .padding(.top, 15)
+                
+                // Resend Verification Code Button
+                Button {
+                    print("verify - 再次發送驗證碼")
+                    timeRemaining = 40
+                    Send(verify: verify,mail: mail) { v,m in
+                        verify = "0"
+                        if (m == "Success") {
+                            verificationCode = v
+                            print("loginVerify - \(m)")
+                        } else {
+                            print("regiest - \(m)")
+                        }
+                    }
+                } label: {
+                    Text("重新發送驗證碼")
+                        .font(.callout)
+                        .underline()
+                        .foregroundColor(Color.blue)
+                }
+                .disabled(timeRemaining != 0)
+                .opacity(timeRemaining != 0 ? 0.5 : 1.0) // 设置按钮的不透明度
+                .padding(.top, 10)
+                
+                // Error Message
+                Text(messenge)
+                    .foregroundColor(.red)
+                    .font(.caption)
+                    .padding(.top, 10)
+                
+                Spacer()
             }
-            .onDisappear() {
-                    isSendingMail = false
-            }
+            .padding(.top, 50)
         }
-
-
+        .onDisappear() {
+            isSendingMail = false
+        }
+    }
+    
+    
     
     func doVerify() {
         // 如果上個畫面的驗證碼還存在的話使用上個畫面的驗證碼去判斷使用者是否輸入錯誤
@@ -141,21 +149,21 @@ struct verifyRegister: View {
             }
         }
     }
- 
+    
     func register(completion: @escaping (String) -> Void) {
         Set_date = formattedDate(set_date)
         let body = ["email": mail, "password": pass, "create_at": Set_date]
         print("body:\(body)")
         phpUrl(php: "register" , type: "account", body: body, store: nil) { message in
-              completion(message)
-          }
+            completion(message)
+        }
     }
 }
 
 struct verifyRegister_Previews: PreviewProvider {
     static var previews: some View {
         @State var verify = "00000000"
-//        @State var userName: String = "userName"
+        //        @State var userName: String = "userName"
         @State var mail: String = "Email"
         @State var pass: String = "password"
         @State var isSendingMail = false
