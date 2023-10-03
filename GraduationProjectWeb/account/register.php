@@ -62,7 +62,7 @@ if ($emailExist) {
 
 
 $userData = array(
-    'userId' => $uid,
+    'id' => strval($uid),
     'userName' => $email,
     'email' => $email,
     'create_at' => $create_at,

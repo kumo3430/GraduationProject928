@@ -21,10 +21,8 @@ class URLSessionSingleton {
 }
 
 func phpUrl(php: String,type: String,body: [String:Any],store: (any ObservableObject)? = nil, completion: @escaping (String) -> Void) {
-    // 在這裡使用傳入的參數
-//    let server = "http://127.0.0.1:8888"
+
     var url: URL?
-    
     url = URL(string: "\(server)/\(type)/\(php).php")
     print("新的url\(String(describing: url))")
     var request = URLRequest(url: url!)
