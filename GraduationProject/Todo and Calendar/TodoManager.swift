@@ -16,7 +16,13 @@ enum Action: Int, Identifiable {
     case routine
     case diet
 }
-
+struct UserData: Decodable {
+    var id: String
+    var userName: String
+    var email: String
+    var create_at: String
+    var message: String
+}
 struct TaskData: Decodable {
     var todo_id: [String]
     var userId: String?

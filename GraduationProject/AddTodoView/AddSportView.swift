@@ -38,9 +38,7 @@ struct AddSportView: View {
         "曲棍球", "壁球", "羽毛球", "舉重", "壁球", "劍道",
         "拳擊", "柔道", "跆拳道", "柔術", "舞劍", "團體健身課程"
     ]
-    
-    @State private var isRecurring = false
-    @State private var selectedFrequency = 1
+
     @State private var recurringOption = 1
     @State private var recurringEndDate = Date()
     
@@ -48,26 +46,6 @@ struct AddSportView: View {
     @State var isError = false
     let timeUnits = ["每日", "每週", "每月"]
     let sportUnits = ["小時", "次", "卡路里"]
-    
-    struct TodoData : Decodable {
-        var userId: String?
-        var category_id: Int
-        var label: String?
-        var todoTitle: String
-        var todoIntroduction: String
-        var startDateTime: String
-        
-        var sportType: String
-        var sportValue: Float
-        var sportUnit: Int
-        
-        var todoStatus: Int
-        var reminderTime: String
-        var dueDateTime: String
-        var todo_id: Int
-        var todoNote: String?
-        var message: String
-    }
     
     var body: some View {
         NavigationView {
@@ -215,12 +193,12 @@ struct AddSportView: View {
                 Text("返回")
                     .foregroundColor(.blue)
             },
-                                trailing: Button("完成") {addSport {}}
+                                trailing: Button("完成") {addSport {_ in }}
                 .disabled(todoTitle.isEmpty && todoIntroduction.isEmpty))
         }
     }
     
-    func addSport(completion: @escaping () -> Void) {
+    func addSport(completion: @escaping (String) -> Void) {
         if sportUnit == "小時" {
             SportUnit = 0
         } else if sportUnit == "次" {
@@ -256,10 +234,10 @@ struct AddSportView: View {
         }
         print("body:\(body)")
         print("selectedTimeUnit:\(selectedTimeUnit)")
-        phpUrl(php: "addSport" ,type: "addTask",body:body,store: sportStore)
-        presentationMode.wrappedValue.dismiss()
-        
-        completion()
+        phpUrl(php: "addSport" ,type: "addTask",body:body,store: sportStore) { message in
+            presentationMode.wrappedValue.dismiss()
+            completion(message)
+        }
     }
 }
 struct AddSportView_Previews: PreviewProvider {

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		139DEC7B2ACBED4A005C5F5D /* account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 139DEC7A2ACBED4A005C5F5D /* account.swift */; };
 		13A8D54C2AC54EE1005F205C /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 13A8D54B2AC54EE1005F205C /* FirebaseAnalytics */; };
 		13A8D54E2AC54EE1005F205C /* FirebaseAppCheck in Frameworks */ = {isa = PBXBuildFile; productRef = 13A8D54D2AC54EE1005F205C /* FirebaseAppCheck */; };
 		13A8D5502AC54EE1005F205C /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 13A8D54F2AC54EE1005F205C /* FirebaseAuth */; };
@@ -103,6 +104,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		139DEC7A2ACBED4A005C5F5D /* account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = account.swift; sourceTree = "<group>"; };
 		13AD35D32A70BB880003FF1B /* TodoListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoListView.swift; sourceTree = "<group>"; };
 		13AD35D52A70BC0D0003FF1B /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 		13D6E1E52A710D480049E5A5 /* verifyRegister.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = verifyRegister.swift; sourceTree = "<group>"; };
@@ -214,7 +216,6 @@
 		3B37A8C42A188BA5009BB504 = {
 			isa = PBXGroup;
 			children = (
-				13D8DA8F2AC6CD2F00753C8F /* AddTask.swift */,
 				3B37A8CF2A188BA5009BB504 /* GraduationProject */,
 				3B37A8E12A188BA6009BB504 /* GraduationProjectTests */,
 				3B37A8EB2A188BA6009BB504 /* GraduationProjectUITests */,
@@ -366,6 +367,8 @@
 				13AD35D52A70BC0D0003FF1B /* CalendarView.swift */,
 				3BAE3CB02AB9F9740079464F /* WeeklyReportView_Previews.swift */,
 				13D8DA8B2AC5CF4400753C8F /* PHPUrl.swift */,
+				13D8DA8F2AC6CD2F00753C8F /* AddTask.swift */,
+				139DEC7A2ACBED4A005C5F5D /* account.swift */,
 				13D8DA8D2AC5DCBF00753C8F /* List.swift */,
 			);
 			path = "Todo and Calendar";
@@ -626,6 +629,7 @@
 				3B9655F12AAD82390064CE63 /* TabBarView.swift in Sources */,
 				3BBBF4C62A847B5E0077B3E6 /* TodoManager.swift in Sources */,
 				3BDA96F52AA86834009FA88F /* DietDetailView.swift in Sources */,
+				139DEC7B2ACBED4A005C5F5D /* account.swift in Sources */,
 				3BBBF4C42A847B4A0077B3E6 /* TodoModels.swift in Sources */,
 				13AD35D42A70BB880003FF1B /* TodoListView.swift in Sources */,
 				3B37A8D12A188BA6009BB504 /* GraduationProjectApp.swift in Sources */,

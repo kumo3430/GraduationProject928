@@ -20,36 +20,14 @@ struct AddStudyView: View {
     @State var reminderTime: Date = Date()
     @State var todoNote: String = ""
     @State private var studyValue: Float = 0.0
-    @State private var selectedStudyUnit: String = "次"
-    @State private var isRecurring = false
-    @State private var selectedFrequency = 1
     @State private var recurringOption = 1  // 1: 持續重複, 2: 選擇結束日期
     @State private var recurringEndDate = Date()
     @State private var selectedTimeUnit: String = "每日"
-    
     @State private var studyUnit: String = "次"
     let studyUnits = ["次", "小時"]
     let timeUnits = ["每日", "每週", "每月"]
     @State var messenge = ""
     @State var isError = false
-    struct TodoData : Decodable {
-        var userId: String?
-        var category_id: Int
-        var label: String?
-        var todoTitle: String
-        var todoIntroduction: String
-        var startDateTime: String
-        
-        var studyValue: Float
-        var studyUnit: Int
-        
-        var todoStatus: Int
-        var reminderTime: String
-        var dueDateTime: String
-        var todo_id: Int
-        var todoNote: String?
-        var message: String
-    }
     
     var body: some View {
         NavigationView {
@@ -162,13 +140,13 @@ struct AddStudyView: View {
                 Text("返回")
                     .foregroundColor(.blue)
             },
-                                trailing: Button("完成") { StudyGeneralAdd{}}
+                                trailing: Button("完成") { StudyGeneralAdd{_ in }}
                 .disabled(todoTitle.isEmpty && todoIntroduction.isEmpty)
             )
         }
     }
     
-    func StudyGeneralAdd(completion: @escaping () -> Void) {
+    func StudyGeneralAdd(completion: @escaping (String) -> Void) {
         var body: [String: Any] = [
             "label": label,
             "todoTitle": todoTitle,
@@ -198,11 +176,10 @@ struct AddStudyView: View {
             body["dueDateTime"] = formattedDate(recurringEndDate)
         }
 
-        phpUrl(php: "addStudyGeneral" ,type: "addTask",body:body,store: todoStore)
-        presentationMode.wrappedValue.dismiss()
-        
-        completion()
-        
+        phpUrl(php: "addStudyGeneral" ,type: "addTask",body:body,store: todoStore) { message in
+            presentationMode.wrappedValue.dismiss()
+            completion(message)
+        }
     }
 }
 

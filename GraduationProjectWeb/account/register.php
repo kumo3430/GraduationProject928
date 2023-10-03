@@ -38,7 +38,7 @@ if ($emailExist) {
     $message = "name is registered";
 } else {
     if ($email != "" && $password != "") {
-        $sql = "INSERT INTO `User` (`email`, `password`, `create_at`) VALUES ('$email', '$password','$create_at')";
+        $sql = "INSERT INTO `User` (`userName`,`email`, `password`, `create_at`) VALUES ('$email','$email', '$password','$create_at')";
         if ($conn->query($sql) === TRUE) {
             // 註冊成功，回傳 JSON 格式的訊息
             $message = "User registered successfully";
@@ -63,8 +63,8 @@ if ($emailExist) {
 
 $userData = array(
     'userId' => $uid,
+    'userName' => $email,
     'email' => $email,
-    'password' => $password,
     'create_at' => $create_at,
     'message' => $message
 );

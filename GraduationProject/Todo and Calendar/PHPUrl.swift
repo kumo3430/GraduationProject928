@@ -20,7 +20,7 @@ class URLSessionSingleton {
     }
 }
 
-func phpUrl(php: String,type: String,body: [String:Any],store: any ObservableObject) {
+func phpUrl(php: String,type: String,body: [String:Any],store: (any ObservableObject)? = nil, completion: @escaping (String) -> Void) {
     // 在這裡使用傳入的參數
 //    let server = "http://127.0.0.1:8888"
     var url: URL?
@@ -40,7 +40,10 @@ func phpUrl(php: String,type: String,body: [String:Any],store: any ObservableObj
             print("StudySpaceList - HTTP error: \(httpResponse.statusCode)")
         }else if let data = data {
             //                completion(.success(data))
-            handleDataForPHP(php: php, data: data,store: store)
+//            handleDataForPHP(php: php, data: data,store: store, completion: completion)
+            handleDataForPHP(php: php, data: data, store: store) { message in
+                           completion(message) // 调用回调闭包传递 message
+                       }
         }
     }.resume()
 }
@@ -73,30 +76,34 @@ func formattedTime(_ date: Date) -> String {
     return formatter.string(from: date)
 }
 
-func handleDataForPHP(php: String, data: Data,store: any ObservableObject) {
+func handleDataForPHP(php: String, data: Data,store: (any ObservableObject)? = nil, completion: @escaping (String) -> Void) {
     switch php {
+    case "login":
+    handleLogin(data: data, completion: completion)
+    case "register":
+        handleRegister(data: data, completion: completion)
     case "StudySpaceList":
-    handleStudySpaceList(data: data,store: store as! TaskStore)
+    handleStudySpaceList(data: data,store: store as! TaskStore, completion: completion)
     case "addStudySpaced":
-        handleStudySpaceAdd(data: data,store: store as! TaskStore)
+        handleStudySpaceAdd(data: data,store: store as! TaskStore, completion: completion)
         
     case "StudyGeneralList":
-        handleStudyGeneralList(data: data,store: store as! TodoStore)
+        handleStudyGeneralList(data: data,store: store as! TodoStore, completion: completion)
     case "addStudyGeneral":
-        handleStudyGeneralAdd(data: data,store: store as! TodoStore)
+        handleStudyGeneralAdd(data: data,store: store as! TodoStore, completion: completion)
         
     case "SportList":
-        handleSportList(data: data,store: store as! SportStore)
+        handleSportList(data: data,store: store as! SportStore, completion: completion)
     case "addSport":
-        handleSportAdd(data: data,store: store as! SportStore)
+        handleSportAdd(data: data,store: store as! SportStore, completion: completion)
         
     case "DietList":
-        handleDietList(data: data,store: store as! DietStore)
+        handleDietList(data: data,store: store as! DietStore, completion: completion)
     case "addDiet":
-        handleDietAdd(data: data,store: store as! DietStore)
+        handleDietAdd(data: data,store: store as! DietStore, completion: completion)
         
     case "tickersList":
-        handletickersList(data: data,store: store as! TickerStore)
+        handletickersList(data: data,store: store as! TickerStore, completion: completion)
     default:
         break
     }

@@ -39,7 +39,9 @@ if (mysqli_num_rows($result) > 0) {
             $uid = $row['id'];
             $userData = array(
                 'id' => $uid,
+                'userName' => $row["userName"],
                 'email' => $row["email"],
+                'create_at' => $row["create_at"],
                 'message' => 'User login successfully'
             );
             $jsonData = json_encode($userData);

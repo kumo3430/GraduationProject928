@@ -33,7 +33,7 @@ func convertTodoStatus(todoStatus: Int) -> Bool {
     return todoStatus != 0
 }
 
-func handleStudySpaceAdd(data: Data,store: TaskStore) {
+func handleStudySpaceAdd(data: Data,store: TaskStore, completion: @escaping (String) -> Void) {
     handleDecodableData(addTaskData.self, data: data) { userData in
         if (userData.message == "User New StudySpaced successfully") {
             let ReviewChecked0 = false
@@ -60,6 +60,7 @@ func handleStudySpaceAdd(data: Data,store: TaskStore) {
                 DispatchQueue.main.async {
                     store.tasks.append(task)
                 }
+                completion("Success")
             } else {
                 print("StudySpaceList - 日期或時間轉換失敗")
             }
@@ -68,7 +69,7 @@ func handleStudySpaceAdd(data: Data,store: TaskStore) {
 }
 
 
-func handleStudyGeneralAdd(data: Data,store: TodoStore) {
+func handleStudyGeneralAdd(data: Data,store: TodoStore, completion: @escaping (String) -> Void) {
     handleDecodableData(addTodoData.self, data: data) { userData in
         if (userData.message == "User New StudyGeneral successfullyUser New first RecurringInstance successfully") {
             var studyUnit: String = ""
@@ -104,8 +105,8 @@ func handleStudyGeneralAdd(data: Data,store: TodoStore) {
                                 todoNote: userData.todoNote ?? "")
                 DispatchQueue.main.async {
                     store.todos.append(todo)
-                    
                 }
+                completion("Success")
             } else {
                 print("StudyGeneralList - 日期或時間轉換失敗")
             }
@@ -114,7 +115,7 @@ func handleStudyGeneralAdd(data: Data,store: TodoStore) {
     }
 }
 
-func handleSportAdd(data: Data,store: SportStore) {
+func handleSportAdd(data: Data,store: SportStore, completion: @escaping (String) -> Void) {
     handleDecodableData(addSportData.self, data: data) { userData in
         if (userData.message == "User New Sport successfullyUser New first RecurringInstance successfully") {
             var sportUnit: String = ""
@@ -154,13 +155,14 @@ func handleSportAdd(data: Data,store: SportStore) {
                 DispatchQueue.main.async {
                     store.sports.append(sport)
                 }
+                completion("Success")
             } else {
                 print("SportList - 日期或時間轉換失敗")
             }
         }
     }
 }
-func handleDietAdd(data: Data,store: DietStore) {
+func handleDietAdd(data: Data,store: DietStore, completion: @escaping (String) -> Void) {
     handleDecodableData(addDietData.self, data: data) { userData in
         if (userData.message == "User New diet successfullyUser New first RecurringInstance successfully") {
             
@@ -191,6 +193,7 @@ func handleDietAdd(data: Data,store: DietStore) {
                 DispatchQueue.main.async {
                     store.diets.append(diet)
                 }
+                completion("Success")
             } else {
                 print("DietList - 日期或時間轉換失敗")
             }

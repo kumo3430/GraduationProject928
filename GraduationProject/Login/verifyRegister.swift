@@ -13,7 +13,6 @@ struct verifyRegister: View {
     var aViewInstance = ContentView()
     
     @Binding var verify :Int
-//    @Binding var userName :String
     @Binding var mail :String
     @Binding var pass :String
     
@@ -146,12 +145,7 @@ struct verifyRegister: View {
         }
     }
     
-    //    private func random() async {
-    //        verify = Int.random(in: 1..<99999999)
-    //        print("隨機變數為：\(verify)")
-    //    }
-    
-//    private func random() async -> Int {
+
     private func random()  -> Int {
         // 如果重新寄送驗證碼的話，上個畫面的驗證碼紀錄會為0
         verify = 0
@@ -160,16 +154,13 @@ struct verifyRegister: View {
         return self.verificationCode
     }
     
-    //    func sendMail() async {
-//    func sendMail(_ verificationCode: Int) async {
     func sendMail(_ verificationCode: Int)  {
         let smtp = SMTP(
             hostname: "smtp.gmail.com",     // SMTP server address
             email: "3430yun@gmail.com",        // username to login
             password: "knhipliavnpqxwty"            // password to login
         )
-        
-        //        let megaman = Mail.User(name: "coco", email: "3430coco@gmail.com")
+
         print("verify - aViewInstance.email:\(mail)")
         let megaman = Mail.User(name: "我習慣了使用者", email: mail)
         let drLight = Mail.User(name: "Yun", email: "3430yun@gmail.com")
@@ -202,6 +193,13 @@ struct verifyRegister: View {
         let dateString = formatter.string(from: date)
         print(dateString)
         return dateString
+    }
+    func register(completion: @escaping (String) -> Void) {
+        let body = ["email": mail, "password": pass, "create_at": Set_date]
+        phpUrl(php: "register" , type: "account", body: body, store: nil) { message in
+              // 在此处调用回调闭包，将 messenge 值传递给调用者
+              completion(message)
+          }
     }
     
     func register() {

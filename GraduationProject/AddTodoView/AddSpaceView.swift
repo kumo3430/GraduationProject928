@@ -24,22 +24,6 @@ struct AddSpaceView: View {
     @State var messenge = ""
     @State var isError = false
     
-    struct UserData : Decodable {
-        var userId: String?
-        var category_id: Int
-        var label: String?
-        var todoTitle: String
-        var todoIntroduction: String
-        var startDateTime: String
-        var reminderTime: String
-        var todo_id: Int
-        var repetition1Count: String
-        var repetition2Count: String
-        var repetition3Count: String
-        var repetition4Count: String
-        var message: String
-    }
-    
     var nextReviewDates: [Date] {
         let intervals = [1, 3, 7, 14]
         return intervals.map { Calendar.current.date(byAdding: .day, value: $0, to: nextReviewDate)! }
@@ -53,18 +37,18 @@ struct AddSpaceView: View {
                     TextField("內容", text: $description)
                 }
                 Section {
-                        HStack {
-                            Image(systemName: "tag.fill")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit) // 保持圖示的原始寬高比
-                                .foregroundColor(.white) // 圖示顏色設為白色
-                                .padding(6) // 確保有足夠的空間顯示外框和背景色
-                                .background(Color.yellow) // 設定背景顏色
-                                .clipShape(RoundedRectangle(cornerRadius: 8)) // 設定方形的邊框，並稍微圓角
-                                .frame(width: 30, height: 30) // 這裡的尺寸是示例，您可以根據需要調整
-                            TextField("標籤", text: $label)
-                        }
+                    HStack {
+                        Image(systemName: "tag.fill")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit) // 保持圖示的原始寬高比
+                            .foregroundColor(.white) // 圖示顏色設為白色
+                            .padding(6) // 確保有足夠的空間顯示外框和背景色
+                            .background(Color.yellow) // 設定背景顏色
+                            .clipShape(RoundedRectangle(cornerRadius: 8)) // 設定方形的邊框，並稍微圓角
+                            .frame(width: 30, height: 30) // 這裡的尺寸是示例，您可以根據需要調整
+                        TextField("標籤", text: $label)
                     }
+                }
                 Section {
                     HStack {
                         Image(systemName: "calendar")
@@ -89,7 +73,7 @@ struct AddSpaceView: View {
                         DatePicker("提醒時間", selection: $nextReviewTime, displayedComponents: [.hourAndMinute])
                     }
                 }
-
+                
                 Section {
                     ForEach(0..<4) { index in
                         HStack {
@@ -112,7 +96,7 @@ struct AddSpaceView: View {
                 Text("返回")
                     .foregroundColor(.blue)
             },
-                                trailing: Button("完成") { addStudySpaced{} }
+                                trailing: Button("完成") { addStudySpaced{_ in } }
                                 // 如果 title 為空，按鈕會被禁用，即無法點擊。
                 .disabled(title.isEmpty && description.isEmpty)
                 .onDisappear() {
@@ -130,7 +114,7 @@ struct AddSpaceView: View {
         return intervals[index]
     }
     
-    func addStudySpaced(completion: @escaping () -> Void) {
+    func addStudySpaced(completion: @escaping (String) -> Void) {
         var body: [String: Any] = [
             "title": title,
             "description": description,
@@ -139,11 +123,11 @@ struct AddSpaceView: View {
             "First": formattedDate(nextReviewDates[0]),"third": formattedDate(nextReviewDates[1]),
             "seventh": formattedDate(nextReviewDates[2]),"fourteenth": formattedDate(nextReviewDates[3]) ]
         
-        phpUrl(php: "addStudySpaced" ,type: "addTask",body:body,store: taskStore)
-        presentationMode.wrappedValue.dismiss()
-    
-        completion()
-        
+        phpUrl(php: "addStudySpaced" ,type: "addTask",body:body,store: taskStore){ message in
+            // 在此处调用回调闭包，将 messenge 值传递给调用者
+            presentationMode.wrappedValue.dismiss()
+            completion(message)
+        }
     }
 }
 
