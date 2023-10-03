@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		139DEC7B2ACBED4A005C5F5D /* account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 139DEC7A2ACBED4A005C5F5D /* account.swift */; };
+		139DECCC2ACC3D9400E6E985 /* ReviseTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 139DECCB2ACC3D9400E6E985 /* ReviseTask.swift */; };
 		13A8D54C2AC54EE1005F205C /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 13A8D54B2AC54EE1005F205C /* FirebaseAnalytics */; };
 		13A8D54E2AC54EE1005F205C /* FirebaseAppCheck in Frameworks */ = {isa = PBXBuildFile; productRef = 13A8D54D2AC54EE1005F205C /* FirebaseAppCheck */; };
 		13A8D5502AC54EE1005F205C /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 13A8D54F2AC54EE1005F205C /* FirebaseAuth */; };
@@ -105,6 +106,7 @@
 
 /* Begin PBXFileReference section */
 		139DEC7A2ACBED4A005C5F5D /* account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = account.swift; sourceTree = "<group>"; };
+		139DECCB2ACC3D9400E6E985 /* ReviseTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviseTask.swift; sourceTree = "<group>"; };
 		13AD35D32A70BB880003FF1B /* TodoListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoListView.swift; sourceTree = "<group>"; };
 		13AD35D52A70BC0D0003FF1B /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 		13D6E1E52A710D480049E5A5 /* verifyRegister.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = verifyRegister.swift; sourceTree = "<group>"; };
@@ -367,6 +369,7 @@
 				13AD35D52A70BC0D0003FF1B /* CalendarView.swift */,
 				3BAE3CB02AB9F9740079464F /* WeeklyReportView_Previews.swift */,
 				13D8DA8B2AC5CF4400753C8F /* PHPUrl.swift */,
+				139DECCB2ACC3D9400E6E985 /* ReviseTask.swift */,
 				13D8DA8F2AC6CD2F00753C8F /* AddTask.swift */,
 				139DEC7A2ACBED4A005C5F5D /* account.swift */,
 				13D8DA8D2AC5DCBF00753C8F /* List.swift */,
@@ -614,6 +617,7 @@
 				3BA700592A1F3B870096B2FF /* FirebaseManager.swift in Sources */,
 				3B8CBB1B2AB2D622004E5A26 /* TaskCompletionViewModel.swift in Sources */,
 				3B0A5DB22A81D6B700283B40 /* AddSportView.swift in Sources */,
+				139DECCC2ACC3D9400E6E985 /* ReviseTask.swift in Sources */,
 				3B05FB172A949EFB00540463 /* AddDietView.swift in Sources */,
 				3B9497932A9C3F7E00BD885F /* TaskCompletionIndicatorCardView.swift in Sources */,
 				3B8CBB1D2AB2D6B5004E5A26 /* TimeExtensions.swift in Sources */,

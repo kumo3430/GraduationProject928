@@ -80,25 +80,34 @@ func handleDataForPHP(php: String, data: Data,store: (any ObservableObject)? = n
     handleLogin(data: data, completion: completion)
     case "register":
         handleRegister(data: data, completion: completion)
+        
     case "StudySpaceList":
     handleStudySpaceList(data: data,store: store as! TaskStore, completion: completion)
     case "addStudySpaced":
         handleStudySpaceAdd(data: data,store: store as! TaskStore, completion: completion)
+    case "reviseSpace":
+        handleStudySpaceRevise(data: data, completion: completion)
         
     case "StudyGeneralList":
         handleStudyGeneralList(data: data,store: store as! TodoStore, completion: completion)
     case "addStudyGeneral":
         handleStudyGeneralAdd(data: data,store: store as! TodoStore, completion: completion)
+    case "reviseStudy":
+        handleStudyGeneralRevise(data: data, completion: completion)
         
     case "SportList":
         handleSportList(data: data,store: store as! SportStore, completion: completion)
     case "addSport":
         handleSportAdd(data: data,store: store as! SportStore, completion: completion)
+//    case "reviseSport":
+//        handleSportRevise(data: data, completion: completion)
         
     case "DietList":
         handleDietList(data: data,store: store as! DietStore, completion: completion)
     case "addDiet":
         handleDietAdd(data: data,store: store as! DietStore, completion: completion)
+//    case "reviseDiet":
+//        handleDietRevise(data: data, completion: completion)
         
     case "tickersList":
         handletickersList(data: data,store: store as! TickerStore, completion: completion)
@@ -111,8 +120,10 @@ func handleDecodableData<T: Decodable>(_ type: T.Type, data: Data, handler: (T) 
     do {
         let decoder = JSONDecoder()
         let userData = try decoder.decode(type, from: data)
+        print("============== \(type) ============== \(type) ==============")
         print("\(type): \(String(data: data, encoding: .utf8)!)")
         handler(userData)
+        print("============== \(type) ============== \(type) ==============")
     } catch {
         print("解碼失敗：\(error)")
     }

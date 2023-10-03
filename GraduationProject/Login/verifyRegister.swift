@@ -122,8 +122,6 @@ struct verifyRegister: View {
         }
     }
     
-    
-    
     func doVerify() {
         // 如果上個畫面的驗證碼還存在的話使用上個畫面的驗證碼去判斷使用者是否輸入錯誤
         if (verify != "0"){
@@ -163,7 +161,6 @@ struct verifyRegister: View {
 struct verifyRegister_Previews: PreviewProvider {
     static var previews: some View {
         @State var verify = "00000000"
-        //        @State var userName: String = "userName"
         @State var mail: String = "Email"
         @State var pass: String = "password"
         @State var isSendingMail = false

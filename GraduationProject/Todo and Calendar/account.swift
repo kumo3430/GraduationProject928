@@ -14,6 +14,8 @@ enum Message: String {
     case notYetFilled = "not yet filled"
     case emailRegistered = "email is registered"
     case registrationFailed = "註冊失敗請重新註冊"
+    case revise = "User revise Study successfully"
+    case reviseSpace = "User revise Space successfully"
 }
 
 struct MailConfig {
@@ -81,15 +83,13 @@ func handleRegister(data: Data, completion: @escaping (String) -> Void) {
 func handleUserData(data: Data, messageType: Message, completion: @escaping (String) -> Void) {
     handleDecodableData(UserData.self, data: data) { userData in
         if userData.message == messageType.rawValue {
-            print("============== loginView ==============")
+            print("============== \(messageType.rawValue) ==============")
             print("\(messageType.rawValue) - userDate:\(userData)")
-            print("使用者ID為：\(userData.id)")
-            print("使用者帳號為：\(userData.email)")
             UserDefaults.standard.set(true, forKey: "signIn")
             UserDefaults.standard.set("\(userData.id)", forKey: "uid")
             UserDefaults.standard.set("\(userData.email)", forKey: "userName")
             completion(Message.success.rawValue)
-            print("============== loginView ==============")
+            print("============== \(messageType.rawValue) ==============")
         } else {
             completion(userData.message)
             print("\(messageType.rawValue) - Message：\(userData.message)")

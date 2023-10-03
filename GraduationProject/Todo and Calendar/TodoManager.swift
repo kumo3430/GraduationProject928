@@ -23,6 +23,14 @@ struct UserData: Decodable {
     var create_at: String
     var message: String
 }
+struct ReviseData: Decodable {
+    var todo_id: Int
+    var label: String
+    var reminderTime: String
+    var dueDateTime: String?
+    var todoNote: String?
+    var message: String
+}
 struct TaskData: Decodable {
     var todo_id: [String]
     var userId: String?

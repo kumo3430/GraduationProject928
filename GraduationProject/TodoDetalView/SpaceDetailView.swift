@@ -163,7 +163,7 @@ struct SpaceDetailView: View {
                 .foregroundColor(.red)
                 .navigationTitle("間隔學習修改")
                 .navigationBarItems(
-                    trailing: Button("完成", action: reviseStudySpaced)
+                    trailing: Button("完成") { reviseStudySpaced{_ in }}
                 )
         }
         .onAppear() {
@@ -182,17 +182,17 @@ struct SpaceDetailView: View {
         //        )
     }
     
-    func formattedDate(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy/MM/dd"
-        return formatter.string(from: date)
-    }
-    
-    func formattedTime(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH:MM"
-        return formatter.string(from: date)
-    }
+//    func formattedDate(_ date: Date) -> String {
+//        let formatter = DateFormatter()
+//        formatter.dateFormat = "yyyy/MM/dd"
+//        return formatter.string(from: date)
+//    }
+//
+//    func formattedTime(_ date: Date) -> String {
+//        let formatter = DateFormatter()
+//        formatter.dateFormat = "HH:MM"
+//        return formatter.string(from: date)
+//    }
     
     func formattedInterval(_ index: Int) -> Int {
         let intervals = [1, 3, 7, 14]
@@ -204,109 +204,118 @@ struct SpaceDetailView: View {
     //        task = Task(id: task.id,title: task.title, description: task.description, nextReviewDate: task.nextReviewDate, nextReviewTime: task.nextReviewTime, isReviewChecked0: task.isReviewChecked0, isReviewChecked1:  task.isReviewChecked1, isReviewChecked2: task.isReviewChecked2, isReviewChecked3:  task.isReviewChecked3 )
     //        presentationMode.wrappedValue.dismiss()
     //    }
-    
-    func reviseStudySpaced() {
-        if ( task.isReviewChecked0 ) {
-            repetition1Status = 1
-        } else {
-            repetition1Status = 0
-        }
-        if ( task.isReviewChecked1 ) {
-            repetition2Status = 1
-        } else {
-            repetition2Status = 0
-        }
-        if ( task.isReviewChecked2 ) {
-            repetition3Status = 1
-        } else {
-            repetition3Status = 0
-        }
-        if ( task.isReviewChecked3 ) {
-            repetition4Status = 1
-        } else {
-            repetition4Status = 0
-        }
-        class URLSessionSingleton {
-            static let shared = URLSessionSingleton()
-            let session: URLSession
-            private init() {
-                let config = URLSessionConfiguration.default
-                config.httpCookieStorage = HTTPCookieStorage.shared
-                config.httpCookieAcceptPolicy = .always
-                session = URLSession(configuration: config)
-            }
-        }
-        let url = URL(string: "http://127.0.0.1:8888/reviseTask/reviseSpace.php")!
-//        let url = URL(string: "http://127.0.0.1:8888/reviseTask/reviseStudySpaced.php")!
-        //        let url = URL(string: "http://10.21.1.164:8888/account/register.php")!
-        var request = URLRequest(url: url)
-        //        request.cachePolicy = .reloadIgnoringLocalCacheData
-        request.httpMethod = "POST"
-//        let body = ["id":  task.id,"title": task.title, "description": task.description,"nextReviewTime": formattedTime(task.nextReviewTime),"repetition1Status": repetition1Status,"repetition2Status":repetition2Status,"repetition3Status": repetition3Status,"repetition4Status": repetition4Status ] as [String : Any]
+    func reviseStudySpaced(completion: @escaping (String) -> Void) {
         let body = [ "id": task.id,
                      "label": task.label,
                      "reminderTime": formattedTime(task.nextReviewTime)] as [String : Any]
-        print("reviseStudySpaced - body:\(body)")
-        let jsonData = try! JSONSerialization.data(withJSONObject: body, options: [])
-        request.httpBody = jsonData
-        URLSessionSingleton.shared.session.dataTask(with: request) { data, response, error in
-            if let error = error {
-                print("reviseStudySpaced - Connection error: \(error)")
-            } else if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode != 200 {
-                print("reviseStudySpaced - HTTP error: \(httpResponse.statusCode)")
-            }
-            else if let data = data{
-                let decoder = JSONDecoder()
-                do {
-                    //                    確認api會印出的所有內容
-                    print(String(data: data, encoding: .utf8)!)
-                    let userData = try decoder.decode(reviseUserData.self, from: data)
-                    if (userData.message == "User revise Space successfully") {
-                        print("============== verifyView ==============")
-                        print(String(data: data, encoding: .utf8)!)
-                        print("reviseStudySpaced - userDate:\(userData)")
-//                        print("使用者ID為：\(userData.userId ?? "N/A")")
-//                        print("事件id為：\(userData.todo_id)")
-//                        print("事件種類為：\(userData.category_id)")
-//                        print("事件名稱為：\(userData.todoTitle)")
-//                        print("事件簡介為：\(userData.todoIntroduction)")
-//                        //                        print("開始時間為：\(userData.startDateTime)")
-//                        print("提醒時間為：\(userData.reminderTime)")
-//                        print("事件編號為：\(userData.todo_id)")
-//                        //                        print("第一次間隔重複時間為：\(userData.repetition1Count)")
-//                        print("第一次間隔重複狀態為：\(userData.repetition1Status)")
-//                        //                        print("第二次間隔重複時間為：\(userData.repetition2Count)")
-//                        print("第二次間隔重複狀態為：\(userData.repetition2Status)")
-//                        //                        print("第三次間隔重複時間為：\(userData.repetition3Count)")
-//                        print("第三次間隔重複狀態為：\(userData.repetition3Status)")
-//                        //                        print("第四次間隔重複時間為：\(userData.repetition4Count)")
-//                        print("第四次間隔重複狀態為：\(userData.repetition4Status)")
-                        print("事件id為：\(userData.todo_id)")
-                        print("事件種類為：\(userData.label)")
-                        print("提醒時間為：\(userData.reminderTime)")
-                        print("reviseStudySpaced - message：\(userData.message)")
-                        DispatchQueue.main.async {
-                            isError = false
-                            // 如果沒有錯才可以關閉視窗並且把此次東西暫存起來
-                            //                            task = Task(id: task.id,title: task.title, description: task.description, nextReviewDate: task.nextReviewDate, nextReviewTime: task.nextReviewTime, isReviewChecked0: task.isReviewChecked0, isReviewChecked1:  task.isReviewChecked1, isReviewChecked2: task.isReviewChecked2, isReviewChecked3:  task.isReviewChecked3 )
-                            task = Task(id: task.id, label: task.label,title: task.title, description: task.description, nextReviewDate: task.nextReviewDate, nextReviewTime: task.nextReviewTime,repetition1Count: task.repetition1Count,repetition2Count: task.repetition2Count,repetition3Count: task.repetition3Count,repetition4Count: task.repetition4Count, isReviewChecked0: task.isReviewChecked0, isReviewChecked1:  task.isReviewChecked1, isReviewChecked2: task.isReviewChecked2, isReviewChecked3:  task.isReviewChecked3 )
-                            presentationMode.wrappedValue.dismiss()
-                        }
-                        print("============== verifyView ==============")
-                    } else  {
-                        isError = true
-                        print("reviseStudySpaced - message：\(userData.message)")
-                        message = "修改失敗，請重新建立"
-                    }
-                } catch {
-                    isError = true
-                    print("reviseStudySpaced - 解碼失敗：\(error)")
-                    message = "修改失敗，請重新建立"
-                }
-            }
+
+        phpUrl(php: "reviseSpace" ,type: "reviseTask",body:body, store: nil){ message in
+            // 在此处调用回调闭包，将 messenge 值传递给调用者
+            completion(message)
         }
-        .resume()
     }
+//    func reviseStudySpaced() {
+//        if ( task.isReviewChecked0 ) {
+//            repetition1Status = 1
+//        } else {
+//            repetition1Status = 0
+//        }
+//        if ( task.isReviewChecked1 ) {
+//            repetition2Status = 1
+//        } else {
+//            repetition2Status = 0
+//        }
+//        if ( task.isReviewChecked2 ) {
+//            repetition3Status = 1
+//        } else {
+//            repetition3Status = 0
+//        }
+//        if ( task.isReviewChecked3 ) {
+//            repetition4Status = 1
+//        } else {
+//            repetition4Status = 0
+//        }
+//        class URLSessionSingleton {
+//            static let shared = URLSessionSingleton()
+//            let session: URLSession
+//            private init() {
+//                let config = URLSessionConfiguration.default
+//                config.httpCookieStorage = HTTPCookieStorage.shared
+//                config.httpCookieAcceptPolicy = .always
+//                session = URLSession(configuration: config)
+//            }
+//        }
+//        let url = URL(string: "http://127.0.0.1:8888/reviseTask/reviseSpace.php")!
+////        let url = URL(string: "http://127.0.0.1:8888/reviseTask/reviseStudySpaced.php")!
+//        //        let url = URL(string: "http://10.21.1.164:8888/account/register.php")!
+//        var request = URLRequest(url: url)
+//        //        request.cachePolicy = .reloadIgnoringLocalCacheData
+//        request.httpMethod = "POST"
+////        let body = ["id":  task.id,"title": task.title, "description": task.description,"nextReviewTime": formattedTime(task.nextReviewTime),"repetition1Status": repetition1Status,"repetition2Status":repetition2Status,"repetition3Status": repetition3Status,"repetition4Status": repetition4Status ] as [String : Any]
+//        let body = [ "id": task.id,
+//                     "label": task.label,
+//                     "reminderTime": formattedTime(task.nextReviewTime)] as [String : Any]
+//        print("reviseStudySpaced - body:\(body)")
+//        let jsonData = try! JSONSerialization.data(withJSONObject: body, options: [])
+//        request.httpBody = jsonData
+//        URLSessionSingleton.shared.session.dataTask(with: request) { data, response, error in
+//            if let error = error {
+//                print("reviseStudySpaced - Connection error: \(error)")
+//            } else if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode != 200 {
+//                print("reviseStudySpaced - HTTP error: \(httpResponse.statusCode)")
+//            }
+//            else if let data = data{
+//                let decoder = JSONDecoder()
+//                do {
+//                    //                    確認api會印出的所有內容
+//                    print(String(data: data, encoding: .utf8)!)
+//                    let userData = try decoder.decode(reviseUserData.self, from: data)
+//                    if (userData.message == "User revise Space successfully") {
+//                        print("============== verifyView ==============")
+//                        print(String(data: data, encoding: .utf8)!)
+//                        print("reviseStudySpaced - userDate:\(userData)")
+////                        print("使用者ID為：\(userData.userId ?? "N/A")")
+////                        print("事件id為：\(userData.todo_id)")
+////                        print("事件種類為：\(userData.category_id)")
+////                        print("事件名稱為：\(userData.todoTitle)")
+////                        print("事件簡介為：\(userData.todoIntroduction)")
+////                        //                        print("開始時間為：\(userData.startDateTime)")
+////                        print("提醒時間為：\(userData.reminderTime)")
+////                        print("事件編號為：\(userData.todo_id)")
+////                        //                        print("第一次間隔重複時間為：\(userData.repetition1Count)")
+////                        print("第一次間隔重複狀態為：\(userData.repetition1Status)")
+////                        //                        print("第二次間隔重複時間為：\(userData.repetition2Count)")
+////                        print("第二次間隔重複狀態為：\(userData.repetition2Status)")
+////                        //                        print("第三次間隔重複時間為：\(userData.repetition3Count)")
+////                        print("第三次間隔重複狀態為：\(userData.repetition3Status)")
+////                        //                        print("第四次間隔重複時間為：\(userData.repetition4Count)")
+////                        print("第四次間隔重複狀態為：\(userData.repetition4Status)")
+//                        print("事件id為：\(userData.todo_id)")
+//                        print("事件種類為：\(userData.label)")
+//                        print("提醒時間為：\(userData.reminderTime)")
+//                        print("reviseStudySpaced - message：\(userData.message)")
+//                        DispatchQueue.main.async {
+//                            isError = false
+//                            // 如果沒有錯才可以關閉視窗並且把此次東西暫存起來
+//                            //                            task = Task(id: task.id,title: task.title, description: task.description, nextReviewDate: task.nextReviewDate, nextReviewTime: task.nextReviewTime, isReviewChecked0: task.isReviewChecked0, isReviewChecked1:  task.isReviewChecked1, isReviewChecked2: task.isReviewChecked2, isReviewChecked3:  task.isReviewChecked3 )
+//                            task = Task(id: task.id, label: task.label,title: task.title, description: task.description, nextReviewDate: task.nextReviewDate, nextReviewTime: task.nextReviewTime,repetition1Count: task.repetition1Count,repetition2Count: task.repetition2Count,repetition3Count: task.repetition3Count,repetition4Count: task.repetition4Count, isReviewChecked0: task.isReviewChecked0, isReviewChecked1:  task.isReviewChecked1, isReviewChecked2: task.isReviewChecked2, isReviewChecked3:  task.isReviewChecked3 )
+//                            presentationMode.wrappedValue.dismiss()
+//                        }
+//                        print("============== verifyView ==============")
+//                    } else  {
+//                        isError = true
+//                        print("reviseStudySpaced - message：\(userData.message)")
+//                        message = "修改失敗，請重新建立"
+//                    }
+//                } catch {
+//                    isError = true
+//                    print("reviseStudySpaced - 解碼失敗：\(error)")
+//                    message = "修改失敗，請重新建立"
+//                }
+//            }
+//        }
+//        .resume()
+//    }
 }
 
 struct TaskDetailView_Previews: PreviewProvider {
