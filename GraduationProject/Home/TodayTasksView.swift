@@ -33,19 +33,23 @@ struct TodayTasksView: View {
             ScrollView {
                 LazyVStack(spacing: cardSpacing) {
                     ForEach(tasks, id: \.id) { task in
-                        ZStack {
+                        ScrollView(.horizontal) {
+                            HStack{
+                            //                        ZStack {
                             getTaskView(for: task.type)
                                 .background(getBackgroundColor(for: task.type, selected: task.id == selectedTaskId)) // 修改这一行来传递selected参数
+                            //                        }
+                                .background(RoundedRectangle(cornerRadius: 10)
+                                    .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 1))
+                                .padding(20)
+                                .accessibilityLabel("\(task.name)")
+                                .accessibilityHint("This is a \(task.type.rawValue) task")
+                                .onTapGesture {
+                                    withAnimation {
+                                        self.selectedTaskId = self.selectedTaskId == task.id ? nil : task.id
+                                    }
+                                }
                         }
-                        .background(RoundedRectangle(cornerRadius: 10)
-                            .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 1))
-                        .padding(20)
-                        .accessibilityLabel("\(task.name)")
-                        .accessibilityHint("This is a \(task.type.rawValue) task")
-                        .onTapGesture {
-                            withAnimation {
-                                self.selectedTaskId = self.selectedTaskId == task.id ? nil : task.id
-                            }
                         }
                     }
                 }
