@@ -7,17 +7,12 @@
 
 import Foundation
 func handleStudySpaceRevise(data: Data, completion: @escaping (String) -> Void) {
-    handleReviseData(data: data, messageType: .userLogin, completion: completion)
+    handleReviseData(data: data, messageType: .reviseSpace, completion: completion)
 }
-func handleStudyGeneralRevise(data: Data, completion: @escaping (String) -> Void) {
-    handleReviseData(data: data, messageType: .userLogin, completion: completion)
+func handleGeneralRevise(data: Data, completion: @escaping (String) -> Void) {
+    handleReviseData(data: data, messageType: .revise, completion: completion)
 }
-func handleSportRevise(data: Data, completion: @escaping (String) -> Void) {
-    handleReviseData(data: data, messageType: .userLogin, completion: completion)
-}
-func handleDietRevise(data: Data, completion: @escaping (String) -> Void) {
-    handleReviseData(data: data, messageType: .userLogin, completion: completion)
-}
+
 func handleReviseData(data: Data, messageType: Message, completion: @escaping (String) -> Void) {
     handleDecodableData(ReviseData.self, data: data) { userData in
         if userData.message == messageType.rawValue {

@@ -23,9 +23,9 @@ struct MailConfig {
     static let smtpEmail = "3430yun@gmail.com"
     static let smtpPassword = "knhipliavnpqxwty"
 }
-func Send(verify: String,mail: String,completion: @escaping (String, String) -> Void) {
+func sendEmail(verify: String,mail: String,completion: @escaping (String, String) -> Void) {
     DispatchQueue.global().async {
-         Random() { randomMessage in
+        generateRandomVerificationCode() { randomMessage in
              let verify = randomMessage
              sendMail(verify: verify, mail: mail) { message in
                  if message == Message.success.rawValue {
@@ -36,7 +36,7 @@ func Send(verify: String,mail: String,completion: @escaping (String, String) -> 
          }
      }
 }
-func Random( completion: @escaping (String) -> Void) {
+func generateRandomVerificationCode( completion: @escaping (String) -> Void) {
     let verify = Int.random(in: 1..<99999999)
     print("regiest - 隨機變數為：\(verify)")
     completion(String(verify))

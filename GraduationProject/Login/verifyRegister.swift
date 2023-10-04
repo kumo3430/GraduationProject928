@@ -88,7 +88,7 @@ struct verifyRegister: View {
                 Button {
                     print("verify - 再次發送驗證碼")
                     timeRemaining = 40
-                    Send(verify: verify,mail: mail) { v,m in
+                    sendEmail(verify: verify,mail: mail) { v,m in
                         verify = "0"
                         if (m == "Success") {
                             verificationCode = v

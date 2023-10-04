@@ -92,8 +92,8 @@ func handleDataForPHP(php: String, data: Data,store: (any ObservableObject)? = n
         handleStudyGeneralList(data: data,store: store as! TodoStore, completion: completion)
     case "addStudyGeneral":
         handleStudyGeneralAdd(data: data,store: store as! TodoStore, completion: completion)
-    case "reviseStudy":
-        handleStudyGeneralRevise(data: data, completion: completion)
+    case "reviseStudy","reviseSport","reviseDiet":
+        handleGeneralRevise(data: data, completion: completion)
         
     case "SportList":
         handleSportList(data: data,store: store as! SportStore, completion: completion)

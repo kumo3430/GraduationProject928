@@ -330,7 +330,7 @@ struct SignUp : View {
                     errorMessage2 = "請確認帳號密碼都有輸入"
                 } else {
                     if !isSendingMail { // 避免重複發送郵件
-                        Send(verify: verify,mail: mail) { v,m in
+                        sendEmail(verify: verify,mail: mail) { v,m in
                             if (m == "Success") {
                                 isSendingMail = true
                                 verify = v
