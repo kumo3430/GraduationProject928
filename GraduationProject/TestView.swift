@@ -56,7 +56,7 @@ struct TestView: View {
                     session = URLSession(configuration: config)
                 }
             }
-            let url = URL(string: "http://127.0.0.1:8888/autoAdd.php")!
+            let url = URL(string: "http://127.0.0.1:8888/addTask/autoAdd.php")!
             var request = URLRequest(url: url)
             request.httpMethod = "POST"
             let body: [String] = []
