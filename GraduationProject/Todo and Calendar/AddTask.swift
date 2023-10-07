@@ -21,6 +21,22 @@ func convertFrequency(frequency: Int) -> String {
     }
 }
 
+func addRecurringEndDate(frequency:Int,startDate:Date) -> Date {
+    switch frequency {
+    case 1:
+        let RecurringEndDate =  (Calendar.current.date(byAdding: .day, value: 1, to: startDate))!
+        return RecurringEndDate
+    case 2:
+        let RecurringEndDate =  (Calendar.current.date(byAdding: .weekOfYear, value: 1, to: startDate))!
+        return RecurringEndDate
+    case 3:
+        let RecurringEndDate =  (Calendar.current.date(byAdding: .month, value: 1, to: startDate))!
+        return RecurringEndDate
+    default:
+        return Date()
+    }
+}
+
 // 定義一個通用的函數處理重複選項計算
 func calculateRecurringOption(dueDateTime: Date, startDate: Date) -> Int {
     let calendar = Calendar.current
@@ -82,6 +98,7 @@ func handleStudyGeneralAdd(data: Data,store: TodoStore, completion: @escaping (S
                 let recurringOption = calculateRecurringOption(dueDateTime: dueDateTime, startDate: startDate)
                 let todoStatus = userData.todoStatus
                 let isTodoStatus = convertTodoStatus(todoStatus: todoStatus)
+                let RecurringEndDate = addRecurringEndDate(frequency: frequency, startDate: startDate)
 
                 if (userData.studyUnit == 0 ){
                     studyUnit = "小時"
@@ -102,7 +119,10 @@ func handleStudyGeneralAdd(data: Data,store: TodoStore, completion: @escaping (S
                                 todoStatus: isTodoStatus,
                                 dueDateTime: dueDateTime,
                                 reminderTime: reminderTime,
-                                todoNote: userData.todoNote ?? "")
+                                todoNote: userData.todoNote ?? "",
+                                RecurringStartDate: startDate,
+                                RecurringEndDate: RecurringEndDate,
+                                completeValue:  0)
                 DispatchQueue.main.async {
                     store.todos.append(todo)
                 }
@@ -128,6 +148,7 @@ func handleSportAdd(data: Data,store: SportStore, completion: @escaping (String)
                 let recurringOption = calculateRecurringOption(dueDateTime: dueDateTime, startDate: startDate)
                 let todoStatus = userData.todoStatus
                 let isTodoStatus = convertTodoStatus(todoStatus: todoStatus)
+                let RecurringEndDate = addRecurringEndDate(frequency: frequency, startDate: startDate)
                 
                 if (userData.sportUnit  == 0 ){
                     sportUnit = "小時"
@@ -151,7 +172,10 @@ func handleSportAdd(data: Data,store: SportStore, completion: @escaping (String)
                                   todoStatus: isTodoStatus,
                                   dueDateTime: dueDateTime,
                                   reminderTime: reminderTime,
-                                  todoNote: userData.todoNote ?? "" )
+                                  todoNote: userData.todoNote ?? "" ,
+                                  RecurringStartDate: startDate,
+                                  RecurringEndDate: RecurringEndDate,
+                                  completeValue:  0)
                 DispatchQueue.main.async {
                     store.sports.append(sport)
                 }
@@ -175,6 +199,7 @@ func handleDietAdd(data: Data,store: DietStore, completion: @escaping (String) -
                 let recurringOption = calculateRecurringOption(dueDateTime: dueDateTime, startDate: startDate)
                 let todoStatus = userData.todoStatus
                 let isTodoStatus = convertTodoStatus(todoStatus: todoStatus)
+                let RecurringEndDate = addRecurringEndDate(frequency: frequency, startDate: startDate)
                 
                 let taskId = Int(userData.todo_id )
                 let diet = Diet(id: taskId,
@@ -189,7 +214,10 @@ func handleDietAdd(data: Data,store: DietStore, completion: @escaping (String) -
                                 todoStatus: isTodoStatus,
                                 dueDateTime: dueDateTime,
                                 reminderTime: reminderTime,
-                                todoNote: userData.todoNote ?? "" )
+                                todoNote: userData.todoNote ?? "" ,
+                                RecurringStartDate: startDate,
+                                RecurringEndDate: RecurringEndDate,
+                                completeValue:  0)
                 DispatchQueue.main.async {
                     store.diets.append(diet)
                 }

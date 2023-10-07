@@ -83,34 +83,33 @@ func handleDataForPHP(php: String, data: Data,store: (any ObservableObject)? = n
         
     case "StudySpaceList":
     handleStudySpaceList(data: data,store: store as! TaskStore, completion: completion)
-    case "addStudySpaced":
-        handleStudySpaceAdd(data: data,store: store as! TaskStore, completion: completion)
-    case "reviseSpace":
-        handleStudySpaceRevise(data: data, completion: completion)
-        
     case "StudyGeneralList":
         handleStudyGeneralList(data: data,store: store as! TodoStore, completion: completion)
+    case "SportList":
+        handleSportList(data: data,store: store as! SportStore, completion: completion)
+    case "DietList":
+        handleDietList(data: data,store: store as! DietStore, completion: completion)
+    case "tickersList":
+        handletickersList(data: data,store: store as! TickerStore, completion: completion)
+        
+    case "addStudySpaced":
+        handleStudySpaceAdd(data: data,store: store as! TaskStore, completion: completion)
     case "addStudyGeneral":
         handleStudyGeneralAdd(data: data,store: store as! TodoStore, completion: completion)
+    case "addSport":
+        handleSportAdd(data: data,store: store as! SportStore, completion: completion)
+    case "addDiet":
+        handleDietAdd(data: data,store: store as! DietStore, completion: completion)
+        
+    case "reviseSpace":
+        handleStudySpaceRevise(data: data, completion: completion)
     case "reviseStudy","reviseSport","reviseDiet":
         handleGeneralRevise(data: data, completion: completion)
         
-    case "SportList":
-        handleSportList(data: data,store: store as! SportStore, completion: completion)
-    case "addSport":
-        handleSportAdd(data: data,store: store as! SportStore, completion: completion)
-//    case "reviseSport":
-//        handleSportRevise(data: data, completion: completion)
+    case "upDateCompleteValue":
+        handleUpDateCompleteValue(data: data, completion: completion)
         
-    case "DietList":
-        handleDietList(data: data,store: store as! DietStore, completion: completion)
-    case "addDiet":
-        handleDietAdd(data: data,store: store as! DietStore, completion: completion)
-//    case "reviseDiet":
-//        handleDietRevise(data: data, completion: completion)
-        
-    case "tickersList":
-        handletickersList(data: data,store: store as! TickerStore, completion: completion)
+
     default:
         break
     }

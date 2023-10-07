@@ -62,8 +62,10 @@ func handleStudyGeneralList(data: Data, store: TodoStore, completion: @escaping 
             var studyUnit: String = ""
             if let startDate = convertToDate(userData.startDateTime[index]),
                let dueDateTime = convertToDate(userData.dueDateTime[index]),
+               let recurringStartDate = convertToDate(userData.RecurringStartDate[index]),
+               let recurringEndDate = convertToDate(userData.RecurringEndDate[index]),
                let reminderTime = convertToTime(userData.reminderTime[index]) {
-
+                
                 if (userData.studyUnit[index] == "0" ){
                     studyUnit = "小時"
                 } else  if (userData.studyUnit[index] == "1" ) {
@@ -89,7 +91,10 @@ func handleStudyGeneralList(data: Data, store: TodoStore, completion: @escaping 
                                 todoStatus: isTodoStatus,
                                 dueDateTime: dueDateTime,
                                 reminderTime: reminderTime,
-                                todoNote: userData.todoNote[index])
+                                todoNote: userData.todoNote[index],
+                                RecurringStartDate: recurringStartDate,
+                                RecurringEndDate: recurringEndDate,
+                                completeValue: Float(userData.completeValue[index]) ?? 0.0)
                 DispatchQueue.main.async {
                     store.todos.append(todo)
                 }
@@ -108,6 +113,8 @@ func handleSportList(data: Data,store: SportStore, completion: @escaping (String
             var sportUnit: String = ""
             if let startDate = convertToDate(userData.startDateTime[index]),
                let dueDateTime = convertToDate(userData.dueDateTime[index]),
+               let recurringStartDate = convertToDate(userData.RecurringStartDate[index]),
+               let recurringEndDate = convertToDate(userData.RecurringEndDate[index]),
                let reminderTime = convertToTime(userData.reminderTime[index]) {
 
                 if (userData.sportUnit[index] == "0" ){
@@ -138,7 +145,10 @@ func handleSportList(data: Data,store: SportStore, completion: @escaping (String
                                 todoStatus: isTodoStatus,
                                 dueDateTime: dueDateTime,
                                 reminderTime: reminderTime,
-                                todoNote: userData.todoNote[index])
+                                todoNote: userData.todoNote[index],
+                                  RecurringStartDate: recurringStartDate,
+                                  RecurringEndDate: recurringEndDate,
+                                  completeValue: Float(userData.completeValue[index]) ?? 0.0)
                 DispatchQueue.main.async {
                     store.sports.append(sport)
                 }
@@ -156,6 +166,8 @@ func handleDietList(data: Data,store: DietStore, completion: @escaping (String) 
 
             if let startDate = convertToDate(userData.startDateTime[index]),
                let dueDateTime = convertToDate(userData.dueDateTime[index]),
+               let recurringStartDate = convertToDate(userData.RecurringStartDate[index]),
+               let recurringEndDate = convertToDate(userData.RecurringEndDate[index]),
                let reminderTime = convertToTime(userData.reminderTime[index]) {
 
                 let frequency = userData.frequency[index]
@@ -177,7 +189,10 @@ func handleDietList(data: Data,store: DietStore, completion: @escaping (String) 
                                 todoStatus: isTodoStatus,
                                 dueDateTime: dueDateTime,
                                 reminderTime: reminderTime,
-                                todoNote: userData.todoNote[index])
+                                todoNote: userData.todoNote[index],
+                                RecurringStartDate: recurringStartDate,
+                                RecurringEndDate: recurringEndDate,
+                                completeValue: Float(userData.completeValue[index]) ?? 0.0)
                 DispatchQueue.main.async {
                     store.diets.append(diet)
                 }

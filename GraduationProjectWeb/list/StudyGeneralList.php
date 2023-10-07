@@ -26,6 +26,9 @@ $todoStatus = array();
 $dueDateTime = array();
 $todoNote = array();
 
+$RecurringStartDate = array();
+$RecurringEndDate = array();
+$completeValue = array();
 
 $servername = "localhost"; // 資料庫伺服器名稱
 $user = "kumo"; // 資料庫使用者名稱
@@ -39,7 +42,8 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$TodoSELSql = "SELECT * FROM Todo T RIGHT JOIN StudyGeneral SG ON T.id = SG.todo_id WHERE T.uid = '$uid' && T.category_id = '0';";
+// $TodoSELSql = "SELECT * FROM Todo T RIGHT JOIN StudyGeneral SG ON T.id = SG.todo_id WHERE T.uid = '$uid' && T.category_id = '0';";
+$TodoSELSql = "SELECT T.*, RI.*, SG.* FROM Todo T LEFT JOIN StudyGeneral SG ON T.id = SG.todo_id RIGHT JOIN RecurringInstance RI ON T.id = RI.todo_id WHERE T.uid = 30 AND t.category_id = 0 AND RI.isOver = 0;";
 
 $result = $conn->query($TodoSELSql);
 if ($result->num_rows > 0) {
@@ -58,6 +62,11 @@ if ($result->num_rows > 0) {
         $todoStatus[] = $row['todoStatus'];
         $dueDateTime[] = $row['dueDateTime'];
         $todoNote[] = $row['todoNote'];
+
+        $RecurringStartDate[] = $row['RecurringStartDate'];
+        $RecurringEndDate[] = $row['RecurringEndDate'];
+        $completeValue[] = $row['completeValue'];
+
     }
 } else {
     $message = "no such Todo";
@@ -79,6 +88,11 @@ $userData = array(
     'todoStatus' => $todoStatus,
     'dueDateTime' => $dueDateTime,
     'todoNote' => $todoNote,
+
+    'RecurringStartDate' => $RecurringStartDate,
+    'RecurringEndDate' => $RecurringEndDate,
+    'completeValue' => $completeValue,
+
     'message' => ""
 );
 echo json_encode($userData);

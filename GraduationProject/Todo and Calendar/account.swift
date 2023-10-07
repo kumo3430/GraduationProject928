@@ -16,6 +16,7 @@ enum Message: String {
     case registrationFailed = "註冊失敗請重新註冊"
     case revise = "User revise Study successfully"
     case reviseSpace = "User revise Space successfully"
+    case upDateCompleteValue = "User upDateCompleteValue successfully"
 }
 
 struct MailConfig {

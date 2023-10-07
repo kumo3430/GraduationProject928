@@ -130,19 +130,19 @@ struct CheckStudyView: View {
 
 struct CheckStudyView_Previews: PreviewProvider {
     static var previews: some View {
-        @State var todo = Todo(id: 001,
-                               label:"我是標籤",
-                               title: "英文",
-                               description: "背L2單字",
-                               startDateTime: Date(),
-                               studyValue: 3.0,
-                               studyUnit: "小時",
-                               recurringUnit:"每週",
-                               recurringOption:2,
-                               todoStatus: false,
-                               dueDateTime: Date(),
-                               reminderTime: Date(),
-                               todoNote: "我是備註")
+//        @State var todo = Todo(id: 001,
+//                               label:"我是標籤",
+//                               title: "英文",
+//                               description: "背L2單字",
+//                               startDateTime: Date(),
+//                               studyValue: 3.0,
+//                               studyUnit: "小時",
+//                               recurringUnit:"每週",
+//                               recurringOption:2,
+//                               todoStatus: false,
+//                               dueDateTime: Date(),
+//                               reminderTime: Date(),
+//                               todoNote: "我是備註")
         CheckStudyView()
     }
 }

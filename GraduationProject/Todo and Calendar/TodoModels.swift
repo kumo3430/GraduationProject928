@@ -47,6 +47,10 @@ struct Todo: Identifiable {
     var dueDateTime: Date
     var reminderTime: Date
     var todoNote: String
+    
+    var RecurringStartDate: Date
+    var RecurringEndDate: Date
+    var completeValue: Float
 }
 
 struct Sport: Identifiable {
@@ -68,6 +72,11 @@ struct Sport: Identifiable {
     var dueDateTime: Date
     var reminderTime: Date
     var todoNote: String
+    
+    var RecurringStartDate: Date
+    var RecurringEndDate: Date
+    var completeValue: Float 
+
 }
 
 struct Diet: Identifiable {
@@ -88,6 +97,10 @@ struct Diet: Identifiable {
     var dueDateTime: Date
     var reminderTime: Date
     var todoNote: String
+    
+    var RecurringStartDate: Date
+    var RecurringEndDate: Date
+    var completeValue: Float
 }
 
 struct Sleep: Identifiable {

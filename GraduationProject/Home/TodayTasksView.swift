@@ -19,8 +19,9 @@ struct DailyTask {
 
 struct TodayTasksView: View {
     var tasks: [DailyTask] = [
-        DailyTask(id: 1, name: "跑步", type: .sport),
+        
         DailyTask(id: 2, name: "學習", type: .study),
+        DailyTask(id: 1, name: "跑步", type: .sport),
         DailyTask(id: 3, name: "第一次複習", type: .space)
     ]
     
@@ -35,21 +36,21 @@ struct TodayTasksView: View {
                     ForEach(tasks, id: \.id) { task in
                         ScrollView(.horizontal) {
                             HStack{
-                            //                        ZStack {
-                            getTaskView(for: task.type)
-                                .background(getBackgroundColor(for: task.type, selected: task.id == selectedTaskId)) // 修改这一行来传递selected参数
-                            //                        }
-                                .background(RoundedRectangle(cornerRadius: 10)
-                                    .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 1))
-                                .padding(20)
-                                .accessibilityLabel("\(task.name)")
-                                .accessibilityHint("This is a \(task.type.rawValue) task")
-                                .onTapGesture {
-                                    withAnimation {
-                                        self.selectedTaskId = self.selectedTaskId == task.id ? nil : task.id
+                                //                        ZStack {
+                                getTaskView(for: task.type)
+                                    .background(getBackgroundColor(for: task.type, selected: task.id == selectedTaskId)) // 修改这一行来传递selected参数
+                                //                        }
+                                    .background(RoundedRectangle(cornerRadius: 10)
+                                        .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 1))
+                                    .padding(20)
+                                    .accessibilityLabel("\(task.name)")
+                                    .accessibilityHint("This is a \(task.type.rawValue) task")
+                                    .onTapGesture {
+                                        withAnimation {
+                                            self.selectedTaskId = self.selectedTaskId == task.id ? nil : task.id
+                                        }
                                     }
-                                }
-                        }
+                            }
                         }
                     }
                 }
@@ -65,13 +66,25 @@ struct TodayTasksView: View {
     func getTaskView(for type: TaskType) -> some View {
         switch type {
         case .sport:
-            return AnyView(CheckSportView())
+            return AnyView(CheckSportView(RecurringStartDate: Date(), RecurringEndDate: Date(), completeValue: 0.0))
         case .study:
             return AnyView(CheckStudyView())
         case .space:
             return AnyView(CheckSpaceView())
         }
     }
+    
+//    func getTaskView(for type: TaskType) -> some View {
+//        switch type {
+//        case .sport:
+//            return AnyView(CheckSportView().frame(width: 300, height: 200).clipShape(RoundedRectangle(cornerRadius: 10)))
+//        case .study:
+//            return AnyView(CheckStudyView().frame(width: 300, height: 200).clipShape(RoundedRectangle(cornerRadius: 10)))
+//        case .space:
+//            return AnyView(CheckSpaceView().frame(width: 300, height: 200).clipShape(RoundedRectangle(cornerRadius: 10)))
+//        }
+//    }
+
     
     func getBackgroundColor(for type: TaskType, selected: Bool) -> Color {
         let baseColor: Color

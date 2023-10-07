@@ -207,7 +207,10 @@ struct DietDetailView_Previews: PreviewProvider {
                                todoStatus: false,
                                dueDateTime: Date(),
                                reminderTime: Date(),
-                               todoNote: "我是備註")
+                               todoNote: "我是備註",
+                               RecurringStartDate: Date(),
+                               RecurringEndDate: Date(),
+                               completeValue:  0)
         DietDetailView(diet: $diet)
     }
 }
