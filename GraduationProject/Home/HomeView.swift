@@ -21,28 +21,32 @@ struct HomeView: View {
                     
                     NavigationLink(destination: QuoteView()) {
                         QuoteCardView().cardStyle()
-                    }
-                    
-                    NavigationLink(destination: TaskCompletionIndicatorView()) {
-                        TaskCompletionIndicatorCardView()
-                            .cardStyle()
-                    }
+                    }.clearNavigationLinkStyle()
                     
                     NavigationLink(destination: TodayTasksView()) {
                         TodayTodoCardView()
                             .cardStyle()
                     }
+                    .clearNavigationLinkStyle()
+                    
+                    NavigationLink(destination: HabitTrackingIndicatorView()) {
+                        HabitTrackingIndicatorCardView()
+                            .cardStyle()
+                    }
+                    .clearNavigationLinkStyle()
                     
                     NavigationLink(destination: AchievementsPageView()) {
                         AchievementCardView(achievement: Achievement(title: "首次之旅", description: "第一次添加習慣", achieved: true, imageName: "plus.circle.fill"))
                             .cardStyle()
                     }
+                    .clearNavigationLinkStyle()
                     
                     
                     NavigationLink(destination: QuoteView()) {
                         CommunityCardView()
                             .cardStyle()
                     }
+                    .clearNavigationLinkStyle()
                 }
                 .padding()
             }
@@ -84,9 +88,28 @@ struct ViewOffsetKey: PreferenceKey {
 extension View {
     func cardStyle() -> some View {
         self.padding(.all, 5)
-            .background(RoundedRectangle(cornerRadius: 30).fill(Color.white.opacity(0.3)).shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5))
+            .background(
+                RoundedRectangle(cornerRadius: 30)
+                    .fill(Color.white.opacity(0.3))
+                    .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5)
+                    .foregroundColor(.black)
+            )
     }
 }
+
+struct ClearNavigationLinkStyle: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .foregroundColor(.black) // Or any color of your choice
+    }
+}
+
+extension View {
+    func clearNavigationLinkStyle() -> some View {
+        modifier(ClearNavigationLinkStyle())
+    }
+}
+
 
 struct HomeView_Previews: PreviewProvider {
     @State static var mockTabBarHidden = false

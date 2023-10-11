@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		137CADEE2AD6800F0028A00B /* HabitTrackingIndicatorCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 137CADED2AD6800F0028A00B /* HabitTrackingIndicatorCardView.swift */; };
 		139DEC7B2ACBED4A005C5F5D /* account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 139DEC7A2ACBED4A005C5F5D /* account.swift */; };
 		139DECCC2ACC3D9400E6E985 /* ReviseTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 139DECCB2ACC3D9400E6E985 /* ReviseTask.swift */; };
 		13A8D54C2AC54EE1005F205C /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 13A8D54B2AC54EE1005F205C /* FirebaseAnalytics */; };
@@ -105,6 +106,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		137CADED2AD6800F0028A00B /* HabitTrackingIndicatorCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HabitTrackingIndicatorCardView.swift; path = ../HabitTrackingIndicatorCardView.swift; sourceTree = "<group>"; };
 		139DEC7A2ACBED4A005C5F5D /* account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = account.swift; sourceTree = "<group>"; };
 		139DECCB2ACC3D9400E6E985 /* ReviseTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviseTask.swift; sourceTree = "<group>"; };
 		13AD35D32A70BB880003FF1B /* TodoListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoListView.swift; sourceTree = "<group>"; };
@@ -325,6 +327,7 @@
 			isa = PBXGroup;
 			children = (
 				3B8CBB182AB2D5CC004E5A26 /* TaskModels.swift */,
+				137CADED2AD6800F0028A00B /* HabitTrackingIndicatorCardView.swift */,
 				3B8CBB1A2AB2D622004E5A26 /* TaskCompletionViewModel.swift */,
 				3B8CBB1C2AB2D6B5004E5A26 /* TimeExtensions.swift */,
 				3BDCD7DF2A96F8BE00E077DE /* TaskCompletionIndicatorView.swift */,
@@ -633,6 +636,7 @@
 				3B9655F12AAD82390064CE63 /* TabBarView.swift in Sources */,
 				3BBBF4C62A847B5E0077B3E6 /* TodoManager.swift in Sources */,
 				3BDA96F52AA86834009FA88F /* DietDetailView.swift in Sources */,
+				137CADEE2AD6800F0028A00B /* HabitTrackingIndicatorCardView.swift in Sources */,
 				139DEC7B2ACBED4A005C5F5D /* account.swift in Sources */,
 				3BBBF4C42A847B4A0077B3E6 /* TodoModels.swift in Sources */,
 				13AD35D42A70BB880003FF1B /* TodoListView.swift in Sources */,
