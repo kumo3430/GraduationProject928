@@ -54,13 +54,25 @@ struct HabitTask: Identifiable {
 }
 
 struct HabitTrackingIndicatorView: View {
+    
+    @EnvironmentObject var taskStore: TaskStore
+    @EnvironmentObject var todoStore: TodoStore
+    @EnvironmentObject var sportStore: SportStore
+    @EnvironmentObject var dietStore: DietStore
     @State private var selectedFilter = TaskFilter.all
+//    var selectedFilter = TaskFilter.all
     @State private var tasks: [HabitTask] = [
         HabitTask(name: "背英文單字"),
         HabitTask(name: "游泳"),
         HabitTask(name: "減糖")
     ]
-    @State private var selectedTask: HabitTask?
+    @State private var id:Int = 0
+    @State private var name:String = "TaskName"
+    @State private var selectedTask: Task?
+    @State private var selectedTodo: Todo?
+    @State private var selectedSport: Sport?
+    @State private var selectedDiet: Diet?
+    @State private var selectedHabitTask: HabitTask?
     
     var body: some View {
         VStack {
@@ -69,12 +81,21 @@ struct HabitTrackingIndicatorView: View {
                 .fontWeight(.bold)
                 .foregroundColor(Color(hex: "#6B6B6B"))
                 .padding()
-            
+            // 上方選單
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 10) {
                     ForEach(TaskFilter.allCases, id: \.self) { filter in
                         Button(action: {
-                            self.selectedFilter = filter
+                            selectedFilter = filter
+//                            if filter.rawValue == "一般學習" {
+//                                self.filteredTasks = todoStore.todos
+//                            } else if filter.rawValue == "間隔學習" {
+//                                self.filteredTasks = taskStore.tasks
+//                            } else if filter.rawValue == "運動" {
+//                                self.filteredTasks = sportStore.sports
+//                            } else if filter.rawValue == "飲食" {
+//                                self.filteredTasks = dietStore.diets
+//                            }
                         }) {
                             Text(filter.rawValue)
                                 .fontWeight(.medium)
@@ -89,41 +110,158 @@ struct HabitTrackingIndicatorView: View {
                 .padding(.horizontal, 10)
             }
             .padding(.vertical, 10)
-
             
+            // 下方內容
             ScrollView {
-                            LazyVStack(spacing: 20) { // 增加顶部间距
-                                ForEach(tasks) { task in
-                                    Button(action: {
-                                        selectedTask = task
-                                    }) {
-                                        HStack {
-                                            Image(systemName: "checkmark.circle.fill")
-                                                .foregroundColor(Color(hex: "#91A3B0"))
-                                                .padding([.leading, .trailing], 15) // 增加左右间距
-                                            
-                                            Text(task.name)
-                                                .fontWeight(.medium)
-                                                .foregroundColor(Color(hex: "#6B6B6B"))
-                                                .padding([.top, .bottom, .trailing], 15) // 增加按钮高度
-                                                .frame(maxWidth: .infinity, alignment: .leading)
-                                        }
-                                        .background(Color.white)
-                                        .cornerRadius(10)
-                                        .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
-                                    }
-                                    .buttonStyle(PlainButtonStyle())
-                                    .sheet(item: $selectedTask) { task in
-                                        TaskDetailView(task: task, taskName: task.name)
-                                    }
+                LazyVStack(spacing: 20) { // 增加顶部间距
+                    
+                    if selectedFilter.rawValue == "一般學習" {
+                        ForEach(todoStore.todos.indices, id: \.self){ task in
+                            Button(action: {
+                                print(todoStore.todos[task])
+                                selectedTodo = todoStore.todos[task]
+                                id = todoStore.todos[task].id
+                                name = todoStore.todos[task].title
+                            }) {
+                                HStack {
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .foregroundColor(Color(hex: "#91A3B0"))
+                                        .padding([.leading, .trailing], 15) // 增加左右间距
+                                    
+                                    Text(todoStore.todos[task].title)
+                                        .fontWeight(.medium)
+                                        .foregroundColor(Color(hex: "#6B6B6B"))
+                                        .padding([.top, .bottom, .trailing], 15) // 增加按钮高度
+                                        .frame(maxWidth: .infinity, alignment: .leading)
                                 }
+                                .background(Color.white)
+                                .cornerRadius(10)
+                                .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
                             }
-                            .padding() // 统一增加四周间距
+                            .buttonStyle(PlainButtonStyle())
+                            .sheet(item: $selectedTodo) { task in
+                                TaskDetailView(task: selectedTodo,id: id, taskName: name)
+                            }
                         }
-                        .background(Color(hex: "#EFEFEF").edgesIgnoringSafeArea(.all))
-                        .cornerRadius(10)
-                        
-                        Spacer()
+                    } else if selectedFilter.rawValue == "間隔學習" {
+                        ForEach(taskStore.tasks.indices, id: \.self) { task in
+                            Button(action: {
+                                print(taskStore.tasks[task])
+                                selectedTask = taskStore.tasks[task]
+                                id = taskStore.tasks[task].id
+                                name = taskStore.tasks[task].title
+                            }) {
+                                HStack {
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .foregroundColor(Color(hex: "#91A3B0"))
+                                        .padding([.leading, .trailing], 15) // 增加左右间距
+                                    
+                                    Text(taskStore.tasks[task].title)
+                                        .fontWeight(.medium)
+                                        .foregroundColor(Color(hex: "#6B6B6B"))
+                                        .padding([.top, .bottom, .trailing], 15) // 增加按钮高度
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                }
+                                .background(Color.white)
+                                .cornerRadius(10)
+                                .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
+                            }
+                            .buttonStyle(PlainButtonStyle())
+                            .sheet(item: $selectedTask) { task in
+                                TaskDetailView(task: selectedTask,id: id, taskName: name)
+                            }
+                        }
+                    } else if selectedFilter.rawValue == "運動" {
+                        ForEach(sportStore.sports.indices, id: \.self) { task in
+                            Button(action: {
+                                print(sportStore.sports[task])
+                                selectedSport = sportStore.sports[task]
+                                id = sportStore.sports[task].id
+                                name = sportStore.sports[task].title
+                            }) {
+                                HStack {
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .foregroundColor(Color(hex: "#91A3B0"))
+                                        .padding([.leading, .trailing], 15) // 增加左右间距
+                                    
+                                    Text(sportStore.sports[task].title)
+                                        .fontWeight(.medium)
+                                        .foregroundColor(Color(hex: "#6B6B6B"))
+                                        .padding([.top, .bottom, .trailing], 15) // 增加按钮高度
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                }
+                                .background(Color.white)
+                                .cornerRadius(10)
+                                .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
+                            }
+                            .buttonStyle(PlainButtonStyle())
+                            .sheet(item: $selectedSport) { task in
+                                TaskDetailView(task: selectedSport,id: id, taskName: name)
+                            }
+                        }
+                    } else if selectedFilter.rawValue == "飲食" {
+                        ForEach(sportStore.sports.indices, id: \.self) { task in
+                            Button(action: {
+                                print(sportStore.sports[task])
+                                selectedSport = sportStore.sports[task]
+                                id = sportStore.sports[task].id
+                                name = sportStore.sports[task].title
+                            }) {
+                                HStack {
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .foregroundColor(Color(hex: "#91A3B0"))
+                                        .padding([.leading, .trailing], 15) // 增加左右间距
+                                    
+                                    Text(sportStore.sports[task].title)
+                                        .fontWeight(.medium)
+                                        .foregroundColor(Color(hex: "#6B6B6B"))
+                                        .padding([.top, .bottom, .trailing], 15) // 增加按钮高度
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                }
+                                .background(Color.white)
+                                .cornerRadius(10)
+                                .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
+                            }
+                            .buttonStyle(PlainButtonStyle())
+                            .sheet(item: $selectedTask) { task in
+                                TaskDetailView(task: selectedSport,id: id, taskName: name)
+                            }
+                        }
+                    } else {
+                        ForEach(tasks) { task in
+                            Button(action: {
+                                print(task)
+                                selectedHabitTask = task
+                            }) {
+                                HStack {
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .foregroundColor(Color(hex: "#91A3B0"))
+                                        .padding([.leading, .trailing], 15) // 增加左右间距
+                                    
+                                    Text(task.name)
+                                        .fontWeight(.medium)
+                                        .foregroundColor(Color(hex: "#6B6B6B"))
+                                        .padding([.top, .bottom, .trailing], 15) // 增加按钮高度
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                }
+                                .background(Color.white)
+                                .cornerRadius(10)
+                                .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
+                            }
+                            .buttonStyle(PlainButtonStyle())
+                            .sheet(item: $selectedHabitTask) { task in
+                                TaskDetailView(task: task,id: 1, taskName: task.name)
+                            }
+                        }
+                    }
+                    
+                }
+                .padding() // 统一增加四周间距
+            }
+            .background(Color(hex: "#EFEFEF").edgesIgnoringSafeArea(.all))
+            .cornerRadius(10)
+            
+            Spacer()
             
         }
         .padding()
@@ -132,7 +270,8 @@ struct HabitTrackingIndicatorView: View {
 }
 
 struct TaskDetailView: View {
-    var task: HabitTask
+    var task: Any
+    var id: Int
     var taskName: String
     @State private var selectedIndicator = IndicatorType.week
     
@@ -156,16 +295,20 @@ struct TaskDetailView: View {
             
             Group {
                 if selectedIndicator == .week {
-                    EnhancedWeekReportView(task: task)
+                    EnhancedWeekReportView()
                 } else if selectedIndicator == .month {
-                    EnhancedMonthReportView(task: task)
+//                    EnhancedMonthReportView(task: task)
+                    EnhancedMonthReportView()
                 } else if selectedIndicator == .year {
-                    YearIndicatorView(task: task)
+                    YearIndicatorView()
                 }
             }
             .transition(.slide)
             
             Spacer()
+        }
+        .onAppear() {
+            print(task)
         }
         .padding()
         .background(LinearGradient(gradient: .init(colors: [Color("Color"),Color("Color1"),Color("Color2")]), startPoint: .top, endPoint: .bottom))
@@ -198,7 +341,7 @@ extension DateFormatter {
 }
 
 struct EnhancedWeekReportView: View {
-    let task: HabitTask
+//    let task: HabitTask
     @State private var selectedDate = Date()
     
     var completionRates: [String: Double] {
@@ -284,7 +427,7 @@ struct EnhancedWeekReportView: View {
 }
 
 struct EnhancedMonthReportView: View {
-    let task: HabitTask
+//    let task: HabitTask
     @State private var selectedDate = Date()
     
     var completionRates: [String: Double] {
@@ -372,7 +515,7 @@ struct EnhancedMonthReportView: View {
 }
 
 struct YearIndicatorView: View {
-    let task: HabitTask
+//    let task: HabitTask
     @State private var selectedDate = Date()
     
     var completionRates: [String: [Double]] {
