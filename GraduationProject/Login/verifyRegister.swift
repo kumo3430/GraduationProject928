@@ -153,7 +153,8 @@ struct verifyRegister: View {
         let body = ["email": mail, "password": pass, "create_at": Set_date]
         print("body:\(body)")
         phpUrl(php: "register" , type: "account", body: body, store: nil) { message in
-            completion(message)
+//            completion(message[0])
+            completion(message["message"]!)
         }
     }
 }

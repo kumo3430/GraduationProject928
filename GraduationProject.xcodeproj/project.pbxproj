@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		131793962ADFEBF000724B44 /* Check.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131793952ADFEBF000724B44 /* Check.swift */; };
 		137CADEE2AD6800F0028A00B /* HabitTrackingIndicatorCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 137CADED2AD6800F0028A00B /* HabitTrackingIndicatorCardView.swift */; };
 		139DEC7B2ACBED4A005C5F5D /* account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 139DEC7A2ACBED4A005C5F5D /* account.swift */; };
 		139DECCC2ACC3D9400E6E985 /* ReviseTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 139DECCB2ACC3D9400E6E985 /* ReviseTask.swift */; };
@@ -106,6 +107,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		131793952ADFEBF000724B44 /* Check.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Check.swift; sourceTree = "<group>"; };
 		137CADED2AD6800F0028A00B /* HabitTrackingIndicatorCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HabitTrackingIndicatorCardView.swift; path = ../HabitTrackingIndicatorCardView.swift; sourceTree = "<group>"; };
 		139DEC7A2ACBED4A005C5F5D /* account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = account.swift; sourceTree = "<group>"; };
 		139DECCB2ACC3D9400E6E985 /* ReviseTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviseTask.swift; sourceTree = "<group>"; };
@@ -372,6 +374,7 @@
 				13AD35D52A70BC0D0003FF1B /* CalendarView.swift */,
 				3BAE3CB02AB9F9740079464F /* WeeklyReportView_Previews.swift */,
 				13D8DA8B2AC5CF4400753C8F /* PHPUrl.swift */,
+				131793952ADFEBF000724B44 /* Check.swift */,
 				139DECCB2ACC3D9400E6E985 /* ReviseTask.swift */,
 				13D8DA8F2AC6CD2F00753C8F /* AddTask.swift */,
 				139DEC7A2ACBED4A005C5F5D /* account.swift */,
@@ -615,6 +618,7 @@
 				3BAE3CB12AB9F9740079464F /* WeeklyReportView_Previews.swift in Sources */,
 				3B8647D52A8DE31700555A9E /* TodayTodoCardView.swift in Sources */,
 				13AD35D62A70BC0D0003FF1B /* CalendarView.swift in Sources */,
+				131793962ADFEBF000724B44 /* Check.swift in Sources */,
 				3B8647CD2A8DAE6000555A9E /* PostView.swift in Sources */,
 				3BDCD7E02A96F8BE00E077DE /* TaskCompletionIndicatorView.swift in Sources */,
 				3BA700592A1F3B870096B2FF /* FirebaseManager.swift in Sources */,

@@ -231,7 +231,8 @@ struct AddDietView: View {
         print("selectedTimeUnit:\(selectedTimeUnit)")
         phpUrl(php: "addDiet" ,type: "addTask",body:body,store: dietStore){ message in
             presentationMode.wrappedValue.dismiss()
-            completion(message)
+//            completion(message[0])
+            completion(message["message"]!)
         }
     }
 }

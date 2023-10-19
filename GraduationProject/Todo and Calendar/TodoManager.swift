@@ -223,6 +223,19 @@ struct addDietData: Decodable {
     var todoNote: String?
     var message: String
 }
+
+struct FirstDay: Decodable {
+    var id: Int
+    var todo_id: Int
+    var RecurringStartDate: String
+    var message: String
+}
+
+struct CheckList: Decodable {
+    var checkDate: [String]
+    var completeValue: [String]
+    var message: String
+}
 class TodoStore: ObservableObject {
     //    @Published var todos = [Todo]()
     @Published var todos: [Todo] = []

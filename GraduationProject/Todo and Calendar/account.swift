@@ -17,6 +17,8 @@ enum Message: String {
     case revise = "User revise Study successfully"
     case reviseSpace = "User revise Space successfully"
     case upDateCompleteValue = "User upDateCompleteValue successfully"
+    case TrackingFirstDay = "User TrackingFirstDay successfully"
+    case RecurringCheckList = "User RecurringCheckList successfully"
 }
 
 struct MailConfig {
@@ -73,15 +75,18 @@ func sendMail(verify: String,mail: String,completion: @escaping (String) -> Void
        }
 }
 
-func handleLogin(data: Data, completion: @escaping (String) -> Void) {
+//func handleLogin(data: Data, completion: @escaping ([String]) -> Void) {
+func handleLogin(data: Data, completion: @escaping ([String:String]) -> Void) {
     handleUserData(data: data, messageType: .userLogin, completion: completion)
 }
 
-func handleRegister(data: Data, completion: @escaping (String) -> Void) {
+//func handleRegister(data: Data, completion: @escaping ([String]) -> Void) {
+func handleRegister(data: Data, completion: @escaping ([String:String]) -> Void) {
     handleUserData(data: data, messageType: .userRegistered, completion: completion)
 }
 
-func handleUserData(data: Data, messageType: Message, completion: @escaping (String) -> Void) {
+//func handleUserData(data: Data, messageType: Message, completion: @escaping ([String]) -> Void) {
+func handleUserData(data: Data, messageType: Message, completion: @escaping ([String:String]) -> Void) {
     handleDecodableData(UserData.self, data: data) { userData in
         if userData.message == messageType.rawValue {
             print("============== \(messageType.rawValue) ==============")
@@ -89,10 +94,11 @@ func handleUserData(data: Data, messageType: Message, completion: @escaping (Str
             UserDefaults.standard.set(true, forKey: "signIn")
             UserDefaults.standard.set("\(userData.id)", forKey: "uid")
             UserDefaults.standard.set("\(userData.email)", forKey: "userName")
-            completion(Message.success.rawValue)
+//            completion([Message.success.rawValue])
+            completion(["message":Message.success.rawValue])
             print("============== \(messageType.rawValue) ==============")
         } else {
-            completion(userData.message)
+            completion(["message":userData.message])
             print("\(messageType.rawValue) - Message：\(userData.message)")
         }
     }

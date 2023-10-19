@@ -178,7 +178,8 @@ struct AddStudyView: View {
 
         phpUrl(php: "addStudyGeneral" ,type: "addTask",body:body,store: todoStore) { message in
             presentationMode.wrappedValue.dismiss()
-            completion(message)
+//            completion(message[0])
+            completion(message["message"]!)
         }
     }
 }

@@ -163,7 +163,8 @@ struct CheckSportView: View {
         ]
         phpUrl(php: "upDateCompleteValue" ,type: "reviseTask",body:body, store: nil){ message in
             // 在此处调用回调闭包，将 messenge 值传递给调用者
-            completion(message)
+//            completion(message[0])
+            completion(message["message"]!)
         }
     }
 }

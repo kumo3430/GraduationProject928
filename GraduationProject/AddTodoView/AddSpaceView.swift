@@ -126,7 +126,8 @@ struct AddSpaceView: View {
         phpUrl(php: "addStudySpaced" ,type: "addTask",body:body,store: taskStore){ message in
             // 在此处调用回调闭包，将 messenge 值传递给调用者
             presentationMode.wrappedValue.dismiss()
-            completion(message)
+//            completion(message[0])
+            completion(message["message"]!)
         }
     }
 }

@@ -26,7 +26,8 @@ func ConvertTodoStatus(todoStatus: String) -> Bool {
     return todoStatus != "0"
 }
 
-func handleStudySpaceList(data: Data,store: TaskStore, completion: @escaping (String) -> Void) {
+//func handleStudySpaceList(data: Data,store: TaskStore, completion: @escaping ([String]) -> Void) {
+func handleStudySpaceList(data: Data,store: TaskStore, completion: @escaping ([String:String]) -> Void) {
     handleDecodableData(TaskData.self, data: data) { userData in
         for index in userData.todoTitle.indices {
 
@@ -52,10 +53,12 @@ func handleStudySpaceList(data: Data,store: TaskStore, completion: @escaping (St
             }
         }
     }
-    completion("Success")
+    //    completion(["Success"])
+        completion(["message":"Success"])
 }
 
-func handleStudyGeneralList(data: Data, store: TodoStore, completion: @escaping (String) -> Void) {
+//func handleStudyGeneralList(data: Data, store: TodoStore, completion: @escaping ([String]) -> Void) {
+func handleStudyGeneralList(data: Data, store: TodoStore, completion: @escaping ([String:String]) -> Void) {
     handleDecodableData(TodoData.self, data: data) { userData in
         for index in userData.todoTitle.indices {
             
@@ -103,10 +106,12 @@ func handleStudyGeneralList(data: Data, store: TodoStore, completion: @escaping 
             }
         }
     }
-    completion("Success")
+    //    completion(["Success"])
+        completion(["message":"Success"])
 }
 
-func handleSportList(data: Data,store: SportStore, completion: @escaping (String) -> Void) {
+//func handleSportList(data: Data,store: SportStore, completion: @escaping ([String]) -> Void) {
+func handleSportList(data: Data,store: SportStore, completion: @escaping ([String:String]) -> Void) {
     handleDecodableData(SportData.self, data: data) { userData in
         for index in userData.todoTitle.indices {
 
@@ -157,10 +162,12 @@ func handleSportList(data: Data,store: SportStore, completion: @escaping (String
             }
         }
     }
-    completion("Success")
+    //    completion(["Success"])
+        completion(["message":"Success"])
 }
 
-func handleDietList(data: Data,store: DietStore, completion: @escaping (String) -> Void) {
+//func handleDietList(data: Data,store: DietStore, completion: @escaping ([String]) -> Void) {
+func handleDietList(data: Data,store: DietStore, completion: @escaping ([String:String]) -> Void) {
     handleDecodableData(DietData.self, data: data) { userData in
         for index in userData.todoTitle.indices {
 
@@ -201,10 +208,12 @@ func handleDietList(data: Data,store: DietStore, completion: @escaping (String) 
             }
         }
     }
-    completion("Success")
+    //    completion(["Success"])
+        completion(["message":"Success"])
 }
 
-func handletickersList(data: Data,store: TickerStore, completion: @escaping (String) -> Void) {
+//func handletickersList(data: Data,store: TickerStore, completion: @escaping ([String]) -> Void) {
+func handletickersList(data: Data,store: TickerStore, completion: @escaping ([String:String]) -> Void) {
     handleDecodableData(TickerData.self, data: data) { userData in
         for index in userData.ticker_id.indices {
             if let deadline = convertToDateTime(userData.deadline[index]) {
@@ -226,5 +235,6 @@ func handletickersList(data: Data,store: TickerStore, completion: @escaping (Str
             }
         }
     }
-    completion("Success")
+//    completion(["Success"])
+    completion(["message":"Success"])
 }

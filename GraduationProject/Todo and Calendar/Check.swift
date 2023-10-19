@@ -1,0 +1,63 @@
+//
+//  Check.swift
+//  GraduationProject
+//
+//  Created by 呂沄 on 2023/10/18.
+//
+
+import Foundation
+
+//func handleTrackingFirstDay(data: Data, messageType: Message, completion: @escaping ([String]) -> Void) {
+func handleTrackingFirstDay(data: Data, messageType: Message, completion: @escaping ([String:String]) -> Void) {
+    handleDecodableData(FirstDay.self, data: data) { userData in
+        if userData.message == messageType.rawValue {
+            print("============== \(messageType.rawValue) ==============")
+            print("\(messageType.rawValue) - userDate:\(userData)")
+            let selectedDate = userData.RecurringStartDate
+            let Instance_id = String(userData.id)
+//            completion([selectedDate,Instance_id])
+            completion([selectedDate:Instance_id])
+            print("============== \(messageType.rawValue) ==============")
+        } else {
+            completion(["message":userData.message])
+            print("\(messageType.rawValue) - Message：\(userData.message)")
+        }
+    }
+}
+//func handleRecurringCheckList(data: Data, messageType: Message, completion: @escaping ([String]) -> Void) {
+func handleRecurringCheckList(data: Data, messageType: Message, completion: @escaping ([String: String]) -> Void) {
+    handleDecodableData(CheckList.self, data: data) { userData in
+        print("\(messageType.rawValue) - userDate:\(userData)")
+        if userData.message == messageType.rawValue {
+            print("============== \(messageType.rawValue) ==============")
+
+//            let a = userData.completeValue.map { valueString in
+//                if let Value = valueString {
+//                    return Value
+//                } else {
+//                    return "0"  // 如果無法轉換，默認值為 0.0 或者您可以選擇其他適當的默認值
+//                }
+//            }
+            let completeValue = userData.completeValue.compactMap { $0 }
+            let checkDate = userData.checkDate.compactMap { $0 }
+            // 使用 zip 将两个数组合并成元组的数组
+            if completeValue.count == checkDate.count {
+                // 使用 zip 函数将两个数组合并为元组数组
+                let combinedArray = Array(zip(checkDate, completeValue))
+                
+                // 使用 Dictionary(uniqueKeysWithValues:) 创建字典
+                let combinedDictionary = Dictionary(uniqueKeysWithValues: combinedArray)
+                
+                // 打印合并后的字典
+                print(combinedDictionary)
+                completion(combinedDictionary)
+            } else {
+                print("两个数组的元素数量不一致")
+            }
+            print("============== \(messageType.rawValue) ==============")
+        } else {
+            completion(["message": userData.message])
+            print("\(messageType.rawValue) - Message：\(userData.message)")
+        }
+    }
+}

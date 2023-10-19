@@ -102,7 +102,8 @@ struct YourApp: App {
         let body: [String: Any] = ["uid": uid]
         phpUrl(php: "StudySpaceList" ,type: "list",body:body,store: taskStore){ message in
             // 在此处调用回调闭包，将 messenge 值传递给调用者
-            completion(message)
+           // completion(message[0])
+            completion(message["message"]!)
         }
     }
     
@@ -110,7 +111,8 @@ struct YourApp: App {
         let body: [String: Any] = ["uid": uid]
         phpUrl(php: "StudyGeneralList",type: "list",body:body,store: todoStore){ message in
             // 在此处调用回调闭包，将 messenge 值传递给调用者
-            completion(message)
+           // completion(message[0])
+            completion(message["message"]!)
         }
     }
     
@@ -118,7 +120,8 @@ struct YourApp: App {
         let body: [String: Any] = ["uid": uid]
         phpUrl(php: "SportList",type: "list",body:body,store: sportStore){ message in
             // 在此处调用回调闭包，将 messenge 值传递给调用者
-            completion(message)
+           // completion(message[0])
+            completion(message["message"]!)
         }
     }
     
@@ -126,7 +129,8 @@ struct YourApp: App {
         let body: [String: Any] = ["uid": uid]
         phpUrl(php: "DietList",type: "list",body:body,store: dietStore){ message in
             // 在此处调用回调闭包，将 messenge 值传递给调用者
-            completion(message)
+           // completion(message[0])
+            completion(message["message"]!)
         }
     }
     
@@ -134,7 +138,9 @@ struct YourApp: App {
         let body: [String: Any] = ["uid": uid]
         phpUrl(php: "tickersList",type: "list",body:body,store: tickerStore){ message in
             // 在此处调用回调闭包，将 messenge 值传递给调用者
-            completion(message)
+            //// completion(message[0])
+            completion(message["message"]!)
+            completion(message["message"]!)
         }
     }
 }

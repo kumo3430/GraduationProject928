@@ -49,7 +49,8 @@ func convertTodoStatus(todoStatus: Int) -> Bool {
     return todoStatus != 0
 }
 
-func handleStudySpaceAdd(data: Data,store: TaskStore, completion: @escaping (String) -> Void) {
+//func handleStudySpaceAdd(data: Data,store: TaskStore, completion: @escaping ([String]) -> Void) {
+func handleStudySpaceAdd(data: Data,store: TaskStore, completion: @escaping ([String:String]) -> Void) {
     handleDecodableData(addTaskData.self, data: data) { userData in
         if (userData.message == "User New StudySpaced successfully") {
             let ReviewChecked0 = false
@@ -76,7 +77,8 @@ func handleStudySpaceAdd(data: Data,store: TaskStore, completion: @escaping (Str
                 DispatchQueue.main.async {
                     store.tasks.append(task)
                 }
-                completion("Success")
+                //                completion(["Success"])
+                                completion(["message":"Success"])
             } else {
                 print("StudySpaceList - 日期或時間轉換失敗")
             }
@@ -85,7 +87,8 @@ func handleStudySpaceAdd(data: Data,store: TaskStore, completion: @escaping (Str
 }
 
 
-func handleStudyGeneralAdd(data: Data,store: TodoStore, completion: @escaping (String) -> Void) {
+//func handleStudyGeneralAdd(data: Data,store: TodoStore, completion: @escaping ([String]) -> Void) {
+func handleStudyGeneralAdd(data: Data,store: TodoStore, completion: @escaping ([String:String]) -> Void) {
     handleDecodableData(addTodoData.self, data: data) { userData in
         if (userData.message == "User New StudyGeneral successfullyUser New first RecurringInstance successfully") {
             var studyUnit: String = ""
@@ -126,7 +129,8 @@ func handleStudyGeneralAdd(data: Data,store: TodoStore, completion: @escaping (S
                 DispatchQueue.main.async {
                     store.todos.append(todo)
                 }
-                completion("Success")
+                //                completion(["Success"])
+                                completion(["message":"Success"])
             } else {
                 print("StudyGeneralList - 日期或時間轉換失敗")
             }
@@ -135,7 +139,8 @@ func handleStudyGeneralAdd(data: Data,store: TodoStore, completion: @escaping (S
     }
 }
 
-func handleSportAdd(data: Data,store: SportStore, completion: @escaping (String) -> Void) {
+//func handleSportAdd(data: Data,store: SportStore, completion: @escaping ([String]) -> Void) {
+func handleSportAdd(data: Data,store: SportStore, completion: @escaping ([String:String]) -> Void) {
     handleDecodableData(addSportData.self, data: data) { userData in
         if (userData.message == "User New Sport successfullyUser New first RecurringInstance successfully") {
             var sportUnit: String = ""
@@ -179,14 +184,16 @@ func handleSportAdd(data: Data,store: SportStore, completion: @escaping (String)
                 DispatchQueue.main.async {
                     store.sports.append(sport)
                 }
-                completion("Success")
+                //                completion(["Success"])
+                                completion(["message":"Success"])
             } else {
                 print("SportList - 日期或時間轉換失敗")
             }
         }
     }
 }
-func handleDietAdd(data: Data,store: DietStore, completion: @escaping (String) -> Void) {
+//func handleDietAdd(data: Data,store: DietStore, completion: @escaping ([String]) -> Void) {
+func handleDietAdd(data: Data,store: DietStore, completion: @escaping ([String:String]) -> Void) {
     handleDecodableData(addDietData.self, data: data) { userData in
         if (userData.message == "User New diet successfullyUser New first RecurringInstance successfully") {
             
@@ -221,7 +228,8 @@ func handleDietAdd(data: Data,store: DietStore, completion: @escaping (String) -
                 DispatchQueue.main.async {
                     store.diets.append(diet)
                 }
-                completion("Success")
+//                completion(["Success"])
+                completion(["message":"Success"])
             } else {
                 print("DietList - 日期或時間轉換失敗")
             }

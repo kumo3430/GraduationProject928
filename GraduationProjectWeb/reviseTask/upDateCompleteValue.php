@@ -7,6 +7,7 @@ $data = json_decode($input_data, true);
 $uid = $_SESSION['uid'];
 
 $todo_id = $data['id'];
+$checkDate = date("Y-m-d");
 $RecurringStartDate = $data['RecurringStartDate'];
 $RecurringEndDate = $data['RecurringEndDate'];
 $completeValue = $data['completeValue'];
@@ -24,14 +25,37 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$TodoSql = "UPDATE RecurringInstance 
-SET `completeValue` = '$completeValue'WHERE `todo_id` = '$todo_id' && `RecurringEndDate` = '$RecurringEndDate' && `RecurringStartDate` = '$RecurringStartDate' ;";
+$TodoSELSql = "SELECT * FROM `RecurringInstance` WHERE todo_id = '$todo_id' && `RecurringEndDate` = '$RecurringEndDate' && `RecurringStartDate` = '$RecurringStartDate';";
 
-if ($conn->query($TodoSql) === TRUE) {
-        $message = "User upDateCompleteValue successfully";
+$result = $conn->query($TodoSELSql);
+if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    $Instance_id = $row['id'];
+    $completeValueOld = $row['completeValue'];
+    $completeValueNew = $completeValueOld + $completeValue;
+
+    $CheckSql = "INSERT INTO `RecurringCheck` (`Instance_id`, `checkDate`, `completeValue`) VALUES ('$Instance_id', '$checkDate', '$completeValue');";
+
+    if($conn->query($CheckSql) === TRUE) {
+        $message = "User New RecurringCheck successfully";
+
+        $TodoSql = "UPDATE RecurringInstance 
+        SET `completeValue` = '$completeValueNew'WHERE `todo_id` = '$todo_id' && `RecurringEndDate` = '$RecurringEndDate' && `RecurringStartDate` = '$RecurringStartDate' ;";
+        
+        if ($conn->query($TodoSql) === TRUE) {
+                $message = "User upDateCompleteValue successfully";
+        } else {
+            $message = $message . 'User upDateCompleteValue - Error: ' . $sql . '<br>' . $conn->error;
+            $conn->error;
+        }
+    } else {
+        $message = "New RecurringCheck - Error: " . $InstanceSql . '<br>' . $conn->error; 
+        if ($conn->connect_error) {
+            $message =  die("Connection failed: " . $conn->connect_error);
+        }
+    }
 } else {
-    $message = $message . 'User upDateCompleteValue - Error: ' . $sql . '<br>' . $conn->error;
-    $conn->error;
+    $message = "No results found";
 }
 
 $userData = array(

@@ -163,7 +163,8 @@ struct DetailSportView: View {
             DispatchQueue.main.async {
                 presentationMode.wrappedValue.dismiss()
             }
-            completion(message)
+//            completion(message[0])
+            completion(message["message"]!)
         }
     }
 }

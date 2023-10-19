@@ -20,8 +20,9 @@ class URLSessionSingleton {
     }
 }
 
-func phpUrl(php: String,type: String,body: [String:Any],store: (any ObservableObject)? = nil, completion: @escaping (String) -> Void) {
-
+//func phpUrl(php: String,type: String,body: [String:Any],store: (any ObservableObject)? = nil, completion: @escaping (String) -> Void) {
+//func phpUrl(php: String,type: String,body: [String:Any],store: (any ObservableObject)? = nil, completion: @escaping ([String]) -> Void) {
+func phpUrl(php: String,type: String,body: [String:Any],store: (any ObservableObject)? = nil, completion: @escaping ([String:String]) -> Void) {
     var url: URL?
     url = URL(string: "\(server)/\(type)/\(php).php")
     print("新的url\(String(describing: url))")
@@ -41,6 +42,14 @@ func phpUrl(php: String,type: String,body: [String:Any],store: (any ObservableOb
 //            handleDataForPHP(php: php, data: data,store: store, completion: completion)
             handleDataForPHP(php: php, data: data, store: store) { message in
                            completion(message) // 调用回调闭包传递 message
+//                completion(message)
+                
+//                var messageDict = [String: String]()
+//                // 在这里根据你的需求将数据填充到 messageDict 中
+//                messageDict["message"] = message
+//                completion(messageDict)
+//                completion(message["message"])
+//                completion(["message": message])
                        }
         }
     }.resume()
@@ -74,7 +83,8 @@ func formattedTime(_ date: Date) -> String {
     return formatter.string(from: date)
 }
 
-func handleDataForPHP(php: String, data: Data,store: (any ObservableObject)? = nil, completion: @escaping (String) -> Void) {
+//func handleDataForPHP(php: String, data: Data,store: (any ObservableObject)? = nil, completion: @escaping ([String]) -> Void) {
+func handleDataForPHP(php: String, data: Data,store: (any ObservableObject)? = nil, completion: @escaping ([String:String]) -> Void) {
     switch php {
     case "login":
     handleLogin(data: data, completion: completion)
@@ -109,6 +119,10 @@ func handleDataForPHP(php: String, data: Data,store: (any ObservableObject)? = n
     case "upDateCompleteValue":
         handleUpDateCompleteValue(data: data, completion: completion)
         
+    case "TrackingFirstDay":
+        handleTrackingFirstDay(data: data, messageType: .TrackingFirstDay, completion: completion)
+    case "RecurringCheckList":
+        handleRecurringCheckList(data: data, messageType: .RecurringCheckList, completion: completion)
 
     default:
         break

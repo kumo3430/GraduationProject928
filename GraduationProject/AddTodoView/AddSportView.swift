@@ -236,7 +236,8 @@ struct AddSportView: View {
         print("selectedTimeUnit:\(selectedTimeUnit)")
         phpUrl(php: "addSport" ,type: "addTask",body:body,store: sportStore) { message in
             presentationMode.wrappedValue.dismiss()
-            completion(message)
+//            completion(message[0])
+            completion(message["message"]!)
         }
     }
 }

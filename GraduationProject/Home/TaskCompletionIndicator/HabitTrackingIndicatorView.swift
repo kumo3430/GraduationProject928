@@ -60,7 +60,7 @@ struct HabitTrackingIndicatorView: View {
     @EnvironmentObject var sportStore: SportStore
     @EnvironmentObject var dietStore: DietStore
     @State private var selectedFilter = TaskFilter.all
-//    var selectedFilter = TaskFilter.all
+    //    var selectedFilter = TaskFilter.all
     @State private var tasks: [HabitTask] = [
         HabitTask(name: "背英文單字"),
         HabitTask(name: "游泳"),
@@ -68,6 +68,7 @@ struct HabitTrackingIndicatorView: View {
     ]
     @State private var id:Int = 0
     @State private var name:String = "TaskName"
+    @State private var targetvalue:Float? = 0.0
     @State private var selectedTask: Task?
     @State private var selectedTodo: Todo?
     @State private var selectedSport: Sport?
@@ -87,15 +88,15 @@ struct HabitTrackingIndicatorView: View {
                     ForEach(TaskFilter.allCases, id: \.self) { filter in
                         Button(action: {
                             selectedFilter = filter
-//                            if filter.rawValue == "一般學習" {
-//                                self.filteredTasks = todoStore.todos
-//                            } else if filter.rawValue == "間隔學習" {
-//                                self.filteredTasks = taskStore.tasks
-//                            } else if filter.rawValue == "運動" {
-//                                self.filteredTasks = sportStore.sports
-//                            } else if filter.rawValue == "飲食" {
-//                                self.filteredTasks = dietStore.diets
-//                            }
+                            //                            if filter.rawValue == "一般學習" {
+                            //                                self.filteredTasks = todoStore.todos
+                            //                            } else if filter.rawValue == "間隔學習" {
+                            //                                self.filteredTasks = taskStore.tasks
+                            //                            } else if filter.rawValue == "運動" {
+                            //                                self.filteredTasks = sportStore.sports
+                            //                            } else if filter.rawValue == "飲食" {
+                            //                                self.filteredTasks = dietStore.diets
+                            //                            }
                         }) {
                             Text(filter.rawValue)
                                 .fontWeight(.medium)
@@ -122,6 +123,7 @@ struct HabitTrackingIndicatorView: View {
                                 selectedTodo = todoStore.todos[task]
                                 id = todoStore.todos[task].id
                                 name = todoStore.todos[task].title
+                                targetvalue = todoStore.todos[task].studyValue
                             }) {
                                 HStack {
                                     Image(systemName: "checkmark.circle.fill")
@@ -140,7 +142,7 @@ struct HabitTrackingIndicatorView: View {
                             }
                             .buttonStyle(PlainButtonStyle())
                             .sheet(item: $selectedTodo) { task in
-                                TaskDetailView(task: selectedTodo,id: id, taskName: name)
+                                TaskDetailView(task: selectedTodo,id: id, taskName: name,targetvalue: targetvalue)
                             }
                         }
                     } else if selectedFilter.rawValue == "間隔學習" {
@@ -168,7 +170,7 @@ struct HabitTrackingIndicatorView: View {
                             }
                             .buttonStyle(PlainButtonStyle())
                             .sheet(item: $selectedTask) { task in
-                                TaskDetailView(task: selectedTask,id: id, taskName: name)
+                                TaskDetailView(task: selectedTask,id: id, taskName: name,targetvalue: 0)
                             }
                         }
                     } else if selectedFilter.rawValue == "運動" {
@@ -178,6 +180,7 @@ struct HabitTrackingIndicatorView: View {
                                 selectedSport = sportStore.sports[task]
                                 id = sportStore.sports[task].id
                                 name = sportStore.sports[task].title
+                                targetvalue = sportStore.sports[task].sportValue
                             }) {
                                 HStack {
                                     Image(systemName: "checkmark.circle.fill")
@@ -196,7 +199,7 @@ struct HabitTrackingIndicatorView: View {
                             }
                             .buttonStyle(PlainButtonStyle())
                             .sheet(item: $selectedSport) { task in
-                                TaskDetailView(task: selectedSport,id: id, taskName: name)
+                                TaskDetailView(task: selectedSport,id: id, taskName: name, targetvalue: targetvalue)
                             }
                         }
                     } else if selectedFilter.rawValue == "飲食" {
@@ -206,6 +209,7 @@ struct HabitTrackingIndicatorView: View {
                                 selectedSport = sportStore.sports[task]
                                 id = sportStore.sports[task].id
                                 name = sportStore.sports[task].title
+                                targetvalue = sportStore.sports[task].sportValue
                             }) {
                                 HStack {
                                     Image(systemName: "checkmark.circle.fill")
@@ -224,7 +228,7 @@ struct HabitTrackingIndicatorView: View {
                             }
                             .buttonStyle(PlainButtonStyle())
                             .sheet(item: $selectedTask) { task in
-                                TaskDetailView(task: selectedSport,id: id, taskName: name)
+                                TaskDetailView(task: selectedSport,id: id, taskName: name, targetvalue: targetvalue)
                             }
                         }
                     } else {
@@ -250,7 +254,7 @@ struct HabitTrackingIndicatorView: View {
                             }
                             .buttonStyle(PlainButtonStyle())
                             .sheet(item: $selectedHabitTask) { task in
-                                TaskDetailView(task: task,id: 1, taskName: task.name)
+                                TaskDetailView(task: task,id: 1, taskName: task.name, targetvalue: 0)
                             }
                         }
                     }
@@ -273,6 +277,7 @@ struct TaskDetailView: View {
     var task: Any
     var id: Int
     var taskName: String
+    var targetvalue: Float? = 0.0
     @State private var selectedIndicator = IndicatorType.week
     
     var body: some View {
@@ -295,12 +300,12 @@ struct TaskDetailView: View {
             
             Group {
                 if selectedIndicator == .week {
-                    EnhancedWeekReportView()
+                    EnhancedWeekReportView(id: id, targetvalue: targetvalue)
                 } else if selectedIndicator == .month {
-//                    EnhancedMonthReportView(task: task)
-                    EnhancedMonthReportView()
+                    //                    EnhancedMonthReportView(task: task)
+                    EnhancedMonthReportView(id: id, targetvalue: targetvalue)
                 } else if selectedIndicator == .year {
-                    YearIndicatorView()
+                    YearIndicatorView(id: id, targetvalue: targetvalue)
                 }
             }
             .transition(.slide)
@@ -341,24 +346,18 @@ extension DateFormatter {
 }
 
 struct EnhancedWeekReportView: View {
-//    let task: HabitTask
-    @State private var selectedDate = Date()
     
-    var completionRates: [String: Double] {
-        let rates = [
-            "2023-10-02": 0.5,
-            "2023-10-03": 0.7,
-            "2023-10-04": 1.0,
-        ]
-        return rates
-    }
+    let id: Int
+    let targetvalue: Float?
+    @State private var selectedDate = Date()
+    @State private var Instance_id: Int = 0
+    @State private var completionRates: [String: Double] = ["":0.0]
     
     var datesOfWeek: [Date] {
         var dates: [Date] = []
         let calendar = Calendar.current
-        let startOfWeek = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: selectedDate))!
         for i in 0..<7 {
-            if let date = calendar.date(byAdding: .day, value: i, to: startOfWeek) {
+            if let date = calendar.date(byAdding: .day, value: i, to: selectedDate) {
                 dates.append(date)
             }
         }
@@ -377,8 +376,8 @@ struct EnhancedWeekReportView: View {
                 Spacer()
                 
                 let startOfWeek = Calendar.current.date(from: Calendar.current.dateComponents([.yearForWeekOfYear, .weekOfYear], from: selectedDate))!
-                let endOfWeek = Calendar.current.date(byAdding: .day, value: 6, to: startOfWeek)!
-                Text("\(startOfWeek, formatter: DateFormatter.weekFormatter) - \(endOfWeek, formatter: DateFormatter.weekFormatter)")
+                let endOfWeek = Calendar.current.date(byAdding: .day, value: 6, to: selectedDate)!
+                Text("\(selectedDate, formatter: DateFormatter.weekFormatter) - \(endOfWeek, formatter: DateFormatter.weekFormatter)")
                     .font(.headline)
                     .onTapGesture {
                         selectedDate = Date()
@@ -419,17 +418,62 @@ struct EnhancedWeekReportView: View {
             }
             .frame(width: 325)
         }
+        .onAppear() {
+            TrackingFirstDay(id:id) { selectedDate, instanceID in
+                self.selectedDate = selectedDate
+                self.Instance_id = instanceID
+                RecurringCheckList(id:instanceID, targetvalue:targetvalue!) { message in
+                    for (key, value) in message {
+                        print("message: \(message)")
+                        print("Key: \(key), Value: \(value)")
+                        let dateFormatter = DateFormatter()
+                        dateFormatter.dateFormat = "yyyy-MM-dd" // 设置日期格式，确保与日期字符串的格式匹配
+                        if let date = dateFormatter.date(from: key) {
+                            let floatValue = Double(value)
+                            let target = targetvalue ?? 1.0 // 使用默认值或其他逻辑来获取 targetvalue
+                            let newValue = floatValue! / Double(target)
+                            print("newValue: \(newValue)")
+                            print("date: \(formattedDate(date))")
+                            completionRates.updateValue(newValue, forKey: formattedDate(date))
+                        } else {
+                            print("Key is not a valid date")
+                        }
+                    }
+                    print(completionRates)
+                }
+            }
+        }
         .background(Color(hex: "#FAFAFA"))
         .cornerRadius(15)
         .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
         .padding(.all, 10)
     }
 }
+func TrackingFirstDay(id: Int, completion: @escaping (Date, Int) -> Void) {
+    let body = ["id": id] as [String : Any]
+    phpUrl(php: "TrackingFirstDay" ,type: "Tracking",body:body,store: nil) { message in
+        for (key, value) in message {
+            if let selectedDate = convertToDate(key), let Instance_id = Int(value) {
+                completion(selectedDate, Instance_id)
+            }
+            
+        }
+    }
+}
+
+
+func RecurringCheckList(id: Int,targetvalue:Float,completion: @escaping ([String:String]) -> Void) {
+    let body = ["id": id] as [String : Any]
+    phpUrl(php: "RecurringCheckList", type: "Tracking", body: body, store: nil) { message in
+        completion(message)
+    }
+}
 
 struct EnhancedMonthReportView: View {
-//    let task: HabitTask
+    //    let task: HabitTask
     @State private var selectedDate = Date()
-    
+    let id: Int
+    let targetvalue: Float?
     var completionRates: [String: Double] {
         let rates = [
             "2023-10-01": 0.5,
@@ -515,9 +559,10 @@ struct EnhancedMonthReportView: View {
 }
 
 struct YearIndicatorView: View {
-//    let task: HabitTask
+    //    let task: HabitTask
     @State private var selectedDate = Date()
-    
+    let id: Int
+    let targetvalue: Float?
     var completionRates: [String: [Double]] {
         let rates = [
             "2023": [0.5, 0.7, 1.0, 0.4, 0.8, 0.6, 0.9, 0.3, 0.6, 0.8, 0.5, 0.7]
