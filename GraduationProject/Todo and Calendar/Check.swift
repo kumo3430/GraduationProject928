@@ -7,7 +7,26 @@
 
 import Foundation
 
-//func handleTrackingFirstDay(data: Data, messageType: Message, completion: @escaping ([String]) -> Void) {
+func TrackingFirstDay(id: Int, completion: @escaping (Date, Int) -> Void) {
+    let body = ["id": id] as [String : Any]
+    phpUrl(php: "TrackingFirstDay" ,type: "Tracking",body:body,store: nil) { message in
+        for (key, value) in message {
+            if let selectedDate = convertToDate(key), let Instance_id = Int(value) {
+                completion(selectedDate, Instance_id)
+            }
+            
+        }
+    }
+}
+
+
+func RecurringCheckList(id: Int,targetvalue:Float,completion: @escaping ([String:String]) -> Void) {
+    let body = ["id": id] as [String : Any]
+    phpUrl(php: "RecurringCheckList", type: "Tracking", body: body, store: nil) { message in
+        completion(message)
+    }
+}
+
 func handleTrackingFirstDay(data: Data, messageType: Message, completion: @escaping ([String:String]) -> Void) {
     handleDecodableData(FirstDay.self, data: data) { userData in
         if userData.message == messageType.rawValue {
@@ -15,7 +34,6 @@ func handleTrackingFirstDay(data: Data, messageType: Message, completion: @escap
             print("\(messageType.rawValue) - userDate:\(userData)")
             let selectedDate = userData.RecurringStartDate
             let Instance_id = String(userData.id)
-//            completion([selectedDate,Instance_id])
             completion([selectedDate:Instance_id])
             print("============== \(messageType.rawValue) ==============")
         } else {
@@ -24,30 +42,20 @@ func handleTrackingFirstDay(data: Data, messageType: Message, completion: @escap
         }
     }
 }
-//func handleRecurringCheckList(data: Data, messageType: Message, completion: @escaping ([String]) -> Void) {
+
 func handleRecurringCheckList(data: Data, messageType: Message, completion: @escaping ([String: String]) -> Void) {
     handleDecodableData(CheckList.self, data: data) { userData in
         print("\(messageType.rawValue) - userDate:\(userData)")
         if userData.message == messageType.rawValue {
             print("============== \(messageType.rawValue) ==============")
-
-//            let a = userData.completeValue.map { valueString in
-//                if let Value = valueString {
-//                    return Value
-//                } else {
-//                    return "0"  // 如果無法轉換，默認值為 0.0 或者您可以選擇其他適當的默認值
-//                }
-//            }
             let completeValue = userData.completeValue.compactMap { $0 }
             let checkDate = userData.checkDate.compactMap { $0 }
             // 使用 zip 将两个数组合并成元组的数组
             if completeValue.count == checkDate.count {
                 // 使用 zip 函数将两个数组合并为元组数组
                 let combinedArray = Array(zip(checkDate, completeValue))
-                
                 // 使用 Dictionary(uniqueKeysWithValues:) 创建字典
                 let combinedDictionary = Dictionary(uniqueKeysWithValues: combinedArray)
-                
                 // 打印合并后的字典
                 print(combinedDictionary)
                 completion(combinedDictionary)
