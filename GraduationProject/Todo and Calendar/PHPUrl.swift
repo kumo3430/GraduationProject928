@@ -83,6 +83,30 @@ func formattedTime(_ date: Date) -> String {
     return formatter.string(from: date)
 }
 
+extension DateFormatter {
+    static let weekFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "YYYY年M月d日"
+        return formatter
+    }()
+    
+    static let dateOnlyFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter
+    }()
+    static let monthFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "zh_Hans_CN")
+        formatter.dateFormat = "YYYY年MM月"
+        return formatter
+    }()
+    static let yearFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "YYYY年"
+        return formatter
+    }()
+}
 //func handleDataForPHP(php: String, data: Data,store: (any ObservableObject)? = nil, completion: @escaping ([String]) -> Void) {
 func handleDataForPHP(php: String, data: Data,store: (any ObservableObject)? = nil, completion: @escaping ([String:String]) -> Void) {
     switch php {

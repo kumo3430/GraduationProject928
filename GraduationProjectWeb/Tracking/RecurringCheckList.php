@@ -20,7 +20,8 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$TodoSELSql = "SELECT * FROM `RecurringCheck` WHERE Instance_id = '$id';";
+// $TodoSELSql = "SELECT * FROM `RecurringCheck` WHERE Instance_id = '$id';";
+$TodoSELSql = "SELECT * FROM RecurringInstance AS RI, RecurringCheck AS RC WHERE RI.todo_id = '67' && RC.instance_id = RI.id;";
 
 $result = $conn->query($TodoSELSql);
 if ($result->num_rows > 0) {
