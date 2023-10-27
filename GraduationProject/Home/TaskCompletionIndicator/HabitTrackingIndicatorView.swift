@@ -34,7 +34,6 @@ extension Color {
     }
 }
 
-
 enum IndicatorType: String, CaseIterable {
     case week = "週"
     case month = "月"
@@ -53,15 +52,16 @@ struct HabitTask: Identifiable {
     let id = UUID()
     let name: String
 }
+
 class CompletionRatesViewModel: ObservableObject {
     @Published var completionRates: [String: Double] = ["": 0.0]
-
+    
     func updateCompletionRate(date: Date, newValue: Double) {
         let formattedDate = GraduationProject.formattedDate(date)
         completionRates.updateValue(newValue, forKey: formattedDate)
     }
 }
-    
+
 struct HabitTrackingIndicatorView: View {
     @State private var selectedCategory = TaskCategory.generalLearning
     @EnvironmentObject var taskStore: TaskStore
@@ -226,358 +226,43 @@ struct HabitTrackingIndicatorView: View {
     }
 }
 
-
-struct TaskDetailView: View {
-    var task: Any
-    var id: Int?
-    var taskName: String
-    var targetvalue: Float? = 0.0
-    @State private var selectedIndicator = IndicatorType.week
-    
-    var body: some View {
-        VStack(spacing: 20) {
-            Text(taskName)
-                .font(.system(size: 30, weight: .semibold, design: .default))
-                .foregroundColor(Color(hex: "#4A4A4A"))
-                .padding(.top, 20)
-            
-            Picker("Indicator", selection: $selectedIndicator) {
-                ForEach(IndicatorType.allCases, id: \.self) { indicator in
-                    Text(indicator.rawValue).tag(indicator)
-                }
-            }
-            .pickerStyle(SegmentedPickerStyle())
-            .padding(.horizontal, 10)
-            .background(Color(hex: "#EFEFEF"))
-            .cornerRadius(8)
-            .shadow(color: Color.black.opacity(0.1), radius: 2, x: 0, y: 2)
-            // 這句要改
-//            Group {
-//                if selectedIndicator == .week {
-//                    EnhancedWeekReportView(id: id ?? 0, targetvalue: targetvalue)
-//                } else if selectedIndicator == .month {
-//                    //                    EnhancedMonthReportView(task: task)
-//                    EnhancedMonthReportView(id: id ?? 0, targetvalue: targetvalue)
-//                } else if selectedIndicator == .year {
-//                    YearIndicatorView(id: id ?? 0, targetvalue: targetvalue)
-//                }
-//            }
-//            .transition(.slide)
-            
-            ReportView(id: id ?? 0, targetvalue: targetvalue,selectedIndicator: selectedIndicator)
-                           .transition(.slide)
-            Spacer()
-        }
-        .onAppear() {
-            print(task)
-        }
-        .padding()
-        .background(LinearGradient(gradient: .init(colors: [Color("Color"),Color("Color1"),Color("Color2")]), startPoint: .top, endPoint: .bottom))
-    }
-}
-
-struct EnhancedWeekReportView: View {
-    
-    let id: Int
-    let targetvalue: Float?
-    @State private var selectedDate = Date()
-    @State private var Instance_id: Int = 0
-    @State private var completionRates: [String: Double] = ["":0.0]
-    
-    var datesOfWeek: [Date] {
-        var dates: [Date] = []
-        let calendar = Calendar.current
-        for i in 0..<7 {
-            if let date = calendar.date(byAdding: .day, value: i, to: selectedDate) {
-                dates.append(date)
-            }
-        }
-        return dates
-    }
-    
-    var body: some View {
-        VStack {
-            HStack {
-                Button(action: {
-                    selectedDate = Calendar.current.date(byAdding: .weekOfYear, value: -1, to: selectedDate) ?? selectedDate
-                }) {
-                    Image(systemName: "arrow.left")
-                }
-                
-                Spacer()
-                
-                let startOfWeek = Calendar.current.date(from: Calendar.current.dateComponents([.yearForWeekOfYear, .weekOfYear], from: selectedDate))!
-                let endOfWeek = Calendar.current.date(byAdding: .day, value: 6, to: selectedDate)!
-                Text("\(selectedDate, formatter: DateFormatter.weekFormatter) - \(endOfWeek, formatter: DateFormatter.weekFormatter)")
-                    .font(.headline)
-                    .onTapGesture {
-                        selectedDate = Date()
-                    }
-                
-                Spacer()
-                
-                Button(action: {
-                    selectedDate = Calendar.current.date(byAdding: .weekOfYear, value: 1, to: selectedDate) ?? selectedDate
-                }) {
-                    Image(systemName: "arrow.right")
-                }
-            }
-            .padding()
-            
-            ScrollView {
-                VStack(spacing: 10) {
-                    ForEach(datesOfWeek, id: \.self) { date in
-                        let formattedDate = DateFormatter.dateOnlyFormatter.string(from: date)
-                        HStack {
-                            Text(formattedDate)
-                                .font(.system(size: 16, weight: .medium, design: .rounded))
-                                .foregroundColor(.gray)
-                                .frame(alignment: .leading)
-                            
-                            Spacer()
-                            
-                            ProgressBar(value: completionRates[formattedDate] ?? 0)
-                                .frame(width: 235, height: 20)
-                                .animation(.easeInOut(duration: 1.0))
-                                .background(Color(hex: "#EFEFEF").cornerRadius(5))
-                                .padding(5)
-                        }
-                        .padding(.vertical, 5)
-                    }
-                }
-                .padding(.all, 10)
-            }
-            .frame(width: 325)
-        }
-        .onAppear() {
-            TrackingFirstDay(id:id) { selectedDate, instanceID in
-                self.selectedDate = selectedDate
-                self.Instance_id = instanceID
-                RecurringCheckList(id:instanceID, targetvalue:targetvalue!) { message in
-                    for (key, value) in message {
-                        print("message: \(message)")
-                        print("Key: \(key), Value: \(value)")
-                        let dateFormatter = DateFormatter()
-                        dateFormatter.dateFormat = "yyyy-MM-dd" // 设置日期格式，确保与日期字符串的格式匹配
-                        if let date = dateFormatter.date(from: key) {
-                            let floatValue = Double(value)
-                            let target = targetvalue ?? 1.0 // 使用默认值或其他逻辑来获取 targetvalue
-                            let newValue = floatValue! / Double(target)
-                            print("newValue: \(newValue)")
-                            print("date: \(formattedDate(date))")
-                            completionRates.updateValue(newValue, forKey: formattedDate(date))
-                        } else {
-                            print("Key is not a valid date")
-                        }
-                    }
-                    print(completionRates)
-                }
-            }
-        }
-        .background(Color(hex: "#FAFAFA"))
-        .cornerRadius(15)
-        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
-        .padding(.all, 10)
-    }
-}
-
-struct EnhancedMonthReportView: View {
-    //    let task: HabitTask
-    @State private var selectedDate = Date()
-    let id: Int
-    let targetvalue: Float?
-    var completionRates: [String: Double] {
-        let rates = [
-            "2023-10-01": 0.5,
-            "2023-10-02": 0.7,
-            "2023-10-03": 1.0,
-        ]
-        return rates
-    }
-    
-    var datesOfMonth: [Date] {
-        var dates: [Date] = []
-        let calendar = Calendar.current
-        let components = calendar.dateComponents([.year, .month], from: selectedDate)
+    struct TaskDetailView: View {
+        var task: Any
+        var id: Int?
+        var taskName: String
+        var targetvalue: Float? = 0.0
+        let completionRatesViewModel = CompletionRatesViewModel()
+        @State private var selectedIndicator = IndicatorType.week
         
-        guard let startOfMonth = calendar.date(from: components),
-              let rangeOfMonth = calendar.range(of: .day, in: .month, for: startOfMonth) else { return dates }
-        
-        for day in rangeOfMonth {
-            if let date = calendar.date(byAdding: .day, value: day - 1, to: startOfMonth) {
-                dates.append(date)
-            }
-        }
-        return dates
-    }
-    
-    var body: some View {
-        VStack {
-            HStack {
-                Button(action: {
-                    selectedDate = Calendar.current.date(byAdding: .month, value: -1, to: selectedDate) ?? selectedDate
-                }) {
-                    Image(systemName: "arrow.left")
-                }
+        var body: some View {
+            VStack(spacing: 20) {
+                Text(taskName)
+                    .font(.system(size: 30, weight: .semibold, design: .default))
+                    .foregroundColor(Color(hex: "#4A4A4A"))
+                    .padding(.top, 20)
                 
-                Spacer()
-                
-                Text("\(selectedDate, formatter: DateFormatter.monthFormatter)")
-                    .font(.headline)
-                    .onTapGesture {
-                        selectedDate = Date()
+                Picker("Indicator", selection: $selectedIndicator) {
+                    ForEach(IndicatorType.allCases, id: \.self) { indicator in
+                        Text(indicator.rawValue).tag(indicator)
                     }
-                
-                Spacer()
-                
-                Button(action: {
-                    selectedDate = Calendar.current.date(byAdding: .month, value: 1, to: selectedDate) ?? selectedDate
-                }) {
-                    Image(systemName: "arrow.right")
                 }
+                .pickerStyle(SegmentedPickerStyle())
+                .padding(.horizontal, 10)
+                .background(Color(hex: "#EFEFEF"))
+                .cornerRadius(8)
+                .shadow(color: Color.black.opacity(0.1), radius: 2, x: 0, y: 2)
+                
+                ReportView(id: id ?? 0, targetvalue: targetvalue,selectedIndicator: $selectedIndicator, completionRatesViewModel: completionRatesViewModel)
+                    .transition(.slide)
+                Spacer()
+            }
+            .onAppear() {
+                print(task)
             }
             .padding()
-            
-            ScrollView {
-                VStack(spacing: 10) {
-                    ForEach(datesOfMonth, id: \.self) { date in
-                        let formattedDate = DateFormatter.dateOnlyFormatter.string(from: date)
-                        HStack {
-                            Text(formattedDate)
-                                .font(.system(size: 16, weight: .medium, design: .rounded))
-                                .foregroundColor(.gray)
-                                .frame(alignment: .leading)
-                            
-                            Spacer()
-                            
-                            ProgressBar(value: completionRates[formattedDate] ?? 0)
-                                .frame(width: 235, height: 20)
-                                .animation(.easeInOut(duration: 1.0))
-                                .background(Color(hex: "#EFEFEF").cornerRadius(5))
-                                .padding(5)
-                        }
-                        .padding(.vertical, 5)
-                    }
-                }
-                .padding(.all, 10)
-            }
-            .frame(width: 325)
+            .background(LinearGradient(gradient: .init(colors: [Color("Color"),Color("Color1"),Color("Color2")]), startPoint: .top, endPoint: .bottom))
         }
-        .background(Color(hex: "#FAFAFA"))
-        .cornerRadius(15)
-        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
-        .padding(.all, 10)
     }
-}
-
-struct YearIndicatorView: View {
-    //    let task: HabitTask
-    @State private var selectedDate = Date()
-    let id: Int
-    let targetvalue: Float?
-//    var completionRates: [String: [Double]] {
-//        let rates = [
-//            "2023": [0.5, 0.7, 1.0, 0.4, 0.8, 0.6, 0.9, 0.3, 0.6, 0.8, 0.5, 0.7]
-//        ]
-//        return rates
-//    }
-    var completionRates: [String: Double] {
-        let rates = [
-            "一月": 0.5,
-            "三月": 0.7,
-            "四月": 1.0,
-        ]
-        return rates
-    }
-    
-    let months = [
-        "一月", "二月", "三月", "四月",
-        "五月", "六月", "七月", "八月",
-        "九月", "十月", "十一月", "十二月"
-    ]
-    
-    var body: some View {
-        VStack {
-            HStack {
-                Button(action: {
-                    // 减少一年
-                    selectedDate = Calendar.current.date(byAdding: .year, value: -1, to: selectedDate) ?? selectedDate
-                }) {
-                    Image(systemName: "arrow.left")
-                }
-                
-                Spacer()
-                
-                Text("\(selectedDate, formatter: DateFormatter.yearFormatter)") // 使用新的年份格式化器
-                    .font(.headline)
-                    .onTapGesture {
-                        // 点击时返回当前年
-                        selectedDate = Date()
-                    }
-                
-                Spacer()
-                
-                Button(action: {
-                    // 增加一年
-                    selectedDate = Calendar.current.date(byAdding: .year, value: 1, to: selectedDate) ?? selectedDate
-                }) {
-                    Image(systemName: "arrow.right")
-                }
-            }
-            .padding()
-            
-            ScrollView {
-//                VStack(spacing: 10) {
-//                    let yearString = DateFormatter.dateOnlyFormatter.string(from: selectedDate).prefix(4)
-//                    let rates = completionRates[String(yearString)] ?? Array(repeating: 0.0, count: 12)
-//                    ForEach(0..<rates.count) { index in
-//                        HStack {
-//                            Text(months[index])
-//                                .font(.system(size: 16, weight: .medium, design: .rounded))
-//                                .foregroundColor(.gray)
-//                                .frame(alignment: .leading)
-//
-//                            Spacer()
-//
-//                            ProgressBar(value: rates[index])
-//                                .frame(width: 235, height: 20)
-//                                .animation(.easeInOut(duration: 1.0))
-//                                .background(Color(hex: "#EFEFEF").cornerRadius(5))
-//                                .padding(5)
-//                        }
-//                        .padding(.vertical, 5)
-//                    }
-//                }
-                VStack(spacing: 10) {
-                    ForEach(months, id: \.self) { date in
-                        let formattedDate = date
-                        HStack {
-                            Text(formattedDate)
-                                .font(.system(size: 16, weight: .medium, design: .rounded))
-                                .foregroundColor(.gray)
-                                .frame(alignment: .leading)
-                            
-                            Spacer()
-                            
-                            ProgressBar(value: completionRates[formattedDate] ?? 0)
-                                .frame(width: 235, height: 20)
-                                .animation(.easeInOut(duration: 1.0))
-                                .background(Color(hex: "#EFEFEF").cornerRadius(5))
-                                .padding(5)
-                        }
-                        .padding(.vertical, 5)
-                    }
-                }
-                .padding(.all, 10)
-            }
-            .frame(width: 325)
-        }
-        .background(Color(hex: "#FAFAFA"))
-        .cornerRadius(15)
-        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
-        .padding(.all, 10)
-    }
-}
 
 struct ProgressBar: View {
     var value: Double
@@ -607,22 +292,20 @@ struct ProgressBar: View {
 struct ReportView: View {
     let id: Int
     let targetvalue: Float?
-    let selectedIndicator: IndicatorType
-//    let dates: [Date]
-//    let completionRates: [String: Double]
+    @Binding var selectedIndicator: IndicatorType
     @State private var selectedDate = Date()
     @State private var Instance_id: Int = 0
-//    @State private var completionRates: [String: Double] = ["":0.0]
-//    @ObservedObject var completionRatesViewModel: CompletionRatesViewModel
-    let completionRatesViewModel = CompletionRatesViewModel()
-   var formattedDate = ""
+//    let completionRatesViewModel = CompletionRatesViewModel()
+    @ObservedObject var completionRatesViewModel: CompletionRatesViewModel
+//    var formattedDate = ""
     // week
     var datesOfWeek: [String] {
-//        var dates: [Date] = []
         var dates: [String] = []
         let calendar = Calendar.current
         for i in 0..<7 {
             if let date = calendar.date(byAdding: .day, value: i, to: selectedDate) {
+                print("datesOfWeek-\(i):\(date)")
+                print("formattedDate datesOfWeek-\(i):\(GraduationProject.formattedDate(date))")
                 dates.append(GraduationProject.formattedDate(date))
             }
         }
@@ -652,6 +335,7 @@ struct ReportView: View {
         "五月", "六月", "七月", "八月",
         "九月", "十月", "十一月", "十二月"
     ]
+    
     func dayList(cycleCategory: IndicatorType) -> ([String]) {
         switch cycleCategory {
         case .week:
@@ -665,32 +349,16 @@ struct ReportView: View {
     
     var body: some View {
         VStack {
-            // 共用部分，如日期選擇和標題
-//            DateSelectionView(id:id,targetvalue:targetvalue, selectedIndicator: selectedIndicator, completionRatesViewModel: CompletionRatesViewModel
-            DateSelectionView(id: id, targetvalue: targetvalue, selectedIndicator: selectedIndicator, selectedDate: $selectedDate, completionRatesViewModel: completionRatesViewModel)
-            
+            DateSelectionView(id: id, targetvalue: targetvalue, selectedIndicator: $selectedIndicator, selectedDate: $selectedDate, completionRatesViewModel: completionRatesViewModel)
             ScrollView {
                 VStack(spacing: 10) {
-                    // 這句要改
-//                    ForEach(dates, id: \.self) { date in
-                       
                     ForEach(dayList(cycleCategory: selectedIndicator), id: \.self) { date in
-//                        ForEach(datesOfWeek, id: \.self) { date in   // week
-//                        ForEach(datesOfMonth, id: \.self) { date in   // month
-                        //ForEach(months, id: \.self) { date in         // year
-//                        let formattedDate = date                      //year
-//                        let formattedDate = DateFormatter.dateOnlyFormatter.string(from: date)
                         HStack {
-//                            Text(self.formattedDate)
                             Text(date)
                                 .font(.system(size: 16, weight: .medium, design: .rounded))
                                 .foregroundColor(.gray)
                                 .frame(alignment: .leading)
-                            
                             Spacer()
-                            
-//                            ProgressBar(value: completionRates[formattedDate] ?? 0)
-//                            ProgressBar(value: completionRates[date] ?? 0)
                             ProgressBar(value: completionRatesViewModel.completionRates[date] ?? 0)
                                 .frame(width: 235, height: 20)
                                 .animation(.easeInOut(duration: 1.0))
@@ -701,34 +369,14 @@ struct ReportView: View {
                     }
                 }
                 .padding(.all, 10)
-                
             }
             .frame(width: 325)
         }
+        .onChange(of: selectedIndicator) { _ in
+            fetchDataAndUpdate()
+        }
         .onAppear() {
-            TrackingFirstDay(id:id) { selectedDate, instanceID in
-                self.selectedDate = selectedDate
-                self.Instance_id = instanceID
-                RecurringCheckList(id:instanceID, targetvalue:targetvalue!) { message in
-                    for (key, value) in message {
-                        print("message: \(message)")
-                        print("Key: \(key), Value: \(value)")
-                        let dateFormatter = DateFormatter()
-                        dateFormatter.dateFormat = "yyyy-MM-dd" // 设置日期格式，确保与日期字符串的格式匹配
-                        if let date = dateFormatter.date(from: key) {
-                            let floatValue = Double(value)
-                            let target = targetvalue ?? 1.0 // 使用默认值或其他逻辑来获取 targetvalue
-                            let newValue = floatValue! / Double(target)
-                            print("newValue: \(newValue)")
-                            print("date: \(GraduationProject.formattedDate(date))")
-                            completionRatesViewModel.updateCompletionRate(date: date, newValue: newValue)
-                        } else {
-                            print("Key is not a valid date")
-                        }
-                    }
-                    print(completionRatesViewModel)
-                }
-            }
+            fetchDataAndUpdate()
         }
         // 共用部分，如背景和陰影
         .background(Color(hex: "#FAFAFA"))
@@ -736,24 +384,44 @@ struct ReportView: View {
         .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
         .padding(.all, 10)
     }
+    func createDateFormatter() -> DateFormatter {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        dateFormatter.timeZone = TimeZone(identifier: "Asia/Taipei")
+        return dateFormatter
+    }
+    func fetchDataAndUpdate() {
+          TrackingFirstDay(id: id) { selectedDate, instanceID in
+              self.selectedDate = selectedDate
+              self.Instance_id = instanceID
+              RecurringCheckList(id: instanceID, targetvalue: targetvalue ?? 1.0) { message in
+                  let dateFormatter = createDateFormatter()
+                  for (key, value) in message {
+                      if let date = dateFormatter.date(from: key), let floatValue = Double(value) {
+                          let target = targetvalue ?? 1.0
+                          let newValue = floatValue / Double(target)
+                          completionRatesViewModel.updateCompletionRate(date: date, newValue: newValue)
+                      } else {
+                          print("Key is not a valid date or value cannot be converted to Double.")
+                      }
+                  }
+              }
+          }
+      }
 }
 
 struct DateSelectionView: View {
     let id: Int
     let targetvalue: Float?
-    let selectedIndicator: IndicatorType
+//    let selectedIndicator: IndicatorType
+    @Binding var selectedIndicator: IndicatorType
     @Binding var selectedDate: Date
-//    let completionRatesViewModel: CompletionRatesViewModel
     @ObservedObject var completionRatesViewModel: CompletionRatesViewModel
-    // 要改成傳進來的方式
     @State private var value = 0
-//    @State private var selectedDate = Date()
     @State private var selectedDateToString = ""
     @State private var Instance_id: Int = 0
-//    @State private var completionRates: [String: Double] = ["":0.0]
-
     
-    func arrowSelectedDateToString(arrow:String, cycleCategory: IndicatorType) -> String {
+    func arrowSelectedDateToString(arrow:String, cycleCategory: IndicatorType, newDate: Date) -> String {
         if (arrow == "left") {
             value = -1
         } else if (arrow == "right"){
@@ -763,19 +431,19 @@ struct DateSelectionView: View {
         }
         switch cycleCategory {
         case .week:
-            selectedDate = Calendar.current.date(byAdding: .weekOfYear, value: value, to: selectedDate) ?? selectedDate
-            let startOfWeek = Calendar.current.date(from: Calendar.current.dateComponents([.yearForWeekOfYear, .weekOfYear], from: selectedDate))!
+            print("DateSelectionView First selectedDate - \(newDate)")
+            let startOfWeek = Calendar.current.date(byAdding: .weekOfYear, value: value, to: newDate) ?? newDate
             let endOfWeek = Calendar.current.date(byAdding: .day, value: 6, to: selectedDate)!
             let startOfWeekToString = DateFormatter.weekFormatter.string(from: startOfWeek)
             let endOfWeekToString = DateFormatter.weekFormatter.string(from: endOfWeek)
-
+            selectedDate = startOfWeek
             return "\(startOfWeekToString) - \(endOfWeekToString)"
         case .month:
-            selectedDate = Calendar.current.date(byAdding: .month, value: value, to: selectedDate) ?? selectedDate
+            selectedDate = Calendar.current.date(byAdding: .month, value: value, to: newDate) ?? newDate
             let formattedDate = DateFormatter.monthFormatter.string(from: selectedDate)
             return "\(formattedDate)"
         case .year:
-            selectedDate = Calendar.current.date(byAdding: .year, value: value, to: selectedDate) ?? selectedDate
+            selectedDate = Calendar.current.date(byAdding: .year, value: value, to: newDate) ?? newDate
             let formattedDate = DateFormatter.yearFormatter.string(from: selectedDate)
             return "\(formattedDate)"
         }
@@ -784,71 +452,28 @@ struct DateSelectionView: View {
     var body: some View {
         HStack {
             Button(action: {
-                // 左箭頭按鈕操作
-//
-//                // week
-//                selectedDate = Calendar.current.date(byAdding: .weekOfYear, value: -1, to: selectedDate) ?? selectedDate
-//                // month
-//                selectedDate = Calendar.current.date(byAdding: .month, value: -1, to: selectedDate) ?? selectedDate
-//                // year
-//                selectedDate = Calendar.current.date(byAdding: .year, value: -1, to: selectedDate) ?? selectedDate
-                
-                selectedDateToString = arrowSelectedDateToString(arrow:"left", cycleCategory: selectedIndicator)
+                selectedDateToString = arrowSelectedDateToString(arrow:"left", cycleCategory: selectedIndicator, newDate: selectedDate)
             }) {
                 Image(systemName: "arrow.left")
             }
-            
             Spacer()
-            
-            // week
-//            let startOfWeek = Calendar.current.date(from: Calendar.current.dateComponents([.yearForWeekOfYear, .weekOfYear], from: selectedDate))!
-//            let endOfWeek = Calendar.current.date(byAdding: .day, value: 6, to: selectedDate)!
-//            Text("\(selectedDate, formatter: DateFormatter.weekFormatter) - \(endOfWeek, formatter: DateFormatter.weekFormatter)")
-//                .font(.headline)
-//                .onTapGesture {
-//                    selectedDate = Date()
-//                }
-//
-//            // month
-//            Text("\(selectedDate, formatter: DateFormatter.monthFormatter)")
-//                .font(.headline)
-//                .onTapGesture {
-//                    selectedDate = Date()
-//                }
-//
-//            // year
-//            Text("\(selectedDate, formatter: DateFormatter.yearFormatter)") // 使用新的年份格式化器
-//                .font(.headline)
-//                .onTapGesture {
-//                    // 点击时返回当前年
-//                    selectedDate = Date()
-//                }
-            
             Text("\(selectedDateToString)")
                 .font(.headline)
-                .onTapGesture {
-                    selectedDate = Date()
+                .onChange(of: selectedIndicator) { newValue in
+                    selectedDateToString = arrowSelectedDateToString(arrow:"today", cycleCategory: selectedIndicator, newDate: selectedDate)
                 }
-            
             Spacer()
-            
             Button(action: {
-                // 右箭頭按鈕操作
-                
-                // week
-//                selectedDate = Calendar.current.date(byAdding: .weekOfYear, value: 1, to: selectedDate) ?? selectedDate
-//                // month
-//                selectedDate = Calendar.current.date(byAdding: .month, value: 1, to: selectedDate) ?? selectedDate
-//                // year
-//                selectedDate = Calendar.current.date(byAdding: .year, value: 1, to: selectedDate) ?? selectedDate
-                
-                selectedDateToString = arrowSelectedDateToString(arrow:"right", cycleCategory: selectedIndicator)
+                selectedDateToString = arrowSelectedDateToString(arrow:"right", cycleCategory: selectedIndicator, newDate: selectedDate)
             }) {
                 Image(systemName: "arrow.right")
             }
         }
-        .onAppear() {
-            selectedDateToString = arrowSelectedDateToString(arrow:"today", cycleCategory: selectedIndicator)
+
+        .onChange(of: selectedDate) { newDate in
+            print("Selected date changed to: \(newDate)")
+            print("DateSelectionView - \(completionRatesViewModel.completionRates)")
+            selectedDateToString = arrowSelectedDateToString(arrow:"today", cycleCategory: selectedIndicator, newDate: newDate)
         }
         .padding()
     }

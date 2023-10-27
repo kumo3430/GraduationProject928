@@ -57,22 +57,29 @@ func phpUrl(php: String,type: String,body: [String:Any],store: (any ObservableOb
 
 func convertToDate(_ dateString: String) -> Date? {
     let dateFormatter = DateFormatter()
+    dateFormatter.timeZone = TimeZone(identifier: "Asia/Taipei")
     dateFormatter.dateFormat = "yyyy-MM-dd"
     return dateFormatter.date(from: dateString)
 }
+
 func convertToTime(_ timeString: String) -> Date? {
     let dateFormatter = DateFormatter()
+    dateFormatter.timeZone = TimeZone(identifier: "Asia/Taipei")
     dateFormatter.dateFormat = "HH:mm:ss"
     return dateFormatter.date(from: timeString)
 }
+
 func convertToDateTime(_ dateString: String) -> Date? {
     let dateFormatter = DateFormatter()
+    dateFormatter.timeZone = TimeZone(identifier: "Asia/Taipei")
     dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
     return dateFormatter.date(from: dateString)
 }
 
+
 func formattedDate(_ date: Date) -> String {
     let formatter = DateFormatter()
+    formatter.timeZone = TimeZone(identifier: "Asia/Taipei")
     formatter.dateFormat = "yyyy-MM-dd"
     return formatter.string(from: date)
 }
@@ -86,6 +93,7 @@ func formattedTime(_ date: Date) -> String {
 extension DateFormatter {
     static let weekFormatter: DateFormatter = {
         let formatter = DateFormatter()
+        formatter.timeZone = TimeZone(identifier: "Asia/Taipei")
         formatter.dateFormat = "YYYY年M月d日"
         return formatter
     }()
